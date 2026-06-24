@@ -1,5 +1,5 @@
 # Protege esta pasta com login.
-# Ao criar um cliente novo, troque "_TEMPLATE_" pelo nome do usuário do cliente.
+# Ao criar um cliente novo, troque "joy-alano" pelo nome do usuário do cliente.
 
 AuthType Basic
 AuthName "Área restrita — acesso ao seu conteúdo de estratégia"
@@ -10,4 +10,4 @@ AuthName "Área restrita — acesso ao seu conteúdo de estratégia"
 AuthUserFile "/home/u346131448/seguranca/.htpasswd"
 
 # Só este usuário pode entrar nesta pasta:
-Require user _TEMPLATE_
+Require user joy-alano
