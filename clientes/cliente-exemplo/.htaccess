@@ -1,0 +1,13 @@
+# Protege esta pasta com login.
+# Ao criar um cliente novo, troque "cliente-exemplo" pelo nome do usuário do cliente.
+
+AuthType Basic
+AuthName "Área restrita — acesso ao seu conteúdo de estratégia"
+
+# IMPORTANTE: ajuste o caminho abaixo para o local real do .htpasswd no seu
+# servidor Hostinger (veja SETUP-HOSTINGER.md). Exemplo:
+# AuthUserFile "/home/u123456789/seguranca/.htpasswd"
+AuthUserFile "/home/SEU_USUARIO_HOSTINGER/seguranca/.htpasswd"
+
+# Só este usuário pode entrar nesta pasta:
+Require user cliente-exemplo
