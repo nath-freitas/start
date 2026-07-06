@@ -1,0 +1,10 @@
+# Proteção da central do Jorge (login server-side)
+AuthType Basic
+AuthName "Central de Entregas — acesso restrito"
+AuthUserFile "/home/u346131448/seguranca/.htpasswd"
+Require user jorge
+
+# nunca servir arquivos ocultos (.htaccess etc.)
+<FilesMatch "^\.ht">
+  Require all denied
+</FilesMatch>
