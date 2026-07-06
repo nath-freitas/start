@@ -1,59 +1,50 @@
-# Portal de Clientes
+# Central de Entregas — Portal de Clientes
 
-Site de áreas logadas por cliente, hospedado num **subdomínio isolado** da
-Hostinger: `clientes.catapultadeideias.com.br`.
-Cada cliente acessa **apenas a pasta dele**, protegida por usuário e senha.
-
-> ⚠️ **REGRA DE OURO:** este repositório é publicado **somente** na pasta do
-> subdomínio `clientes.catapultadeideias.com.br` — **NUNCA** em `public_html`
-> (onde mora o WordPress principal). Ver `SETUP-HOSTINGER.md`.
-
-## Como funciona (visão geral)
+Cada cliente tem uma **Central de Entregas** (um `index.html` completo) publicada em:
 
 ```
-GOOGLE DRIVE          →   GITHUB (este repo)      →   HOSTINGER (subdomínio)
-rascunho dos HTML         versão final + ponte        clientes.catapultadeideias.com.br
+cliente.catapultadeideias.com.br/<slug>/
 ```
 
-- O **rascunho/biblioteca** dos conteúdos fica no Google Drive.
-- A **versão final** vem pra este repositório (uma pasta por cliente).
-- A Hostinger puxa deste repositório via **Git Deploy** e publica no subdomínio.
-- Cada pasta de cliente é protegida por `.htaccess` + `.htpasswd` (login).
+Exemplo: `cliente.catapultadeideias.com.br/jg/` (Jorge Grimberg).
 
-## Estrutura
+No servidor Hostinger, os arquivos ficam em `public_html/cliente/<slug>/` — a pasta
+do subdomínio, **isolada** do WordPress principal.
+
+## A ideia central
+
+Todo o visual, login e funcionamento são **iguais para todos os clientes**.
+A única coisa que muda por cliente é o bloco **`const CLIENTE = {...}`** no topo
+do `index.html`. Atualizar um cliente = editar esse bloco.
 
 ```
 .
-├── index.html              # página inicial pública do portal
-├── .htaccess               # regras gerais de segurança
-├── _TEMPLATE/              # modelo para criar cliente novo (fica bloqueado)
-│   ├── .htaccess
-│   └── index.html
-├── joy-alano/              # → clientes.catapultadeideias.com.br/joy-alano/
-├── lu-viana/
-├── camila-koszka/
-├── laisse-moreira/
-└── luana-lima/
+├── _MODELO/index.html   # modelo (bloco CLIENTE em branco) para clientes novos
+├── jg/index.html        # Jorge Grimberg
+└── (um folder por cliente…)
 ```
 
-> O `.htpasswd` (usuários e senhas) **não fica neste repositório**. Ele vive no
-> servidor, fora da pasta pública: `/home/u346131448/seguranca/.htpasswd`.
+## O que dá pra atualizar (campos do bloco CLIENTE)
 
-## Adicionar um cliente novo
-
-1. Copie a pasta `_TEMPLATE/` para `nome-do-cliente/`.
-2. No `.htaccess` da nova pasta, troque `Require user _TEMPLATE_` por
-   `Require user nome-do-cliente`.
-3. Adicione a linha do cliente ao `.htpasswd` do servidor (peça o hash).
-4. `git add . && git commit -m "novo cliente: nome-do-cliente" && git push`.
-   A Hostinger publica automaticamente **no subdomínio**.
-
-## Clientes atuais
-
-| Cliente | Usuário | Link |
+| Seção | Campo | O que é |
 |---|---|---|
-| Joy Alano | `joy-alano` | `/joy-alano/` |
-| Lu Viana | `lu-viana` | `/lu-viana/` |
-| Camila Koszka | `camila-koszka` | `/camila-koszka/` |
-| Laisse Moreira | `laisse-moreira` | `/laisse-moreira/` |
-| Luana Lima | `luana-lima` | `/luana-lima/` |
+| Topo | `nome`, `instagram`, `pastaEntregas`, `faturamento12m`, `inicio`, `duracaoDias` | Dados de cabeçalho |
+| Objetivos | `objetivos: [...]` | Lista de objetivos do projeto |
+| Entregas estratégicas | `estrategicas[].recursos[]` | Materiais/links dentro de Diagnóstico, Fundamentos, Plano |
+| Calls | `calls: [...]` | Data + temas + link da gravação |
+| Campanhas | `campanhas: [...]` | Briefings de campanha |
+| Relatórios | `relatoriosAtivo`, `relatorios: []` | Relatórios periódicos |
+
+> **Plano de ação** NÃO fica no `CLIENTE` — ele é editável online e salva no
+> `save.php` (dado do servidor). Não mexemos nele nas atualizações.
+
+## Rotina de atualização
+
+1. Você me manda o cliente + o que adicionar (ver `COMO-ATUALIZAR.md`).
+2. Eu edito o `CLIENTE` do `index.html` daquele cliente, faço commit (histórico/backup).
+3. Eu te devolvo o `index.html` pronto.
+4. Você sobe **só esse `index.html`** na pasta do cliente pelo Gerenciador de
+   Arquivos (substituindo o antigo). A página atualiza na hora.
+
+Assim nunca encostamos no `save.php`, na proteção de senha do hPanel, nem no
+WordPress. Risco zero.

@@ -1,9 +1,0 @@
-# ── Segurança geral do site ───────────────────────────────────────────────
-
-# Nunca servir arquivos sensíveis (.htaccess, .htpasswd, .git, etc.)
-<FilesMatch "^\.(?:ht|git).*">
-    Require all denied
-</FilesMatch>
-
-# Não listar o conteúdo das pastas
-Options -Indexes
