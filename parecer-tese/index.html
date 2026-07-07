@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Análise das Pesquisas e Parecer Estratégico · Jorge Grimberg</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#EBE1CD; --paper:#F8F3E7; --ink:#16130E; --ink-soft:#3A352B;
+    --muted:#736A57; --line:#D6C8AB; --yellow:#FFC21F; --yellow-deep:#E0A400;
+    --taupe:#7A6034; --maxw:1120px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Inter",system-ui,sans-serif;font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px;}
+  h1,h2,h3,h4{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;line-height:1.05;margin:0;letter-spacing:-0.01em;}
+  .eyebrow{font-family:"Space Mono",monospace;font-size:.72rem;text-transform:uppercase;letter-spacing:.22em;color:var(--muted);margin:0;}
+  p{margin:0 0 1rem;}
+  .lead{font-size:1.12rem;color:var(--ink-soft);}
+  strong{font-weight:600;color:var(--ink);}
+
+  .top{padding:30px 0 0;}
+  .brandrow{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;}
+  .brandmark{font-family:"Space Mono",monospace;font-weight:700;letter-spacing:.18em;font-size:.8rem;text-transform:uppercase;}
+  .brandmark span{color:var(--yellow-deep);}
+  .doctag{font-family:"Space Mono",monospace;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);}
+
+  .hero{padding:48px 0 36px;border-bottom:2px solid var(--ink);}
+  .hero h1{font-size:clamp(2.4rem,6vw,4.4rem);font-weight:800;}
+  .hero h1 em{font-style:normal;background:var(--yellow);padding:0 .12em;box-decoration-break:clone;-webkit-box-decoration-break:clone;}
+  .hero .sub{margin-top:22px;display:flex;gap:26px;flex-wrap:wrap;align-items:baseline;}
+  .hero .client{font-family:"Bricolage Grotesque";font-weight:600;font-size:1.15rem;}
+  .hero .meta{font-family:"Space Mono",monospace;font-size:.74rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;}
+
+  section{padding:60px 0;border-bottom:1px solid var(--line);}
+  .sec-head{display:flex;align-items:baseline;gap:18px;margin-bottom:26px;}
+  .sec-num{font-family:"Space Mono",monospace;font-size:.8rem;font-weight:700;color:var(--yellow-deep);letter-spacing:.1em;padding-top:.35em;}
+  .sec-head h2{font-size:clamp(1.7rem,3.6vw,2.5rem);}
+  .sec-intro{max-width:820px;margin-bottom:14px;}
+
+  /* statement */
+  .statement{background:var(--ink);color:var(--paper);border-radius:20px;padding:44px 42px;}
+  .statement .eyebrow{color:var(--yellow);margin-bottom:16px;}
+  .statement p{font-family:"Bricolage Grotesque";font-weight:600;font-size:clamp(1.4rem,2.8vw,2rem);line-height:1.28;color:var(--paper);margin:0;letter-spacing:-0.01em;}
+  .statement p em{font-style:normal;color:var(--yellow);}
+  .statement.sm p{font-size:clamp(1.15rem,2vw,1.5rem);line-height:1.32;}
+
+  /* generic cards */
+  .cards2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:24px 22px;border-top:4px solid var(--c,var(--ink));}
+  .card.y{--c:var(--yellow-deep);}
+  .card.t{--c:var(--taupe);}
+  .card h4{font-size:1.12rem;margin-bottom:12px;display:flex;align-items:center;gap:9px;}
+  .card h4::before{content:"";width:12px;height:12px;border-radius:50%;background:var(--c,var(--ink));display:inline-block;flex:none;}
+  .card ul{margin:0;padding-left:0;list-style:none;}
+  .card li{position:relative;padding-left:18px;margin-bottom:9px;font-size:.96rem;color:var(--ink-soft);line-height:1.5;}
+  .card li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;background:var(--c,var(--ink));border-radius:50%;}
+  .card p{margin:0 0 .6rem;font-size:.96rem;color:var(--ink-soft);}
+  .card p:last-child{margin-bottom:0;}
+
+  /* stat callout */
+  .statnum{font-family:"Bricolage Grotesque";font-weight:800;font-size:2.4rem;line-height:1;color:var(--ink);}
+  .statnum em{font-style:normal;color:var(--yellow-deep);}
+  .statlabel{font-size:.9rem;color:var(--ink-soft);margin-top:8px;}
+
+  /* verbatim quote */
+  .quotes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px;}
+  .quote{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--yellow);border-radius:0 12px 12px 0;padding:18px 20px;}
+  .quote p{font-family:"Bricolage Grotesque";font-weight:600;font-size:1.05rem;line-height:1.35;color:var(--ink);margin:0 0 8px;font-style:italic;}
+  .quote .who{font-family:"Space Mono",monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+
+  /* poll bars */
+  .bars{display:flex;flex-direction:column;gap:12px;margin-top:8px;}
+  .bar{display:grid;grid-template-columns:1fr;gap:5px;}
+  .bar .brow{display:flex;justify-content:space-between;align-items:baseline;gap:12px;}
+  .bar .blabel{font-size:.97rem;color:var(--ink-soft);}
+  .bar .bpct{font-family:"Space Mono",monospace;font-weight:700;font-size:.95rem;color:var(--ink);}
+  .bar .track{height:12px;background:var(--paper);border:1px solid var(--line);border-radius:999px;overflow:hidden;}
+  .bar .fill{height:100%;background:var(--ink);border-radius:999px;}
+  .bar.hot .fill{background:var(--yellow);}
+  .bar .fill.low{background:var(--taupe);opacity:.5;}
+
+  /* chips / clusters */
+  .clusters{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+  .cluster{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:22px;}
+  .cluster .glabel{font-family:"Space Mono",monospace;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;}
+  .chips{display:flex;flex-wrap:wrap;gap:9px;align-items:center;}
+  .chip{background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:.9rem;color:var(--ink);line-height:1.1;}
+  .chip.s{font-size:.82rem;padding:5px 12px;color:var(--ink-soft);}
+  .chip.m{font-size:1rem;padding:8px 17px;}
+  .chip.l{font-size:1.18rem;padding:9px 19px;font-weight:500;}
+  .chip.hot{background:var(--yellow);border-color:var(--yellow-deep);font-weight:500;}
+  .clusternote{font-family:"Space Mono",monospace;font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:14px;}
+
+  /* converge / diverge rows */
+  .rows{display:flex;flex-direction:column;gap:14px;}
+  .row{display:grid;grid-template-columns:200px 1fr;gap:20px;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 22px;align-items:start;}
+  .row .rk{font-family:"Bricolage Grotesque";font-weight:700;font-size:1.05rem;color:var(--ink);}
+  .row .rv{font-size:.97rem;color:var(--ink-soft);}
+  .row .rv em{font-style:normal;background:var(--yellow);padding:0 .18em;border-radius:2px;color:var(--ink);}
+
+  /* layer diagram */
+  .layers{display:flex;flex-direction:column;gap:14px;}
+  .layer{display:grid;grid-template-columns:170px 1fr;gap:22px;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:22px 24px;border-left:5px solid var(--c,var(--ink));}
+  .layer.core{--c:var(--yellow-deep);background:#FBF4E0;}
+  .layer.entry{--c:var(--ink);}
+  .layer.horizon{--c:var(--taupe);}
+  .layer .ltag{font-family:"Space Mono",monospace;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+  .layer .lname{font-family:"Bricolage Grotesque";font-weight:800;font-size:1.28rem;color:var(--ink);margin-top:4px;line-height:1.1;}
+  .layer p{margin:0;font-size:.96rem;color:var(--ink-soft);}
+  .layer .badge{display:inline-block;background:var(--yellow);color:var(--ink);font-family:"Space Mono",monospace;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:999px;margin-top:8px;}
+  .layerread{margin-top:22px;background:var(--yellow);border-radius:12px;padding:18px 22px;font-family:"Bricolage Grotesque";font-weight:600;font-size:1.08rem;color:var(--ink);}
+
+  /* market funnel */
+  .funnel{display:flex;flex-direction:column;gap:12px;align-items:center;}
+  .tier{border:1px solid var(--line);border-radius:16px;padding:24px 26px;width:100%;background:var(--paper);}
+  .tier.t1{max-width:100%;}
+  .tier.t2{max-width:82%;background:#FBF4E0;}
+  .tier.t3{max-width:60%;background:var(--ink);color:var(--paper);text-align:center;}
+  .tier .ttag{font-family:"Space Mono",monospace;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;text-align:center;}
+  .tier.t3 .ttag{color:var(--yellow);}
+  .tier .twoup{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+  .tier .u .un{font-family:"Bricolage Grotesque";font-weight:800;font-size:1.7rem;line-height:1;color:var(--ink);}
+  .tier .u .ul{font-size:.9rem;color:var(--ink-soft);margin-top:7px;}
+  .tier.t2 .tbody{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center;}
+  .tier.t2 .tmain{font-family:"Bricolage Grotesque";font-weight:700;font-size:1.15rem;color:var(--ink);max-width:52%;}
+  .tier.t2 .proof{font-size:.86rem;color:var(--ink-soft);max-width:44%;border-left:2px solid var(--yellow-deep);padding-left:14px;}
+  .tier.t3 .big{font-family:"Bricolage Grotesque";font-weight:800;font-size:clamp(1.6rem,3vw,2.3rem);color:var(--yellow);line-height:1.05;}
+  .tier.t3 .sm{font-size:.94rem;color:#E7DECB;margin-top:10px;}
+  .funnel-note{font-family:"Space Mono",monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:center;margin-top:6px;}
+  .takeaway{margin-top:24px;background:var(--yellow);border-radius:14px;padding:22px 26px;font-family:"Bricolage Grotesque";font-weight:600;font-size:1.12rem;color:var(--ink);line-height:1.35;}
+
+  /* summary bullets (hero recap) */
+  .kv{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:8px;}
+  .kv .item{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px 22px;}
+  .kv .item .n{font-family:"Space Mono",monospace;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--yellow-deep);font-weight:700;margin-bottom:8px;}
+  .kv .item p{margin:0;font-size:.98rem;color:var(--ink-soft);}
+  .kv .item p b{color:var(--ink);}
+
+  .method-note{margin-top:20px;font-size:.9rem;color:var(--muted);border-left:3px solid var(--ink);padding-left:14px;max-width:820px;}
+
+  footer{background:var(--ink);color:#C9BCA0;padding:40px 0;border-bottom:none;}
+  footer .wrap{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;align-items:center;}
+  footer .fbrand{font-family:"Space Mono",monospace;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--paper);}
+  footer .fbrand span{color:var(--yellow);}
+  footer .fnote{font-family:"Space Mono",monospace;font-size:.68rem;letter-spacing:.08em;color:#9A8E76;text-transform:uppercase;}
+  .sources{font-family:"Space Mono",monospace;font-size:.64rem;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;margin-top:20px;}
+
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease;}
+  .reveal.in{opacity:1;transform:none;}
+
+  @media(max-width:880px){
+    .cards2,.cards3,.clusters,.quotes,.kv{grid-template-columns:1fr;}
+    .row{grid-template-columns:1fr;gap:8px;}
+    .layer{grid-template-columns:1fr;gap:10px;}
+    .tier.t2,.tier.t3{max-width:100%;}
+    .tier .twoup{grid-template-columns:1fr;gap:16px;}
+    .tier.t2 .tmain,.tier.t2 .proof{max-width:100%;}
+    .statement{padding:32px 26px;}
+  }
+  @media(max-width:520px){
+    body{font-size:16px;}
+    .wrap{padding:0 18px;}
+  }
+  @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none;}html{scroll-behavior:auto;}}
+  :focus-visible{outline:3px solid var(--yellow-deep);outline-offset:2px;}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="wrap brandrow">
+    <div class="brandmark">Catapulta de Ideias <span>×</span> Nath Freitas</div>
+    <div class="doctag">Documento Estratégico · Parecer</div>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Diagnóstico de pesquisa · Semana zero</p>
+    <h1 style="margin-top:18px;">Análise das pesquisas e <em>parecer estratégico</em></h1>
+    <div class="sub">
+      <div class="client">JG Studio · <b>Jorge Grimberg</b></div>
+      <div class="meta">Alunos · Audiência · Tese · Camadas · Validação</div>
+    </div>
+  </div>
+</header>
+
+<!-- 01 ABERTURA -->
+<section>
+  <div class="wrap reveal">
+    <div class="sec-head"><div class="sec-num">01</div><h2>Da hipótese à tese</h2></div>
+    <p class="sec-intro lead">Saímos de hipóteses. Chegamos a uma tese central candidata, sustentada por duas pesquisas independentes com a mesma audiência.</p>
+    <div class="kv">
+      <div class="item"><div class="n">A tese</div><p><b>Ler cultura e futuro para decidir.</b> O mecanismo que atravessa tudo que o Jorge faz: repertório como método, não como dom.</p></div>
+      <div class="item"><div class="n">A evidência</div><p>Duas pesquisas, <b>alunos</b> e <b>audiência</b>, descrevem o mesmo diferencial por ângulos diferentes. O que muda entre elas é só o resultado desejado.</p></div>
+      <div class="item"><div class="n">O que falta</div><p>Uma confirmação, já com sinal forte nos dados, que o <b>grupo focal</b> fecha olho no olho.</p></div>
+      <div class="item"><div class="n">O próximo passo</div><p>Um <b>intensivo online</b> que vende a tese e a valida com compradores reais, servindo de ponte para o programa de 6 meses.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 COMO LER -->
+<section>
+  <div class="wrap reveal">
+    <div class="sec-head"><div class="sec-num">02</div><h2>Dois olhares sobre a mesma audiência</h2></div>
+    <p class="sec-intro lead">Nenhum dos dois grupos é público frio: os dois conhecem e admiram o Jorge. A diferença é a relação, um comprou, o outro observa.</p>
+    <div class="cards2">
+      <div class="card">
+        <h4>Pesquisa de alunos</h4>
+        <p><strong>Jotform · 73 respostas.</strong> Quem já viveu o processo e pagou. Base quente, enviesada para o que ele já vendeu.</p>
+        <p>Fonte da linguagem real da transformação e dos cases concretos.</p>
+      </div>
+      <div class="card y">
+        <h4>Pesquisa de audiência</h4>
+        <p><strong>Enquetes no Instagram · até 401 votos por pergunta.</strong> Quem acompanha, admira e ainda não comprou.</p>
+        <p>Fonte do que atrai e do desejo que ainda não virou compra.</p>
+      </div>
+    </div>
+    <p class="method-note">Estas pesquisas medem desejo e engajamento, não intenção de compra nem tamanho de mercado. Quem valida isso é dinheiro, e é o que o lançamento vai fazer.</p>
+  </div>
+</section>
+
+<!-- 03 ALUNOS -->
+<section>
+  <div class="wrap reveal">
+    <div class="sec-head"><div class="sec-num">03</div><h2>Alunos: o resultado que sentiram foi clareza e voz</h2></div>
+    <p class="sec-intro lead">O núcleo é criativo e de moda, mas o que atravessa as respostas é uma mudança de olhar que virou decisão. Posicionamento aparece, mas é minoria da linguagem.</p>
+    <div class="cards3" style="margin-bottom:26px;">
+      <div class="card"><div class="statnum"><em>63%</em></div><div class="statlabel">se declaram da indústria da moda (≈64% somando comunicação criativa e branding)</div></div>
+      <div class="card y"><div class="statnum"><em>96%</em></div><div class="statlabel">sentem falta de um grupo de troca (48% sim + 48% às vezes)</div></div>
+      <div class="card t"><div class="statnum"><em>71%</em></div><div class="statlabel">pagariam por comunidade curada "dependendo do que inclui"</div></div>
+    </div>
+    <p class="eyebrow" style="margin-bottom:2px;">A transformação, na voz deles</p>
+    <div class="quotes">
+      <div class="quote"><p>"Treinei meu olhar para criar uma leitura de mercado mais prática e realista."</p><div class="who">Izadora, mudança de olhar</div></div>
+      <div class="quote"><p>"O Jorge me ajudou a entender que intuição é construção de repertório."</p><div class="who">Perpétua, repertório como método</div></div>
+      <div class="quote"><p>"Confiança e posicionamento… saí com meu planejamento e sigo ele até hoje."</p><div class="who">Laura, posicionamento explícito</div></div>
+      <div class="quote"><p>"Mudei de carreira completamente. Hoje sou designer de estampas."</p><div class="who">Marcela, decisão concreta</div></div>
+    </div>
+    <p class="method-note">Codificando as ~66 respostas abertas: a família "mudei meu olhar / decidi / mudei de rota" é maioria; "posicionamento" na linguagem literal aparece em cerca de 20% (13 de 66). O sinal já pende para a tese.</p>
+  </div>
+</section>
+
+<!-- 04 AUDIENCIA -->
+<section>
+  <div class="wrap reveal">
+    <div class="sec-head"><div class="sec-num">04</div><h2>Audiência: a atração é a visão de mundo; o desejo é decidir e crescer</h2></div>
+    <p class="sec-intro lead">Quando perguntamos direto, o público de conteúdo escolhe repertório em massa e quase ignora posicionamento como palavra. Ele vem pela mente do Jorge.</p>
+
+    <div class="cards2" style="margin-bottom:26px;">
+      <div class="card">
+        <h4>O diferencial percebido</h4>
+        <div class="bars">
+          <div class="bar hot"><div class="brow"><span class="blabel">repertório e conhecimento</span><span class="bpct">65%</span></div><div class="track"><div class="fill" style="width:100%"></div></div></div>
+          <div class="bar"><div class="brow"><span class="blabel">pensar fora da caixa</span><span class="bpct">20%</span></div><div class="track"><div class="fill" style="width:31%"></div></div></div>
+          <div class="bar"><div class="brow"><span class="blabel">olhar e estética</span><span class="bpct">12%</span></div><div class="track"><div class="fill" style="width:18%"></div></div></div>
+          <div class="bar"><div class="brow"><span class="blabel">clareza para decidir meu caminho</span><span class="bpct">3%</span></div><div class="track"><div class="fill low" style="width:5%"></div></div></div>
+        </div>
+      </div>
+      <div class="card y">
+        <h4>O desafio deles</h4>
+        <div class="bars">
+          <div class="bar hot"><div class="brow"><span class="blabel">crescer financeiramente</span><span class="bpct">49%</span></div><div class="track"><div class="fill" style="width:100%"></div></div></div>
+          <div class="bar"><div class="brow"><span class="blabel">clareza e direção</span><span class="bpct">29%</span></div><div class="track"><div class="fill" style="width:59%"></div></div></div>
+          <div class="bar"><div class="brow"><span class="blabel">posicionamento e autoridade</span><span class="bpct">14%</span></div><div class="track"><div class="fill low" style="width:29%"></div></div></div>
+          <div class="bar"><div class="brow"><span class="blabel">lançar novos projetos</span><span class="bpct">8%</span></div><div class="track"><div class="fill low" style="width:16%"></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="eyebrow" style="margin-bottom:2px;">A audiência, na voz dela</p>
+    <div class="quotes" style="margin-bottom:26px;">
+      <div class="quote"><p>"Gosto de ver como você está lendo o mundo, seu olhar traz embasamento e conhecimento."</p><div class="who">pamela_abreu</div></div>
+      <div class="quote"><p>"A forma como você entrega é diferente. Me faz questionar tudo e a todos."</p><div class="who">maaxpaixao</div></div>
+    </div>
+
+    <div class="clusters">
+      <div class="cluster">
+        <div class="glabel">De onde vêm, os nichos</div>
+        <div class="chips">
+          <span class="chip l hot">moda</span>
+          <span class="chip l">marketing</span>
+          <span class="chip m">branding</span>
+          <span class="chip m">consultoria</span>
+          <span class="chip">carreira</span>
+          <span class="chip">arte / foto</span>
+          <span class="chip s">comportamento</span>
+          <span class="chip s">futuro</span>
+        </div>
+        <div class="clusternote">Tamanho &#8733; frequência nas respostas</div>
+      </div>
+      <div class="cluster">
+        <div class="glabel">O que querem, os resultados desejados</div>
+        <div class="chips">
+          <span class="chip l hot">crescer</span>
+          <span class="chip l">clareza</span>
+          <span class="chip m">direção</span>
+          <span class="chip m">decidir</span>
+          <span class="chip">posicionamento</span>
+          <span class="chip">leitura de mercado</span>
+          <span class="chip s">parar de copiar</span>
+          <span class="chip s">identidade</span>
+        </div>
+        <div class="clusternote">Tamanho &#8733; frequência nas respostas</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 CONVERGEM -->
+<section>
+  <div class="wrap reveal">
+    <div class="sec-head"><div class="sec-num">05</div><h2>Onde as duas pesquisas convergem</h2></div>
+    <div class="statement sm" style="margin-bottom:26px;">
+      <p class="eyebrow">O diferencial, batizado</p>
+      <p>O que os dois grupos descrevem é a mesma coisa: a forma como o Jorge vê o mundo. Vamos chamar isso de <em>lente JG</em>, o embrião do mecanismo único que ancora a marca.</p>
+    </div>
+    <div class="rows">
+      <div class="row"><div class="rk">O diferencial</div><div class="rv">É o mesmo nos dois grupos: a <em>lente JG</em>. Repertório, olhar, leitura de mundo. Alunos e audiência descrevem a mesma coisa.</div></div>
+      <div class="row"><div class="rk">A palavra-ponte</div><div class="rv">Ambos citam <em>clareza</em> como o que ela gera. É o termo que aparece dos dois lados.</div></div>
+      <div class="row"><div class="rk">O desejo de continuidade</div><div class="rv">Alunos pela comunidade (96% sentem falta de grupo); audiência pelo acompanhamento (30% já pedem o formato longo, sem nem ter comprado).</div></div>
+    </div>
+    <div class="statement sm" style="margin-top:24px;">
+      <p class="eyebrow">Prova cruzada</p>
+      <p>Aluno: "intuição é construção de <em>repertório</em>." &nbsp;·&nbsp; Audiência: "seu olhar traz <em>embasamento e conhecimento</em>." A mesma frase, por ângulos diferentes.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 06 DIVERGEM -->
+<section>
+  <div class="wrap reveal">
+    <div class="sec-head"><div class="sec-num">06</div><h2>Onde as duas pesquisas divergem</h2></div>
+    <div class="rows">
+      <div class="row"><div class="rk">O resultado desejado</div><div class="rv">Alunos nomeiam <em>posicionamento e voz</em>, porque foi o que compraram. A audiência quer <em>crescimento e direção</em>; posicionamento é quase invisível para ela (14%).</div></div>
+      <div class="row"><div class="rk">A relação com tendência</div><div class="rv">Na audiência, repertório e tendência são a razão nº 1 de seguir (65%). Nos alunos, tendência é o método por trás do posicionamento, não o rótulo.</div></div>
+      <div class="row"><div class="rk">O primeiro passo</div><div class="rv">Audiência quer <em>intensivo curto online</em> (51%); alunos preferem presencial e comunidade.</div></div>
+    </div>
+    <p class="lead" style="margin-top:22px;max-width:820px;">Divergem sem se contradizer: cada grupo descreve o Jorge pela porta por onde entrou. Não é gente diferente, é a mesma lente JG vista de dois pontos.</p>
+  </div>
+</section>
+
+<!-- 07 SINTESE -->
+<section>
+  <div class="wrap reveal">
+    <div class="sec-head"><div class="sec-num">07</div><h2>A síntese</h2></div>
+    <div class="statement">
+      <p class="eyebrow">O que não muda, e o que muda</p>
+      <p>Em toda a evidência, o mecanismo é o mesmo: a <em>lente JG</em>, ler cultura e futuro. O que muda é a aplicação. Para o aluno, virou posicionamento. Para a audiência, é decisão e crescimento. Para áreas correlatas, é ler o próprio mercado.</p>
+    </div>
+    <p class="lead" style="margin-top:24px;max-width:820px;">Por isso a tese central não pode ser "posicionamento" (estreito demais, e a audiência não pede) nem "tendência" (mecanismo, não resultado). Ela precisa ser larga o bastante para conter todas as aplicações e específica o bastante para ser só do Jorge.</p>
+  </div>
+</section>
+
+<!-- 08 TESE -->
+<section>
+  <div class="wrap reveal">
+    <div class="sec-head"><div class="sec-num">08</div><h2>A tese central</h2></div>
+    <div class="statement" style="margin-bottom:26px;">
+      <p class="eyebrow">O território da marca</p>
+      <p>Você aprende a enxergar cultura e futuro como o Jorge enxerga, a <em>lente JG</em>, e usa isso para decidir a sua vida profissional: do posicionamento à carreira, ao produto, à leitura do seu mercado.</p>
+    </div>
+    <div class="cards3">
+      <div class="card">
+        <h4>Posicionamento é a prova</h4>
+        <p>É o resultado mais comprovado atualmente, pois foi o único produto vendido até então. A aplicação mais tangível da lente JG, a entrada, não o teto.</p>
+      </div>
+      <div class="card y">
+        <h4>Vale além da moda</h4>
+        <p>Marketing, branding, criação e áreas correlatas. Confirmado pelos 37% de alunos fora da moda e pelos pedidos cross-área da audiência.</p>
+      </div>
+      <div class="card t">
+        <h4>O que não pode ser copiado</h4>
+        <p>Um mecanismo único proprietário, validado por 20 anos de experiência e pela direção da WGSN na América Latina. O diferencial não é a promessa: é o repertório e a autoridade que a sustentam.</p>
+      </div>
+    </div>
+    <div class="statement sm" style="margin-top:26px;">
+      <p class="eyebrow">A confirmação que falta</p>
+      <p>Quando o aluno descreve o que mudou, ele diz "me posicionei melhor" ou "passei a pensar diferente sobre minhas decisões"? Os dados já apontam a <em>segunda</em>. O grupo focal confirma olho no olho, com a pergunta que força a escolha.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 09 CAMADAS -->
+<section>
+  <div class="wrap reveal">
+    <div class="sec-head"><div class="sec-num">09</div><h2>Uma tese, três camadas</h2></div>
+    <p class="sec-intro lead">A tese como espinha, posicionamento como prova e use case, e inteligência de tendência como base metodológica que sustenta o presente e o futuro.</p>
+    <div class="layers">
+      <div class="layer core">
+        <div><div class="ltag">Centro · a espinha</div><div class="lname">Ler cultura e futuro para decidir</div><span class="badge">Tese B</span></div>
+        <p>O mecanismo único, a lente JG. Ancora todo o ecossistema: conteúdo, intensivo, programa e o horizonte B2B.</p>
+      </div>
+      <div class="layer entry">
+        <div><div class="ltag">Entrada · a prova</div><div class="lname">Posicionamento</div></div>
+        <p>É o resultado mais comprovado atualmente, pois foi o único produto vendido até então. O caso de uso mais fácil de acreditar na página.</p>
+      </div>
+      <div class="layer horizon">
+        <div><div class="ltag">Horizonte · o futuro</div><div class="lname">Inteligência de tendência</div></div>
+        <p>Onde a lente JG sobe da escala do indivíduo para a da marca: relatório, Futuro Day, consultoria B2B.</p>
+      </div>
+    </div>
+    <div class="layerread">As três camadas partem do mesmo mecanismo. É ele que dá unidade ao ecossistema e evita que cada produto pareça um negócio solto.</div>
+  </div>
+</section>
+
+<!-- 10 MERCADO -->
+<section>
+  <div class="wrap reveal">
+    <div class="sec-head"><div class="sec-num">10</div><h2>O mercado é grande. O que o programa precisa é pequeno.</h2></div>
+    <div class="funnel">
+      <div class="tier t1">
+        <div class="ttag">O mercado guarda-chuva</div>
+        <div class="twoup">
+          <div class="u"><div class="un">~1,5 mi</div><div class="ul">profissionais formais na moda (até 8 mi com indiretos)</div></div>
+          <div class="u"><div class="un">+180 mil</div><div class="ul">empresas de marketing e comunicação · +457 mil profissionais na cadeia</div></div>
+        </div>
+      </div>
+      <div class="funnel-note">↓ todos consomem cultura e decidem com base em leitura de tendência ↓</div>
+      <div class="tier t2">
+        <div class="ttag">A fatia compradora do Jorge</div>
+        <div class="tbody">
+          <div class="tmain">Criativos, donos de marca, consultores, CMOs e profissionais de branding que valorizam leitura de cultura e têm orçamento. Centenas de milhares, não milhões.</div>
+          <div class="proof">O brasileiro paga por educação de especialista: infoproduto <b>R$10,6 bi</b> projetado p/ 2025, 20 mi+ compradores, 53% para habilidade profissional. Educação online <b>US$1,5 bi</b>, +22% ao ano.</div>
+        </div>
+      </div>
+      <div class="funnel-note">↓ e o que o programa realmente precisa ↓</div>
+      <div class="tier t3">
+        <div class="ttag">O que o programa precisa</div>
+        <div class="big">15 a 30 pessoas por ciclo</div>
+        <div class="sm">= R$90k a R$300k por ciclo (a R$6-10k). Não exige mercado grande: exige converter uma fração pequena da audiência.</div>
+      </div>
+    </div>
+    <div class="takeaway">Para um expert solo, a conta não é tamanho de mercado, é funil: audiência × conversão × ticket. O mercado é folgadamente suficiente para o programa.</div>
+    <p class="sources">Fontes: ABIT · Cortex / Mundo do Marketing · CENP / Novo Caged · CNDL / SPC Brasil · IMARC Group.</p>
+  </div>
+</section>
+
+<!-- 11 LANCAMENTO -->
+<section>
+  <div class="wrap reveal">
+    <div class="sec-head"><div class="sec-num">11</div><h2>O lançamento como prova</h2></div>
+    <p class="sec-intro lead">Um intensivo curto online que ensina a lente JG aplicada a uma decisão real do participante. É o produto de lançamento e o teste de fumaça da tese, ao mesmo tempo.</p>
+    <div class="cards3" style="margin-bottom:26px;">
+      <div class="card">
+        <h4>O formato</h4>
+        <p>Intensivo curto online que ensina a lente JG aplicada a uma decisão real. Atende os <strong>51%</strong> da audiência que pediram exatamente esse formato.</p>
+      </div>
+      <div class="card y">
+        <h4>A ponte</h4>
+        <p>Uma fatia genuína do programa de 6 meses: "enxergar uma vez" leva a "enxergar continuamente, comigo, à medida que a cultura muda". Não é isca, é a primeira dose.</p>
+      </div>
+      <div class="card t">
+        <h4>A dupla função</h4>
+        <p>Produto de curto prazo e, ao mesmo tempo, o teste que valida a tese com compradores reais, o voto que vale mais que qualquer enquete.</p>
+      </div>
+    </div>
+    <div class="statement">
+      <p class="eyebrow">Por que é seguro mover agora</p>
+      <p>O intensivo se constrói sobre o <em>mecanismo</em> (a lente JG), que é constante sob qualquer desfecho da pesquisa. Ensina a enxergar, não promete um resultado que a validação ainda pode ajustar. O comportamento de compra fecha os fundamentos.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fbrand">Catapulta de Ideias <span>×</span> Nath Freitas</div>
+    <div class="fnote">Uso exclusivo de Jorge Grimberg · JG Studio</div>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var els = document.querySelectorAll('.reveal');
+    if(!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      els.forEach(function(e){e.classList.add('in');});return;
+    }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }});
+    },{threshold:0.12});
+    els.forEach(function(e){io.observe(e);});
+  })();
+</script>
+</body>
+</html>
