@@ -62,7 +62,7 @@
   .status{font-family:"Space Mono",monospace;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;display:inline-flex;align-items:center;gap:8px;color:var(--muted);white-space:nowrap;}
   .status::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--muted);flex:none;}
   .status.andamento{color:var(--yellow-deep);} .status.andamento::before{background:var(--yellow);}
-  .status.entregue{color:var(--ink);} .status.entregue::before{background:var(--ink);}
+  .status.entregue{color:#1E5AA8;} .status.entregue::before{background:#1E5AA8;}
 
   .pd{width:7px;height:7px;border-radius:50%;flex:none;display:inline-block;}
   .pd.fundamentos{background:var(--ink);} .pd.arquitetura{background:var(--yellow-deep);}
@@ -154,18 +154,21 @@
 <!-- ============================================================= -->
 <script>
 const CLIENTE = {
-  nome: "NOME DO CLIENTE",
-  instagram: { url:"", seguidores:"" },
+  nome: "Laisse Moreira",
+  instagram: { url:"https://www.instagram.com/laissemoreiraconsultoria/", seguidores:"2.541" },
   pastaEntregas: "",
   faturamento12m: "",
-  inicio: "2026-00-00",
+  inicio: "2026-06-16",
   duracaoDias: 60,
-  atualizadoEm: "2026-00-00",
+  atualizadoEm: "2026-07-13",
 
   // login do gate JS (opcional — voce ja protege via hPanel)
   acesso: { usuario:"", senhaHash:"", senha:"", dica:"" },
 
-  objetivos: [],
+  objetivos: [
+    "Validar narrativa de oferta",
+    "Realizar primeiro lançamento da mentoria coletiva"
+  ],
 
   estrategicas: [
     { id:"diagnostico",       nome:"Diagnóstico",            resumo:"", status:"em-breve", recursos:[] },
@@ -173,7 +176,14 @@ const CLIENTE = {
     { id:"plano-estrategico", nome:"Plano Estratégico",      resumo:"", status:"em-breve", recursos:[] }
   ],
 
-  calls: [],
+  calls: [
+    { data:"2026-06-26",
+      temas:"Consultoria de marketing — desdobramento da narrativa de oferta e do lançamento.",
+      url:"https://tldv.io/app/meetings/6a3e7ed5e064b50013d85b7d" },
+    { data:"2026-06-16",
+      temas:"Call inicial da consultoria — diagnóstico e alinhamento.",
+      url:"https://tldv.io/app/meetings/6a3196221e43b40013a257a8" }
+  ],
   campanhas: [],
   relatoriosAtivo: false,
   relatorios: []

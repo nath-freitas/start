@@ -1,0 +1,4 @@
+Options -Indexes
+<FilesMatch "^\.ht">
+  Require all denied
+</FilesMatch>

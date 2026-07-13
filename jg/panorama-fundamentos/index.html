@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panorama dos Fundamentos · Jorge Grimberg</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#EBE1CD;
+    --paper:#F8F3E7;
+    --ink:#16130E;
+    --ink-soft:#3A352B;
+    --muted:#736A57;
+    --line:#D6C8AB;
+    --yellow:#FFC21F;
+    --yellow-deep:#E0A400;
+    --taupe:#7A6034;
+    --maxw:1120px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Inter",system-ui,sans-serif;
+    font-size:17px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px;}
+
+  /* ---- type ---- */
+  h1,h2,h3,h4{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;line-height:1.05;margin:0;letter-spacing:-0.01em;}
+  .eyebrow{font-family:"Space Mono",monospace;font-size:.72rem;text-transform:uppercase;letter-spacing:.22em;color:var(--muted);margin:0;}
+  p{margin:0 0 1rem;}
+  .lead{font-size:1.12rem;color:var(--ink-soft);}
+  strong{font-weight:600;color:var(--ink);}
+
+  /* ---- header ---- */
+  .top{padding:30px 0 0;}
+  .brandrow{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;}
+  .brandmark{font-family:"Space Mono",monospace;font-weight:700;letter-spacing:.18em;font-size:.8rem;text-transform:uppercase;}
+  .brandmark span{color:var(--yellow-deep);}
+  .doctag{font-family:"Space Mono",monospace;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);}
+
+  .hero{padding:48px 0 36px;border-bottom:2px solid var(--ink);}
+  .hero h1{font-size:clamp(2.6rem,7vw,5rem);font-weight:800;}
+  .hero h1 em{font-style:normal;background:var(--yellow);padding:0 .12em;box-decoration-break:clone;-webkit-box-decoration-break:clone;}
+  .hero .sub{margin-top:22px;display:flex;gap:26px;flex-wrap:wrap;align-items:baseline;}
+  .hero .client{font-family:"Bricolage Grotesque";font-weight:600;font-size:1.15rem;}
+  .hero .client b{color:var(--ink);}
+  .hero .meta{font-family:"Space Mono",monospace;font-size:.74rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;}
+
+  /* ---- section scaffolding ---- */
+  section{padding:64px 0;border-bottom:1px solid var(--line);}
+  .sec-head{display:flex;align-items:baseline;gap:18px;margin-bottom:30px;}
+  .sec-num{font-family:"Space Mono",monospace;font-size:.8rem;font-weight:700;color:var(--yellow-deep);letter-spacing:.1em;padding-top:.35em;}
+  .sec-head h2{font-size:clamp(1.7rem,3.6vw,2.5rem);}
+  .sec-intro{max-width:760px;margin-bottom:14px;}
+
+  /* ---- venn ---- */
+  .venn-stage{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;}
+  .venn-stage svg{width:100%;height:auto;display:block;}
+  .venn-side .ob{background:var(--ink);color:var(--paper);border-radius:16px;padding:26px 24px;}
+  .venn-side .ob .eyebrow{color:var(--yellow);}
+  .venn-side .ob h3{color:var(--paper);font-size:1.35rem;margin:8px 0 12px;}
+  .venn-side .ob p{color:#E7DECB;margin:0;font-size:1.02rem;}
+
+  .circle-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:34px;}
+  .ccard{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:22px 20px;border-top:4px solid var(--c,var(--ink));}
+  .ccard.diff{--c:var(--ink);}
+  .ccard.pers{--c:var(--yellow-deep);}
+  .ccard.merc{--c:var(--taupe);}
+  .ccard h4{font-size:1.05rem;margin-bottom:12px;display:flex;align-items:center;gap:9px;}
+  .ccard h4::before{content:"";width:12px;height:12px;border-radius:50%;background:var(--c);display:inline-block;flex:none;}
+  .ccard ul{margin:0;padding-left:0;list-style:none;}
+  .ccard li{position:relative;padding-left:18px;margin-bottom:9px;font-size:.96rem;color:var(--ink-soft);line-height:1.5;}
+  .ccard li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;background:var(--c);border-radius:50%;}
+
+  /* ---- big statement ---- */
+  .statement{background:var(--ink);color:var(--paper);border-radius:20px;padding:46px 44px;}
+  .statement .eyebrow{color:var(--yellow);margin-bottom:16px;}
+  .statement p{font-family:"Bricolage Grotesque";font-weight:600;font-size:clamp(1.4rem,2.8vw,2rem);line-height:1.28;color:var(--paper);margin:0;letter-spacing:-0.01em;}
+  .statement p em{font-style:normal;color:var(--yellow);}
+
+  /* ---- persona ---- */
+  .persona-grid{display:grid;grid-template-columns:1.3fr .7fr;gap:34px;align-items:start;}
+  .persona-body p{color:var(--ink-soft);}
+  .persona-aside{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:24px;}
+  .persona-aside .eyebrow{margin-bottom:14px;}
+  .worlds{list-style:none;margin:0;padding:0;counter-reset:w;}
+  .worlds li{counter-increment:w;position:relative;padding:11px 0 11px 38px;border-bottom:1px dashed var(--line);font-size:.95rem;color:var(--ink-soft);}
+  .worlds li:last-child{border-bottom:none;}
+  .worlds li::before{content:counter(w);position:absolute;left:0;top:9px;width:24px;height:24px;background:var(--yellow);color:var(--ink);font-family:"Space Mono",monospace;font-weight:700;font-size:.78rem;border-radius:50%;display:grid;place-items:center;}
+  .not{margin-top:18px;font-size:.9rem;color:var(--muted);border-left:3px solid var(--ink);padding-left:12px;}
+
+  /* ---- empathy ---- */
+  .empathy{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .ecard{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px;}
+  .ecard h4{font-family:"Space Mono",monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--yellow-deep);font-weight:700;margin-bottom:10px;}
+  .ecard p{margin:0;font-size:.95rem;color:var(--ink-soft);line-height:1.5;}
+  .ecard.accent{background:var(--ink);}
+  .ecard.accent h4{color:var(--yellow);}
+  .ecard.accent p{color:#E7DECB;}
+
+  /* ---- semantic ---- */
+  .sem-group{margin-bottom:22px;}
+  .sem-group .glabel{font-family:"Space Mono",monospace;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:11px;}
+  .chips{display:flex;flex-wrap:wrap;gap:9px;}
+  .chip{background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:.92rem;color:var(--ink);}
+  .chip.hot{background:var(--yellow);border-color:var(--yellow-deep);font-weight:500;}
+  .chip.voice{font-style:italic;background:transparent;border-style:dashed;color:var(--ink-soft);}
+
+  /* ---- journey ---- */
+  .journey{display:grid;grid-template-columns:repeat(3,1fr);gap:0;position:relative;}
+  .stage{background:var(--paper);border:1px solid var(--line);padding:26px 22px;position:relative;}
+  .stage:nth-child(1){border-radius:14px 0 0 14px;}
+  .stage:nth-child(3){border-radius:0 14px 14px 0;}
+  .stage:not(:first-child){border-left:none;}
+  .stage .stnum{font-family:"Space Mono",monospace;font-size:.72rem;letter-spacing:.12em;color:var(--yellow-deep);font-weight:700;}
+  .stage h4{font-size:1.18rem;margin:8px 0 12px;}
+  .stage .sit{font-size:.93rem;color:var(--ink-soft);margin-bottom:18px;}
+  .stage .prodlabel{font-family:"Space Mono",monospace;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+  .stage .prod{background:var(--ink);color:var(--paper);border-radius:10px;padding:11px 13px;font-family:"Bricolage Grotesque";font-weight:600;font-size:1rem;margin:5px 0 12px;}
+  .stage .pay{font-size:.9rem;color:var(--ink-soft);border-top:1px dashed var(--line);padding-top:12px;}
+  .stage .arrow{position:absolute;right:-13px;top:50%;transform:translateY(-50%);width:26px;height:26px;background:var(--yellow);border-radius:50%;display:grid;place-items:center;z-index:3;color:var(--ink);font-weight:700;font-size:.9rem;}
+  .stage:last-child .arrow{display:none;}
+  .journey-read{margin-top:22px;background:var(--yellow);border-radius:12px;padding:18px 22px;font-family:"Bricolage Grotesque";font-weight:600;font-size:1.08rem;color:var(--ink);}
+
+  /* ---- mechanism ---- */
+  .layers{display:flex;flex-direction:column;gap:14px;margin-bottom:40px;}
+  .layer{display:grid;grid-template-columns:64px 1fr;gap:20px;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px 22px;}
+  .layer .lnum{font-family:"Bricolage Grotesque";font-weight:800;font-size:2.2rem;color:var(--yellow-deep);text-align:center;line-height:1;}
+  .layer h4{font-size:1.18rem;margin-bottom:5px;}
+  .layer p{margin:0;font-size:.96rem;color:var(--ink-soft);}
+
+  .names{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:42px;}
+  .ncard{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px 22px;position:relative;}
+  .ncard.flag{border:2px solid var(--ink);}
+  .ncard .nname{font-family:"Bricolage Grotesque";font-weight:700;font-size:1.3rem;margin-bottom:6px;}
+  .ncard .ndesc{font-size:.92rem;color:var(--ink-soft);margin:0;}
+  .ncard .badge{position:absolute;top:16px;right:16px;background:var(--yellow);color:var(--ink);font-family:"Space Mono",monospace;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 9px;border-radius:999px;}
+  .ncard .rate{margin-top:12px;font-family:"Space Mono",monospace;font-size:.68rem;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;}
+
+  .ph{background:var(--yellow);color:var(--ink);font-weight:600;padding:0 .3em;border-radius:3px;font-family:"Bricolage Grotesque";}
+
+  .copyblock{margin-bottom:18px;border:1px solid var(--line);border-radius:14px;overflow:hidden;}
+  .copyblock .ch{background:var(--ink);color:var(--paper);font-family:"Space Mono",monospace;font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;padding:11px 20px;}
+  .copyblock .ch b{color:var(--yellow);}
+  .copyblock .cb{background:var(--paper);padding:22px 24px;}
+  .copyblock .cb p{margin:0;color:var(--ink-soft);}
+  .copyblock.big .cb p{font-size:.99rem;}
+  .copyblock.simple .cb p{font-size:1.05rem;color:var(--ink);}
+  .copyblock.elevator .cb{background:var(--ink);}
+  .copyblock.elevator .cb p{font-family:"Bricolage Grotesque";font-weight:600;font-size:clamp(1.25rem,2.6vw,1.7rem);color:var(--paper);line-height:1.3;}
+  .copyblock.elevator .cb p em{font-style:normal;color:var(--yellow);}
+
+  /* ---- footer ---- */
+  footer{background:var(--ink);color:#C9BCA0;padding:40px 0;border-bottom:none;}
+  footer .wrap{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;align-items:center;}
+  footer .fbrand{font-family:"Space Mono",monospace;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--paper);}
+  footer .fbrand span{color:var(--yellow);}
+  footer .fnote{font-family:"Space Mono",monospace;font-size:.68rem;letter-spacing:.08em;color:#9A8E76;text-transform:uppercase;}
+
+  /* ---- reveal ---- */
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease;}
+  .reveal.in{opacity:1;transform:none;}
+
+  /* ---- responsive ---- */
+  @media(max-width:880px){
+    .venn-stage{grid-template-columns:1fr;gap:26px;}
+    .venn-stage svg{max-width:460px;margin:0 auto;}
+    .circle-cards{grid-template-columns:1fr;}
+    .persona-grid{grid-template-columns:1fr;gap:24px;}
+    .empathy{grid-template-columns:1fr;}
+    .journey{grid-template-columns:1fr;}
+    .stage{border-radius:14px!important;border-left:1px solid var(--line)!important;margin-bottom:0;}
+    .stage:not(:last-child){border-bottom:none;}
+    .stage .arrow{right:50%;top:auto;bottom:-13px;transform:translateX(50%) rotate(90deg);}
+    .stage:last-child{border-radius:14px!important;}
+    .names{grid-template-columns:1fr;}
+    .statement{padding:32px 26px;}
+  }
+  @media(max-width:520px){
+    body{font-size:16px;}
+    .wrap{padding:0 18px;}
+    .layer{grid-template-columns:44px 1fr;gap:14px;padding:18px;}
+    .layer .lnum{font-size:1.7rem;}
+    .statement{padding:28px 22px;}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .reveal{opacity:1;transform:none;transition:none;}
+    html{scroll-behavior:auto;}
+  }
+  :focus-visible{outline:3px solid var(--yellow-deep);outline-offset:2px;}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="wrap brandrow">
+    <div class="brandmark">Catapulta de Ideias <span>×</span> Nath Freitas</div>
+    <div class="doctag">Documento Estratégico · Fundamentos</div>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Pilar 1, Fundamentos de Mercado</p>
+    <h1 style="margin-top:18px;">Panorama dos <em>Fundamentos</em></h1>
+    <div class="sub">
+      <div class="client">JG Studio · <b>Jorge Grimberg</b></div>
+      <div class="meta">Persona · Posicionamento · Mecanismo · Produtos</div>
+    </div>
+  </div>
+</header>
+
+<!-- 01 VENN -->
+<section>
+  <div class="wrap reveal">
+    <div class="sec-head">
+      <div class="sec-num">01</div>
+      <h2>O cruzamento que define o oceano azul</h2>
+    </div>
+    <p class="sec-intro lead">Três forças sustentam a marca: o que só o Jorge tem, quem ele atende e o que o mercado já oferece. No ponto onde as três se encontram está o posicionamento, o lugar onde ele não tem concorrente direto.</p>
+
+    <div class="venn-stage">
+      <svg viewBox="0 0 620 560" role="img" aria-labelledby="venn-t venn-d">
+        <title id="venn-t">Diagrama de três círculos sobrepostos</title>
+        <desc id="venn-d">Os círculos Diferenciais do Jorge, Persona e Mercado se cruzam. A interseção central é o oceano azul.</desc>
+        <circle cx="240" cy="212" r="168" fill="rgba(22,19,14,0.08)" stroke="#16130E" stroke-width="1.6"/>
+        <circle cx="380" cy="212" r="168" fill="rgba(255,194,31,0.22)" stroke="#E0A400" stroke-width="1.6"/>
+        <circle cx="310" cy="342" r="168" fill="rgba(122,96,52,0.13)" stroke="#7A6034" stroke-width="1.6"/>
+        <text x="240" y="78" text-anchor="middle" font-family="Space Mono, monospace" font-size="15" font-weight="700" fill="#16130E" letter-spacing="1">DIFERENCIAIS</text>
+        <text x="380" y="78" text-anchor="middle" font-family="Space Mono, monospace" font-size="15" font-weight="700" fill="#9A7400" letter-spacing="1">PERSONA</text>
+        <text x="310" y="528" text-anchor="middle" font-family="Space Mono, monospace" font-size="15" font-weight="700" fill="#7A6034" letter-spacing="1">MERCADO</text>
+        <g>
+          <rect x="232" y="252" width="156" height="46" rx="23" fill="#FFC21F" stroke="#16130E" stroke-width="1.6"/>
+          <text x="310" y="275" text-anchor="middle" dominant-baseline="middle" font-family="Space Mono, monospace" font-size="13.5" font-weight="700" fill="#16130E" letter-spacing="1.2">OCEANO AZUL</text>
+        </g>
+      </svg>
+
+      <div class="venn-side">
+        <div class="ob">
+          <p class="eyebrow">A interseção</p>
+          <h3>O posicionamento do Jorge</h3>
+          <p>O Jorge é o único que ensina a ler cultura e futuro para decidir a própria trajetória profissional, com vinte anos de repertório verificável, incluindo a direção da WGSN na América Latina. O mercado ensina o método como formação técnica ou vende pesquisa para organizações. O Jorge ensina a pessoa a decidir a própria vida.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="circle-cards">
+      <div class="ccard diff">
+        <h4>Diferenciais do Jorge</h4>
+        <ul>
+          <li>Vinte anos de mercado como pesquisador de tendências, jornalista de moda e mentor.</li>
+          <li>Dez anos na WGSN, com passagem pela direção da América Latina.</li>
+          <li>Passagens por Business of Fashion e Vogue America.</li>
+          <li>Mestre em design, arquitetura e urbanismo, atua entre estratégia, conteúdo, branding e direção criativa.</li>
+          <li>Viveu ele mesmo a trajetória multipotencial que ensina, passando por jornalismo, arquitetura, moda e pesquisa.</li>
+        </ul>
+      </div>
+      <div class="ccard pers">
+        <h4>A persona</h4>
+        <ul>
+          <li>Profissional multipotencial, com trajetória entre carreira e empreendedorismo.</li>
+          <li>Acumulou repertório real e disperso, e não consegue mais explicar o que faz numa frase.</li>
+          <li>Teme parecer disperso demais para o mercado, e teme igualmente ter que esconder partes de si.</li>
+          <li>Quer permissão para ser inteiro e ainda ser legível e vendável.</li>
+          <li>A trava real não é falta de conteúdo, é a decisão sobre qual caminho seguir, seja carreira ou marca própria.</li>
+        </ul>
+      </div>
+      <div class="ccard merc">
+        <h4>O mercado</h4>
+        <ul>
+          <li>Moda, marketing e branding somam mais de um milhão e novecentas mil pessoas no Brasil.</li>
+          <li>Box1824 e Matt Klein vendem pesquisa de tendência para organizações e executivos, não para o indivíduo.</li>
+          <li>Escolas como Senac, FAAP, IED e ESPM ensinam coolhunting como formação técnica, com diploma.</li>
+          <li>Made in Future é a referência mais próxima em perfil, mas mantém o ângulo institucional, sem aplicar a leitura à decisão de carreira do indivíduo.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 OCEANO AZUL -->
+<section>
+  <div class="wrap reveal">
+    <div class="sec-head">
+      <div class="sec-num">02</div>
+      <h2>Oceano azul</h2>
+    </div>
+    <div class="statement">
+      <p class="eyebrow">O território da marca</p>
+      <p>Ler cultura e futuro não é um exercício intelectual que fica na teoria. É um <em>método de decisão</em>. O Jorge é quem transforma repertório disperso em <em>trajetória profissional com clareza e autenticidade</em>, ensinado por quem viveu vinte anos lendo tendência para o mercado, para profissionais multipotenciais que precisam decidir entre carreira e marca própria.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 03 PERSONA -->
+<section>
+  <div class="wrap reveal">
+    <div class="sec-head">
+      <div class="sec-num">03</div>
+      <h2>A persona</h2>
+    </div>
+    <div class="persona-grid">
+      <div class="persona-body">
+        <p>O recorte é o <strong>profissional multipotencial com desafios de trajetória profissional</strong>, sem subnichar por setor. A moda é o núcleo numérico das duas pesquisas, mas o que une o público não é a indústria, é o estágio psicológico, alguém que acumulou repertório real, múltiplas habilidades e interesses, e não consegue mais organizar isso numa direção só. Trajetória profissional é o termo certo aqui, porque a decisão que trava essa pessoa nem sempre é sobre emprego ou carreira convencional, muitas vezes é sobre abrir a própria marca, montar um negócio autoral ou decidir entre os dois caminhos.</p>
+        <p>Está atravessando um momento de virada, mudança de cidade, fim de sociedade, saída de emprego, burnout, mudança de mercado, ou a sensação de que o caminho que dava certo parou de fazer sentido. Aparece tanto em quem está no começo de carreira quanto em quem já tem quinze ou vinte anos de estrada, não é uma faixa de idade, é um estágio.</p>
+        <p>O que a trava não é falta de repertório. É a dúvida sobre qual direção seguir, para o próprio trabalho ou para um projeto autoral que já toca. O que essa pessoa quer, na palavra dela, é <strong>clareza para decidir sem precisar esconder nenhuma parte de quem ela é</strong>.</p>
+      </div>
+      <aside class="persona-aside">
+        <p class="eyebrow">Mundos de intenção</p>
+        <ul class="worlds">
+          <li>Carreira tradicional em transição ou reposicionamento.</li>
+          <li>Marca ou negócio autoral, começando ou amadurecendo.</li>
+          <li>Migração entre áreas criativas e técnicas.</li>
+          <li>Consolidação de um projeto disperso em direção única.</li>
+        </ul>
+        <p class="not">Ela não é alguém sem repertório buscando uma profissão do zero, nem alguém que já tem um ofício estreito e definido buscando apenas tática de marketing. É alguém com repertório amplo demais para caber numa frase só.</p>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- 04 EMPATIA -->
+<section>
+  <div class="wrap reveal">
+    <div class="sec-head">
+      <div class="sec-num">04</div>
+      <h2>Mapa de empatia</h2>
+    </div>
+    <div class="empathy">
+      <div class="ecard">
+        <h4>Pensa e sente</h4>
+        <p>"Tenho muita coisa dentro de mim e não sei como organizar isso numa direção só." Será que dá para eu ser tudo isso e ainda ser levada a sério. Medo de estar dispersa demais.</p>
+      </div>
+      <div class="ecard">
+        <h4>Vê</h4>
+        <p>Colegas com posicionamento estreito e sucesso de fórmula. Influenciadores e gurus de hustle culture vendendo de forma agressiva. Mercado saturado de conteúdo diário.</p>
+      </div>
+      <div class="ecard">
+        <h4>Ouve</h4>
+        <p>"Você precisa se especializar." "Escolhe um nicho." Cobranças de constância e volume de conteúdo. E o oposto, gente admirando justamente a mistura de repertórios.</p>
+      </div>
+      <div class="ecard">
+        <h4>Fala e faz</h4>
+        <p>Tenta explicar o que faz e sente que fica cada vez mais difícil. Testa vários formatos e projetos paralelos. Evita se ver gravada ou exposta. Adia postar por não saber qual direção comunicar.</p>
+      </div>
+      <div class="ecard accent">
+        <h4>Dores</h4>
+        <p>Dificuldade de nomear o que faz numa frase. Sente que precisa escolher uma coisa só e isso a mutila. Trava na hora de decidir e agir, mesmo sabendo o que deveria fazer.</p>
+      </div>
+      <div class="ecard accent">
+        <h4>Ganhos</h4>
+        <p>Organizar o repertório sem abrir mão de nenhuma parte de si. Entender para onde a cultura e o mercado estão indo. Decidir com coragem e clareza. Comunicar isso com autenticidade e ser reconhecida e paga por isso.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 CAMPO SEMÂNTICO -->
+<section>
+  <div class="wrap reveal">
+    <div class="sec-head">
+      <div class="sec-num">05</div>
+      <h2>Campo semântico</h2>
+    </div>
+    <p class="sec-intro">Palavras e expressões extraídas literalmente das pesquisas. É o vocabulário que deve voltar na copy, na voz de quem a marca atende.</p>
+
+    <div class="sem-group">
+      <div class="glabel">Liberdade e vida</div>
+      <div class="chips">
+        <span class="chip hot">vida nômade</span>
+        <span class="chip">liberdade</span>
+        <span class="chip">estilo de vida</span>
+        <span class="chip">presença</span>
+        <span class="chip">autenticidade</span>
+      </div>
+    </div>
+    <div class="sem-group">
+      <div class="glabel">Dispersão e organização</div>
+      <div class="chips">
+        <span class="chip hot">multipotencial</span>
+        <span class="chip">multidisciplinar</span>
+        <span class="chip">disperso</span>
+        <span class="chip">organizar</span>
+        <span class="chip">enxergar o mapa</span>
+      </div>
+    </div>
+    <div class="sem-group">
+      <div class="glabel">Coragem e ação</div>
+      <div class="chips">
+        <span class="chip hot">coragem</span>
+        <span class="chip">travar</span>
+        <span class="chip">medo de me expor</span>
+        <span class="chip">tomar atitude</span>
+      </div>
+    </div>
+    <div class="sem-group">
+      <div class="glabel">Mudança e decisão</div>
+      <div class="chips">
+        <span class="chip">ponto de virada</span>
+        <span class="chip">reposicionar</span>
+        <span class="chip">decidir</span>
+        <span class="chip">mudar de rota</span>
+        <span class="chip">mudar de carreira</span>
+      </div>
+    </div>
+    <div class="sem-group">
+      <div class="glabel">Desejo do público de conteúdo</div>
+      <div class="chips">
+        <span class="chip hot">crescer</span>
+        <span class="chip">clareza e direção</span>
+        <span class="chip">repertório e conhecimento</span>
+        <span class="chip">pensar fora da caixa</span>
+      </div>
+    </div>
+    <div class="sem-group">
+      <div class="glabel">Antimodelo</div>
+      <div class="chips">
+        <span class="chip">não sou uma máquina de vendas</span>
+        <span class="chip">fórmula</span>
+      </div>
+    </div>
+    <div class="sem-group">
+      <div class="glabel">Transformação — voz do aluno</div>
+      <div class="chips">
+        <span class="chip voice">intuição é construção de repertório</span>
+        <span class="chip voice">treinei meu olhar</span>
+        <span class="chip voice">passei a pensar diferente sobre as minhas decisões</span>
+        <span class="chip voice">me fez parar de copiar os outros e confiar no meu olhar</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 JORNADA + MATRIZ -->
+<section>
+  <div class="wrap reveal">
+    <div class="sec-head">
+      <div class="sec-num">06</div>
+      <h2>Jornada de crescimento e matriz de produtos</h2>
+    </div>
+    <p class="sec-intro">A persona cresce em três estágios, e cada estágio pede um produto. Essa é a matriz que saiu das pesquisas.</p>
+
+    <div class="journey">
+      <div class="stage">
+        <div class="stnum">ESTÁGIO 01</div>
+        <h4>Dispersão</h4>
+        <p class="sit">Testando formatos, sem direção clara, público de conteúdo que ainda não comprou.</p>
+        <div class="prodlabel">Produto</div>
+        <div class="prod">Intensivo Online</div>
+        <p class="pay">Ensina a lente JG aplicada a uma decisão real. Sai com o repertório organizado e uma decisão em mãos.</p>
+        <div class="arrow" aria-hidden="true">→</div>
+      </div>
+      <div class="stage">
+        <div class="stnum">ESTÁGIO 02</div>
+        <h4>Direção em construção</h4>
+        <p class="sit">Já decidiu um caminho, mas precisa sustentar e evoluir com continuidade, tem projeto ou negócio rodando.</p>
+        <div class="prodlabel">Produto</div>
+        <div class="prod">Programa Contínuo, ciclos de seis meses</div>
+        <p class="pay">Aulas gravadas mais encontro semanal ao vivo, com tema cultural renovado a cada ciclo. Continua decidindo e se posicionando à medida que a cultura muda.</p>
+        <div class="arrow" aria-hidden="true">→</div>
+      </div>
+      <div class="stage">
+        <div class="stnum">ESTÁGIO 03</div>
+        <h4>Maturidade e profundidade</h4>
+        <p class="sit">Já domina a própria trajetória, quer resolver uma questão específica e complexa com atenção direta.</p>
+        <div class="prodlabel">Produto</div>
+        <div class="prod">Mentoria Individual</div>
+        <p class="pay">Cinco encontros, atenção direta do Jorge para resolver com profundidade uma questão pontual de carreira ou de projeto.</p>
+      </div>
+    </div>
+    <div class="journey-read">O mercado mapeado cobre pesquisa de tendência institucional para marcas, ou ensina o método como formação técnica. Só o Jorge cobre a jornada inteira do indivíduo, da dispersão à decisão com clareza.</div>
+  </div>
+</section>
+
+<!-- 07 MECANISMO -->
+<section style="border-bottom:none;">
+  <div class="wrap reveal">
+    <div class="sec-head">
+      <div class="sec-num">07</div>
+      <h2>Mecanismo único</h2>
+    </div>
+    <p class="sec-intro">Um sistema de quatro camadas, a jornada de quem aprende. Cada camada é algo que a própria pessoa passa a saber fazer, e desbloqueia o estágio seguinte.</p>
+
+    <div class="layers">
+      <div class="layer">
+        <div class="lnum">1</div>
+        <div>
+          <h4>Organizar o repertório</h4>
+          <p>Mapear e organizar as peças soltas de habilidades, formações e experiências, até enxergar um retrato legível de si mesma. Desbloqueia, passa a saber suas próprias potencialidades.</p>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="lnum">2</div>
+        <div>
+          <h4>Ler os movimentos</h4>
+          <p>Observar cultura e mercado com critério, como framework praticável, identificando o que está mudando e o que importa. Desbloqueia, passa a entender mercado, ler cultura, ler movimentos.</p>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="lnum">3</div>
+        <div>
+          <h4>Cruzar potencial e oportunidade</h4>
+          <p>Cruzar o repertório organizado com os movimentos identificados, achando onde a oportunidade externa encontra a força autêntica dela. Desbloqueia, alinha uma oportunidade de tendência com uma potencialidade individual.</p>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="lnum">4</div>
+        <div>
+          <h4>Decidir e se posicionar</h4>
+          <p>Transformar esse alinhamento em decisão concreta, com coragem, e comunicar isso ao mercado sem suprimir a autenticidade. Desbloqueia, decide os próprios caminhos profissionais com clareza e autenticidade.</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="eyebrow" style="margin-bottom:16px;">A copy do mecanismo</p>
+
+    <div class="copyblock big">
+      <div class="ch">Definição completa · <b>Lente JG</b></div>
+      <div class="cb">
+        <p>A <span class="ph">Lente JG</span> é o método pelo qual um profissional multipotencial transforma repertório disperso em trajetória profissional com clareza. A primeira camada é organizar o repertório, mapear as peças soltas de habilidades e experiências até enxergar um retrato legível de si mesma. A segunda camada é ler os movimentos, observar cultura e mercado com critério, identificando o que está mudando e o que importa. A terceira camada é cruzar potencial e oportunidade, encontrar onde os movimentos identificados encontram a força autêntica de quem está decidindo. A quarta camada é decidir e se posicionar, transformar esse alinhamento em decisão concreta, com coragem, e comunicar isso ao mercado sem suprimir a autenticidade. O resultado não é só entender o próprio repertório. É decidir a própria trajetória profissional, seja carreira ou marca própria, por uma direção que não abre mão de quem a pessoa é. A <span class="ph">Lente JG</span> é o método completo, do repertório disperso à decisão com clareza.</p>
+      </div>
+    </div>
+
+    <div class="copyblock simple">
+      <div class="ch">Definição simples</div>
+      <div class="cb">
+        <p>Ler o mundo para decidir sua própria trajetória.</p>
+      </div>
+    </div>
+
+    <div class="copyblock elevator">
+      <div class="ch">Elevator pitch</div>
+      <div class="cb">
+        <p>A Lente JG ensina a organizar seu repertório, ler os movimentos de cultura e mercado, cruzar isso com o seu potencial, e <em>decidir seus próximos passos profissionais</em> com clareza e autenticidade.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fbrand">Catapulta de Ideias <span>×</span> Nath Freitas</div>
+    <div class="fnote">Uso exclusivo de Jorge Grimberg · JG Studio</div>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var els = document.querySelectorAll('.reveal');
+    if(!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      els.forEach(function(e){e.classList.add('in');});
+      return;
+    }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    },{threshold:0.12});
+    els.forEach(function(e){io.observe(e);});
+  })();
+</script>
+</body>
+</html>

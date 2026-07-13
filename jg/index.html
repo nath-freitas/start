@@ -62,7 +62,7 @@
   .status{font-family:"Space Mono",monospace;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;display:inline-flex;align-items:center;gap:8px;color:var(--muted);white-space:nowrap;}
   .status::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--muted);flex:none;}
   .status.andamento{color:var(--yellow-deep);} .status.andamento::before{background:var(--yellow);}
-  .status.entregue{color:var(--ink);} .status.entregue::before{background:var(--ink);}
+  .status.entregue{color:#1E5AA8;} .status.entregue::before{background:#1E5AA8;}
 
   .pd{width:7px;height:7px;border-radius:50%;flex:none;display:inline-block;}
   .pd.fundamentos{background:var(--ink);} .pd.arquitetura{background:var(--yellow-deep);}
@@ -163,12 +163,7 @@ const CLIENTE = {
   atualizadoEm: "2026-06-30",
 
   // ----- ACESSO (login) — troque a senha e remova "senha" em produção -----
-  acesso: {
-    usuario: "jorge",
-    senhaHash: "e65434b2df9d5289831a7632575dff8ad6b1f31f8329a30cf7342ddda7d5d030", // = "grimberg2026"
-    senha: "grimberg2026",
-    dica: ""
-  },
+  acesso: { usuario: "", senhaHash: "", senha: "", dica: "" },
 
   objetivos: [
     "Clareza do *modelo de negócio*",
@@ -180,17 +175,23 @@ const CLIENTE = {
   // tipo: documento | gravacao | pdf | planilha | apresentacao | link
   estrategicas: [
     { id:"diagnostico", nome:"Diagnóstico", resumo:"Leitura do ponto de partida e parecer sobre a tese central.",
-      status:"em-andamento", recursos:[
+      status:"entregue", recursos:[
         { titulo:"Análise e Parecer sobre a tese central", tipo:"documento", url:"https://cliente.catapultadeideias.com.br/jg/parecer-tese" }
       ] },
     { id:"fundamentos", nome:"Revisão de Fundamentos", resumo:"Clareza do modelo de negócio, persona, posicionamento e matriz de produtos.",
-      status:"em-breve", recursos:[] },
+      status:"em-andamento", recursos:[
+        { titulo:"Panorama de Fundamentos", tipo:"documento", url:"https://cliente.catapultadeideias.com.br/jg/panorama-fundamentos" },
+        { titulo:"Business Model", tipo:"link", url:"https://cliente.catapultadeideias.com.br/jg/business-model" }
+      ] },
     { id:"plano-estrategico", nome:"Plano Estratégico", resumo:"Macroprocessos de marketing e vendas e o lançamento de curto prazo.",
       status:"em-breve", recursos:[] }
   ],
 
   // ----- BIBLIOTECA DE CALLS (aparece quando há calls) -----
   calls: [
+    { data:"2026-07-06",
+      temas:"Panorama de fundamentos: validação de posicionamento, persona e mecanismo.",
+      url:"https://tldv.io/app/meetings/6a4c0933491ee6001359445f" },
     { data:"2026-06-22",
       temas:"Diagnóstico inicial da pesquisa de alunos e do plano de negócios. Levantamento de hipóteses para a tese central do negócio.",
       url:"https://tldv.io/app/meetings/6a39943b6c8e2f00131b135c/" }

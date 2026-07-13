@@ -1,0 +1,9 @@
+AuthType Basic
+AuthName "Central de Entregas — acesso restrito"
+AuthUserFile "/home/u346131448/public_html/cliente/jg/.htpasswd"
+Require valid-user
+
+# nunca deixar baixar arquivos de config/senha
+<FilesMatch "^\.ht">
+  Require all denied
+</FilesMatch>
