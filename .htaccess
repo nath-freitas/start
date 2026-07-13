@@ -1,0 +1,7 @@
+AuthType Basic
+AuthName "Central de Entregas — acesso restrito"
+AuthUserFile "/home/u346131448/public_html/cliente/laisse/.htpasswd"
+Require valid-user
+<FilesMatch "^\.ht">
+  Require all denied
+</FilesMatch>

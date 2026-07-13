@@ -62,7 +62,7 @@
   .status{font-family:"Space Mono",monospace;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;display:inline-flex;align-items:center;gap:8px;color:var(--muted);white-space:nowrap;}
   .status::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--muted);flex:none;}
   .status.andamento{color:var(--yellow-deep);} .status.andamento::before{background:var(--yellow);}
-  .status.entregue{color:var(--ink);} .status.entregue::before{background:var(--ink);}
+  .status.entregue{color:#1E5AA8;} .status.entregue::before{background:#1E5AA8;}
 
   .pd{width:7px;height:7px;border-radius:50%;flex:none;display:inline-block;}
   .pd.fundamentos{background:var(--ink);} .pd.arquitetura{background:var(--yellow-deep);}
@@ -154,58 +154,39 @@
 <!-- ============================================================= -->
 <script>
 const CLIENTE = {
-  nome: "Jorge Grimberg",
-  instagram: { url:"https://www.instagram.com/jorgegrimberg/", seguidores:"203.991" },
-  pastaEntregas: "https://drive.google.com/drive/folders/1Sxv7ft09ADDYiSASllOIy9ihDmrAAaCK",
-  faturamento12m: "R$ 750 mil",
-  inicio: "2026-06-22",
+  nome: "Laisse Moreira",
+  instagram: { url:"https://www.instagram.com/laissemoreiraconsultoria/", seguidores:"2.541" },
+  pastaEntregas: "",
+  faturamento12m: "",
+  inicio: "2026-06-16",
   duracaoDias: 60,
-  atualizadoEm: "2026-06-30",
+  atualizadoEm: "2026-07-13",
 
-  // ----- ACESSO (login) — troque a senha e remova "senha" em produção -----
-  acesso: {
-    usuario: "jorge",
-    senhaHash: "e65434b2df9d5289831a7632575dff8ad6b1f31f8329a30cf7342ddda7d5d030", // = "grimberg2026"
-    senha: "grimberg2026",
-    dica: ""
-  },
+  // login do gate JS (opcional — voce ja protege via hPanel)
+  acesso: { usuario:"", senhaHash:"", senha:"", dica:"" },
 
   objetivos: [
-    "Clareza do *modelo de negócio*",
-    "Estruturação de *macroprocessos* de marketing e vendas",
-    "*Lançamento* de curto prazo"
+    "Validar narrativa de oferta",
+    "Realizar primeiro lançamento da mentoria coletiva"
   ],
 
-  // ----- ENTREGAS ESTRATÉGICAS (caixas editáveis por projeto) -----
-  // tipo: documento | gravacao | pdf | planilha | apresentacao | link
   estrategicas: [
-    { id:"diagnostico", nome:"Diagnóstico", resumo:"Leitura do ponto de partida e parecer sobre a tese central.",
-      status:"em-andamento", recursos:[
-        { titulo:"Análise e Parecer sobre a tese central", tipo:"documento", url:"https://cliente.catapultadeideias.com.br/jg/parecer-tese" }
-      ] },
-    { id:"fundamentos", nome:"Revisão de Fundamentos", resumo:"Clareza do modelo de negócio, persona, posicionamento e matriz de produtos.",
-      status:"em-breve", recursos:[] },
-    { id:"plano-estrategico", nome:"Plano Estratégico", resumo:"Macroprocessos de marketing e vendas e o lançamento de curto prazo.",
-      status:"em-breve", recursos:[] }
+    { id:"diagnostico",       nome:"Diagnóstico",            resumo:"", status:"em-breve", recursos:[] },
+    { id:"fundamentos",       nome:"Revisão de Fundamentos", resumo:"", status:"em-breve", recursos:[] },
+    { id:"plano-estrategico", nome:"Plano Estratégico",      resumo:"", status:"em-breve", recursos:[] }
   ],
 
-  // ----- BIBLIOTECA DE CALLS (aparece quando há calls) -----
   calls: [
-    { data:"2026-06-22",
-      temas:"Diagnóstico inicial da pesquisa de alunos e do plano de negócios. Levantamento de hipóteses para a tese central do negócio.",
-      url:"https://tldv.io/app/meetings/6a39943b6c8e2f00131b135c/" }
+    { data:"2026-06-26",
+      temas:"Consultoria de marketing — desdobramento da narrativa de oferta e do lançamento.",
+      url:"https://tldv.io/app/meetings/6a3e7ed5e064b50013d85b7d" },
+    { data:"2026-06-16",
+      temas:"Call inicial da consultoria — diagnóstico e alinhamento.",
+      url:"https://tldv.io/app/meetings/6a3196221e43b40013a257a8" }
   ],
-
-  // ----- FUNIS E CAMPANHAS (menu de briefings; aparece quando há itens) -----
-  campanhas: [
-    // { titulo:"Nome da campanha", tipo:"link", status:"ativa", data:"2026-07", url:"..." }
-  ],
-
-  // ----- RELATÓRIOS (biblioteca condicional; só p/ acompanhamento de campanha) -----
+  campanhas: [],
   relatoriosAtivo: false,
-  relatorios: [
-    // { periodo:"Julho 2026", entregueEm:"2026-08-04", url:"./relatorios/2026-07.html" }
-  ]
+  relatorios: []
 };
 </script>
 
