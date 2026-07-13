@@ -175,12 +175,13 @@ const CLIENTE = {
   // tipo: documento | gravacao | pdf | planilha | apresentacao | link
   estrategicas: [
     { id:"diagnostico", nome:"Diagnóstico", resumo:"Leitura do ponto de partida e parecer sobre a tese central.",
-      status:"em-andamento", recursos:[
+      status:"entregue", recursos:[
         { titulo:"Análise e Parecer sobre a tese central", tipo:"documento", url:"https://cliente.catapultadeideias.com.br/jg/parecer-tese" }
       ] },
     { id:"fundamentos", nome:"Revisão de Fundamentos", resumo:"Clareza do modelo de negócio, persona, posicionamento e matriz de produtos.",
       status:"em-andamento", recursos:[
-        { titulo:"Panorama de Fundamentos", tipo:"documento", url:"https://cliente.catapultadeideias.com.br/jg/panorama-fundamentos" }
+        { titulo:"Panorama de Fundamentos", tipo:"documento", url:"https://cliente.catapultadeideias.com.br/jg/panorama-fundamentos" },
+        { titulo:"Business Model", tipo:"link", url:"https://cliente.catapultadeideias.com.br/jg/business-model" }
       ] },
     { id:"plano-estrategico", nome:"Plano Estratégico", resumo:"Macroprocessos de marketing e vendas e o lançamento de curto prazo.",
       status:"em-breve", recursos:[] }
