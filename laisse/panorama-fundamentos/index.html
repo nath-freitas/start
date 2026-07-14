@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panorama dos Fundamentos · Laísse Moreira — Defesa de Posicionamento</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#EBE1CD;
+    --paper:#F8F3E7;
+    --ink:#16130E;
+    --ink-soft:#3A352B;
+    --muted:#736A57;
+    --line:#D6C8AB;
+    --yellow:#FFC21F;
+    --yellow-deep:#E0A400;
+    --taupe:#7A6034;
+    --maxw:1120px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Inter",system-ui,sans-serif;
+    font-size:17px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px;}
+
+  /* ---- type ---- */
+  h1,h2,h3,h4{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;line-height:1.05;margin:0;letter-spacing:-0.01em;}
+  .eyebrow{font-family:"Space Mono",monospace;font-size:.72rem;text-transform:uppercase;letter-spacing:.22em;color:var(--muted);margin:0;}
+  p{margin:0 0 1rem;}
+  .lead{font-size:1.12rem;color:var(--ink-soft);}
+  strong{font-weight:600;color:var(--ink);}
+
+  /* ---- header ---- */
+  .top{padding:30px 0 0;}
+  .brandrow{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;}
+  .brandmark{font-family:"Space Mono",monospace;font-weight:700;letter-spacing:.18em;font-size:.8rem;text-transform:uppercase;}
+  .brandmark span{color:var(--yellow-deep);}
+  .doctag{font-family:"Space Mono",monospace;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);}
+
+  .hero{padding:48px 0 36px;border-bottom:2px solid var(--ink);}
+  .hero h1{font-size:clamp(2.6rem,7vw,5rem);font-weight:800;}
+  .hero h1 em{font-style:normal;background:var(--yellow);padding:0 .12em;box-decoration-break:clone;-webkit-box-decoration-break:clone;}
+  .hero .sub{margin-top:22px;display:flex;gap:26px;flex-wrap:wrap;align-items:baseline;}
+  .hero .client{font-family:"Bricolage Grotesque";font-weight:600;font-size:1.15rem;}
+  .hero .client b{color:var(--ink);}
+  .hero .meta{font-family:"Space Mono",monospace;font-size:.74rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;}
+  .hero .pill{display:inline-block;margin-top:24px;background:var(--ink);color:var(--paper);font-family:"Space Mono",monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;border-radius:999px;}
+  .hero .pill b{color:var(--yellow);font-weight:700;}
+
+  /* ---- section scaffolding ---- */
+  section{padding:64px 0;border-bottom:1px solid var(--line);}
+  .sec-head{display:flex;align-items:baseline;gap:18px;margin-bottom:30px;}
+  .sec-num{font-family:"Space Mono",monospace;font-size:.8rem;font-weight:700;color:var(--yellow-deep);letter-spacing:.1em;padding-top:.35em;}
+  .sec-head h2{font-size:clamp(1.7rem,3.6vw,2.5rem);}
+  .sec-intro{max-width:780px;margin-bottom:14px;}
+
+  /* ---- venn ---- */
+  .venn-stage{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;}
+  .venn-stage svg{width:100%;height:auto;display:block;}
+  .venn-side .ob{background:var(--ink);color:var(--paper);border-radius:16px;padding:26px 24px;}
+  .venn-side .ob .eyebrow{color:var(--yellow);}
+  .venn-side .ob h3{color:var(--paper);font-size:1.35rem;margin:8px 0 12px;}
+  .venn-side .ob p{color:#E7DECB;margin:0;font-size:1.02rem;}
+
+  .circle-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:34px;}
+  .ccard{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:22px 20px;border-top:4px solid var(--c,var(--ink));}
+  .ccard.diff{--c:var(--ink);}
+  .ccard.pers{--c:var(--yellow-deep);}
+  .ccard.merc{--c:var(--taupe);}
+  .ccard h4{font-size:1.05rem;margin-bottom:12px;display:flex;align-items:center;gap:9px;}
+  .ccard h4::before{content:"";width:12px;height:12px;border-radius:50%;background:var(--c);display:inline-block;flex:none;}
+  .ccard ul{margin:0;padding-left:0;list-style:none;}
+  .ccard li{position:relative;padding-left:18px;margin-bottom:9px;font-size:.96rem;color:var(--ink-soft);line-height:1.5;}
+  .ccard li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;background:var(--c);border-radius:50%;}
+
+  /* ---- big statement ---- */
+  .statement{background:var(--ink);color:var(--paper);border-radius:20px;padding:46px 44px;}
+  .statement .eyebrow{color:var(--yellow);margin-bottom:16px;}
+  .statement p{font-family:"Bricolage Grotesque";font-weight:600;font-size:clamp(1.4rem,2.8vw,2rem);line-height:1.28;color:var(--paper);margin:0;letter-spacing:-0.01em;}
+  .statement p em{font-style:normal;color:var(--yellow);}
+
+  /* ---- market evidence (stats + whitespace) ---- */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:34px;}
+  .stat{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:22px 20px;border-top:4px solid var(--yellow-deep);}
+  .stat .num{font-family:"Bricolage Grotesque";font-weight:800;font-size:2.5rem;line-height:1;color:var(--ink);letter-spacing:-0.02em;}
+  .stat .lab{font-size:.92rem;color:var(--ink-soft);margin:10px 0 8px;line-height:1.42;}
+  .stat .src{font-family:"Space Mono",monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+  .whitespace{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .ws{border-radius:14px;padding:24px 24px;}
+  .ws.has{background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--taupe);}
+  .ws.gap{background:var(--ink);border:1px solid var(--ink);border-top:4px solid var(--yellow);}
+  .ws h4{font-size:1.12rem;margin-bottom:6px;}
+  .ws.gap h4{color:var(--paper);}
+  .ws .who{font-family:"Space Mono",monospace;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;}
+  .ws.gap .who{color:var(--yellow);}
+  .ws ul{margin:0;padding-left:0;list-style:none;}
+  .ws li{position:relative;padding-left:18px;margin-bottom:10px;font-size:.96rem;line-height:1.5;color:var(--ink-soft);}
+  .ws.gap li{color:#E7DECB;}
+  .ws li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--taupe);}
+  .ws.gap li::before{background:var(--yellow);}
+  .ws .seal{margin-top:16px;padding-top:14px;border-top:1px dashed rgba(247,243,231,.25);font-family:"Bricolage Grotesque";font-weight:600;font-size:1rem;color:var(--paper);}
+  .ws-read{margin-top:22px;background:var(--yellow);border-radius:12px;padding:18px 22px;font-family:"Bricolage Grotesque";font-weight:600;font-size:1.08rem;color:var(--ink);}
+
+  /* ---- persona ---- */
+  .persona-grid{display:grid;grid-template-columns:1.3fr .7fr;gap:34px;align-items:start;}
+  .persona-body p{color:var(--ink-soft);}
+  .persona-aside{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:24px;}
+  .persona-aside .eyebrow{margin-bottom:14px;}
+  .worlds{list-style:none;margin:0;padding:0;counter-reset:w;}
+  .worlds li{counter-increment:w;position:relative;padding:11px 0 11px 38px;border-bottom:1px dashed var(--line);font-size:.95rem;color:var(--ink-soft);}
+  .worlds li:last-child{border-bottom:none;}
+  .worlds li::before{content:counter(w);position:absolute;left:0;top:9px;width:24px;height:24px;background:var(--yellow);color:var(--ink);font-family:"Space Mono",monospace;font-weight:700;font-size:.78rem;border-radius:50%;display:grid;place-items:center;}
+  .not{margin-top:18px;font-size:.9rem;color:var(--muted);border-left:3px solid var(--ink);padding-left:12px;}
+
+  /* ---- empathy ---- */
+  .empathy{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .ecard{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px;}
+  .ecard h4{font-family:"Space Mono",monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--yellow-deep);font-weight:700;margin-bottom:10px;}
+  .ecard p{margin:0;font-size:.95rem;color:var(--ink-soft);line-height:1.5;}
+  .ecard.accent{background:var(--ink);}
+  .ecard.accent h4{color:var(--yellow);}
+  .ecard.accent p{color:#E7DECB;}
+
+  /* ---- semantic ---- */
+  .sem-group{margin-bottom:22px;}
+  .sem-group .glabel{font-family:"Space Mono",monospace;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:11px;}
+  .chips{display:flex;flex-wrap:wrap;gap:9px;}
+  .chip{background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:.92rem;color:var(--ink);}
+  .chip.hot{background:var(--yellow);border-color:var(--yellow-deep);font-weight:500;}
+  .chip.voice{font-style:italic;background:transparent;border-style:dashed;color:var(--ink-soft);}
+
+  /* ---- journey ---- */
+  .journey{display:grid;grid-template-columns:repeat(3,1fr);gap:0;position:relative;}
+  .stage{background:var(--paper);border:1px solid var(--line);padding:26px 22px;position:relative;}
+  .stage:nth-child(1){border-radius:14px 0 0 14px;}
+  .stage:nth-child(3){border-radius:0 14px 14px 0;}
+  .stage:not(:first-child){border-left:none;}
+  .stage .stnum{font-family:"Space Mono",monospace;font-size:.72rem;letter-spacing:.12em;color:var(--yellow-deep);font-weight:700;}
+  .stage h4{font-size:1.18rem;margin:8px 0 12px;}
+  .stage .sit{font-size:.93rem;color:var(--ink-soft);margin-bottom:18px;}
+  .stage .prodlabel{font-family:"Space Mono",monospace;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+  .stage .prod{background:var(--ink);color:var(--paper);border-radius:10px;padding:11px 13px;font-family:"Bricolage Grotesque";font-weight:600;font-size:1rem;margin:5px 0 12px;}
+  .stage .pay{font-size:.9rem;color:var(--ink-soft);border-top:1px dashed var(--line);padding-top:12px;}
+  .stage .arrow{position:absolute;right:-13px;top:50%;transform:translateY(-50%);width:26px;height:26px;background:var(--yellow);border-radius:50%;display:grid;place-items:center;z-index:3;color:var(--ink);font-weight:700;font-size:.9rem;}
+  .stage:last-child .arrow{display:none;}
+  .journey-read{margin-top:22px;background:var(--yellow);border-radius:12px;padding:18px 22px;font-family:"Bricolage Grotesque";font-weight:600;font-size:1.08rem;color:var(--ink);}
+  .pending{margin-top:16px;font-size:.9rem;color:var(--muted);border-left:3px solid var(--yellow-deep);padding-left:12px;}
+  .pending b{color:var(--ink-soft);font-weight:600;}
+  .jsub{font-size:1.15rem;margin:34px 0 4px;}
+  .jsub-intro{font-size:.95rem;color:var(--muted);margin-bottom:18px;max-width:720px;}
+  .viradas{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .virada{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:22px 20px;border-top:4px solid var(--yellow-deep);}
+  .virada .vnum{width:30px;height:30px;background:var(--ink);color:var(--yellow);font-family:"Space Mono",monospace;font-weight:700;border-radius:50%;display:grid;place-items:center;font-size:.9rem;}
+  .virada .vpilar{font-family:"Space Mono",monospace;font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--taupe);margin:12px 0 4px;}
+  .virada h4{font-size:1.08rem;margin-bottom:9px;}
+  .virada p{font-size:.92rem;color:var(--ink-soft);margin:0;line-height:1.5;}
+
+  /* ---- next step (method to come) ---- */
+  .nextstep{background:var(--paper);border:1px dashed var(--taupe);border-radius:16px;padding:30px 32px;}
+  .nextstep .eyebrow{margin-bottom:10px;}
+  .nextstep h3{font-size:1.4rem;margin-bottom:10px;}
+  .nextstep p{color:var(--ink-soft);margin:0;max-width:760px;}
+  .ph{background:var(--yellow);color:var(--ink);font-weight:600;padding:0 .3em;border-radius:3px;font-family:"Bricolage Grotesque";}
+
+  /* ---- footer ---- */
+  footer{background:var(--ink);color:#C9BCA0;padding:40px 0;border-bottom:none;}
+  footer .wrap{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;align-items:center;}
+  footer .fbrand{font-family:"Space Mono",monospace;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--paper);}
+  footer .fbrand span{color:var(--yellow);}
+  footer .fnote{font-family:"Space Mono",monospace;font-size:.68rem;letter-spacing:.08em;color:#9A8E76;text-transform:uppercase;}
+
+  /* ---- reveal ---- */
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease;}
+  .reveal.in{opacity:1;transform:none;}
+
+  /* ---- responsive ---- */
+  @media(max-width:880px){
+    .venn-stage{grid-template-columns:1fr;gap:26px;}
+    .venn-stage svg{max-width:460px;margin:0 auto;}
+    .circle-cards{grid-template-columns:1fr;}
+    .stats{grid-template-columns:repeat(2,1fr);}
+    .whitespace{grid-template-columns:1fr;}
+    .persona-grid{grid-template-columns:1fr;gap:24px;}
+    .empathy{grid-template-columns:1fr;}
+    .journey{grid-template-columns:1fr;}
+    .viradas{grid-template-columns:1fr;}
+    .stage{border-radius:14px!important;border-left:1px solid var(--line)!important;margin-bottom:0;}
+    .stage:not(:last-child){border-bottom:none;}
+    .stage .arrow{right:50%;top:auto;bottom:-13px;transform:translateX(50%) rotate(90deg);}
+    .stage:last-child{border-radius:14px!important;}
+    .statement{padding:32px 26px;}
+  }
+  @media(max-width:520px){
+    body{font-size:16px;}
+    .wrap{padding:0 18px;}
+    .stats{grid-template-columns:1fr;}
+    .stat .num{font-size:2.2rem;}
+    .statement{padding:28px 22px;}
+    .nextstep{padding:24px 22px;}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .reveal{opacity:1;transform:none;transition:none;}
+    html{scroll-behavior:auto;}
+  }
+  :focus-visible{outline:3px solid var(--yellow-deep);outline-offset:2px;}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="wrap brandrow">
+    <div class="brandmark">Catapulta de Ideias <span>×</span> Nath Freitas</div>
+    <div class="doctag">Etapa 2 · Growth Logic</div>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Pilar 1 — Fundamentos da Marca</p>
+    <h1 style="margin-top:18px;">Panorama dos <em>Fundamentos</em></h1>
+    <div class="sub">
+      <div class="client">Laísse Moreira Consultoria · <b>Laísse Moreira</b></div>
+      <div class="meta">Persona · Posicionamento · Mercado · Produtos</div>
+    </div>
+    <div class="pill">Persona prioritária: <b>o sucessor de empresa familiar</b></div>
+  </div>
+</header>
+
+<!-- 01 VENN -->
+<section>
+  <div class="wrap reveal">
+    <div class="sec-head">
+      <div class="sec-num">01</div>
+      <h2>O cruzamento que define o oceano azul</h2>
+    </div>
+    <p class="sec-intro lead">Três forças sustentam a marca: o que só a Laísse tem, quem ela atende e o que o mercado já oferece. No ponto onde as três se encontram está o posicionamento — o lugar onde ela não tem concorrente direto.</p>
+
+    <div class="venn-stage">
+      <svg viewBox="0 0 620 560" role="img" aria-labelledby="venn-t venn-d">
+        <title id="venn-t">Diagrama de três círculos sobrepostos</title>
+        <desc id="venn-d">Os círculos Diferenciais da Laísse, Persona e Mercado se cruzam. A interseção central é o oceano azul.</desc>
+        <circle cx="240" cy="212" r="168" fill="rgba(22,19,14,0.08)" stroke="#16130E" stroke-width="1.6"/>
+        <circle cx="380" cy="212" r="168" fill="rgba(255,194,31,0.22)" stroke="#E0A400" stroke-width="1.6"/>
+        <circle cx="310" cy="342" r="168" fill="rgba(122,96,52,0.13)" stroke="#7A6034" stroke-width="1.6"/>
+        <text x="240" y="78" text-anchor="middle" font-family="Space Mono, monospace" font-size="15" font-weight="700" fill="#16130E" letter-spacing="1">DIFERENCIAIS</text>
+        <text x="380" y="78" text-anchor="middle" font-family="Space Mono, monospace" font-size="15" font-weight="700" fill="#9A7400" letter-spacing="1">PERSONA</text>
+        <text x="310" y="528" text-anchor="middle" font-family="Space Mono, monospace" font-size="15" font-weight="700" fill="#7A6034" letter-spacing="1">MERCADO</text>
+        <g>
+          <rect x="232" y="252" width="156" height="46" rx="23" fill="#FFC21F" stroke="#16130E" stroke-width="1.6"/>
+          <text x="310" y="275" text-anchor="middle" dominant-baseline="middle" font-family="Space Mono, monospace" font-size="13.5" font-weight="700" fill="#16130E" letter-spacing="1.2">OCEANO AZUL</text>
+        </g>
+      </svg>
+
+      <div class="venn-side">
+        <div class="ob">
+          <p class="eyebrow">A interseção</p>
+          <h3>O posicionamento da Laísse</h3>
+          <p>O mercado de empresa familiar estrutura a sucessão — a holding, o conselho, o organograma. A Laísse desenvolve o que nenhum documento resolve: a postura de liderar quem te conhecia antes do crachá. A governança organiza a empresa. Ela prepara o líder.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="circle-cards">
+      <div class="ccard diff">
+        <h4>Diferenciais da Laísse</h4>
+        <ul>
+          <li>Dupla perspectiva: enxerga com o olho do empresário e do líder ao mesmo tempo.</li>
+          <li>Análise comportamental como diagnóstico — o núcleo do método, não um extra.</li>
+          <li>IA própria para cultura organizacional: entrega que não é genérica.</li>
+          <li>Vivência real de gestão. Pratica o que ensina, não é teoria.</li>
+          <li>Empresa familiar como especialidade — o território que ela conhece por dentro.</li>
+        </ul>
+      </div>
+      <div class="ccard pers">
+        <h4>A persona</h4>
+        <ul>
+          <li>24 a 38 anos, assumiu liderança formal numa empresa familiar.</li>
+          <li>Parte do time é família ou já a conhecia antes do cargo.</li>
+          <li>Síndrome de impostor amplificada pelo sobrenome.</li>
+          <li>O medo não é técnico: é "será que vão me respeitar como líder".</li>
+          <li>A dor real é relacional: liderar, cobrar e mudar sem romper o vínculo.</li>
+        </ul>
+      </div>
+      <div class="ccard merc">
+        <h4>O mercado</h4>
+        <ul>
+          <li>90% das empresas brasileiras são familiares; a sucessão é o desafio nº 1.</li>
+          <li>Concorrência toda no mesmo eixo: governança, holding, conselho, valuation.</li>
+          <li>Cada player puxa credencial sênior e institucional: FGV, conselheiro, advogado.</li>
+          <li>Todos tratam a estrutura da sucessão. Ninguém trata a pessoa que vai liderar.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 OCEANO AZUL -->
+<section>
+  <div class="wrap reveal">
+    <div class="sec-head">
+      <div class="sec-num">02</div>
+      <h2>Oceano azul</h2>
+    </div>
+    <div class="statement">
+      <p class="eyebrow">O território da marca</p>
+      <p>Liderança não se herda junto com o cargo. O mercado ensina a estruturar a sucessão — a holding, o conselho, o organograma. A Laísse desenvolve o que nenhum documento resolve: a <em>postura de liderar quem te conhecia antes do crachá</em>. Onde a governança trata da empresa, ela trata da <em>pessoa</em> que vai sustentá-la.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 03 PERSONA -->
+<section>
+  <div class="wrap reveal">
+    <div class="sec-head">
+      <div class="sec-num">03</div>
+      <h2>A persona</h2>
+    </div>
+    <div class="persona-grid">
+      <div class="persona-body">
+        <p>A persona prioritária do lançamento é <strong>o empresário / sucessor de empresa familiar</strong> — quem assumiu, ou está assumindo, o comando de um negócio da própria família e precisa liderar quem o conhecia antes do cargo. Não é o empresário genérico: é o dono ou herdeiro de empresa familiar, o público que já compõe quase toda a base da Laísse.</p>
+        <p>Tem entre <strong>24 e 45 anos</strong> e assumiu a liderança formal numa empresa onde parte do time é família ou já a conhecia antes do cargo. Pode ser a filha do dono que virou gestora ou o sucessor que já assumiu e quer modernizar. Conhece os valores da casa, mas não sabe como fazer a equipe praticá-los; lidera sendo acessível, evita o confronto e dá feedback raro e suave demais.</p>
+        <p>O que a trava é a <strong>legitimidade</strong> — ser vista como líder de verdade, e não como "a filha do dono" — e a dor é relacional: cobrar, dar retorno e mudar sem romper o vínculo. Um recorte importa: existem dois tipos de sucessor, e só um é cliente. O herdeiro acomodado, que só quer herdar, não compra. Quem compra é <strong>o sucessor que quer assumir de verdade e fazer a mudança acontecer</strong>.</p>
+      </div>
+      <aside class="persona-aside">
+        <p class="eyebrow">Prioritária e secundária</p>
+        <ul class="worlds">
+          <li><strong>Prioritária:</strong> empresário / sucessor de empresa familiar — o comprador da Mentoria Tríade.</li>
+          <li><strong>Secundária:</strong> o líder contratado, que assume uma equipe sem vínculo com a estrutura — público natural do Lidere, não da Tríade.</li>
+        </ul>
+        <p class="not">Ela não é o fundador sênior planejando a aposentadoria, nem o herdeiro acomodado que só quer herdar. É quem está vivendo a liderança agora e quer fazer a mudança acontecer.</p>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- 04 EMPATIA -->
+<section>
+  <div class="wrap reveal">
+    <div class="sec-head">
+      <div class="sec-num">04</div>
+      <h2>Mapa de empatia</h2>
+    </div>
+    <div class="empathy">
+      <div class="ecard">
+        <h4>Pensa e sente</h4>
+        <p>"Será que estou pronta?" "Meu pai construiu isso, não posso estragar." Síndrome de impostor amplificada pelo sobrenome. Tensão constante entre autoridade e aceitação.</p>
+      </div>
+      <div class="ecard">
+        <h4>Vê</h4>
+        <p>Time acomodado e resistente a novidades. Colegas que a conheciam antes do cargo. O pai ainda consultado direto pela equipe, sem passar por ela. Uma empresa presa no "sempre foi assim".</p>
+      </div>
+      <div class="ecard">
+        <h4>Ouve</h4>
+        <p>"Aqui sempre funcionou assim." Do pai, conselho misturado com cobrança. De amigos, "deve ser fácil trabalhar na empresa da família". Do time, silêncio — o feedback real não chega até ela.</p>
+      </div>
+      <div class="ecard">
+        <h4>Fala e faz</h4>
+        <p>Tenta ser acessível, ouve mais do que fala com medo de impor. Evita confronto com os mais velhos e com a família. Busca referência sozinha: conteúdo, cursos, Instagram.</p>
+      </div>
+      <div class="ecard accent">
+        <h4>Dores</h4>
+        <p>Não ser vista como líder — ser "a filha do dono". Dar feedback a quem tem mais experiência. Mudar sem ferir o vínculo familiar. Decisões difíceis: cobrar, reposicionar, demitir.</p>
+      </div>
+      <div class="ecard accent">
+        <h4>Ganhos</h4>
+        <p>Ser líder de verdade — pelo time, pelo pai e por ela mesma. Conversas difíceis com segurança. Um time que se move por vontade própria. Mostrar ao pai que a escolha foi certa.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 CAMPO SEMÂNTICO -->
+<section>
+  <div class="wrap reveal">
+    <div class="sec-head">
+      <div class="sec-num">05</div>
+      <h2>Campo semântico</h2>
+    </div>
+    <p class="sec-intro">Palavras e expressões extraídas do Instagram da Laísse, das referências de mercado e das respostas dos clientes reais. É o vocabulário que deve voltar na copy, na voz de quem a marca atende.</p>
+
+    <div class="sem-group">
+      <div class="glabel">Como ela lidera hoje — a dor</div>
+      <div class="chips">
+        <span class="chip hot">piloto automático</span>
+        <span class="chip">apagar incêndio</span>
+        <span class="chip">deixar frouxo</span>
+        <span class="chip">gestão centralizada</span>
+        <span class="chip">age no feeling</span>
+        <span class="chip">resistência a mudanças</span>
+        <span class="chip">ciclo de dependência</span>
+      </div>
+    </div>
+    <div class="sem-group">
+      <div class="glabel">O território familiar</div>
+      <div class="chips">
+        <span class="chip hot">liderar quem te viu crescer</span>
+        <span class="chip hot">passar o bastão</span>
+        <span class="chip hot">a filha do dono</span>
+        <span class="chip">conquistar o próprio nome</span>
+        <span class="chip">metade do time é família</span>
+        <span class="chip">empresa sem cultura</span>
+        <span class="chip">senso de dono</span>
+      </div>
+    </div>
+    <div class="sem-group">
+      <div class="glabel">O que ela quer — a transformação</div>
+      <div class="chips">
+        <span class="chip hot">virada de chave</span>
+        <span class="chip">liderança respeitada</span>
+        <span class="chip">time autogerenciável</span>
+        <span class="chip">comunicação assertiva</span>
+        <span class="chip">conversas difíceis</span>
+        <span class="chip">colocar o time nos trilhos</span>
+        <span class="chip">performance sustentável</span>
+      </div>
+    </div>
+    <div class="sem-group">
+      <div class="glabel">Voz do cliente real</div>
+      <div class="chips">
+        <span class="chip voice">quando tento implementar algo novo, existe resistência</span>
+        <span class="chip voice">sou bonzinho demais, deixo o pessoal frouxo</span>
+        <span class="chip voice">quero ser uma líder mais completa e consciente</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 MÉTODO -->
+<section>
+  <div class="wrap reveal">
+    <div class="sec-head">
+      <div class="sec-num">06</div>
+      <h2>O Método Tríade</h2>
+    </div>
+    <p class="sec-intro lead">Na maioria das vezes, o que falta ao líder que herdou a empresa não é vontade — é caminho. O Método Tríade é esse caminho, e ele é sempre o mesmo: começa na cultura, passa pela gestão e termina na comunicação.</p>
+
+    <div class="statement">
+      <p class="eyebrow">A promessa</p>
+      <p>Liderança não se herda com o cargo. O Método Tríade é o <em>único caminho</em> que transforma quem assumiu a empresa familiar em um <em>líder respeitado</em>, com um time que anda sozinho e entrega resultado.</p>
+    </div>
+
+    <h3 class="jsub">Os três pilares — o caminho, nessa ordem</h3>
+    <p class="jsub-intro">Cada pilar destrava o problema que o anterior revela. É a ordem em que a transformação de fato acontece.</p>
+    <div class="viradas">
+      <div class="virada">
+        <div class="vnum">1</div>
+        <div class="vpilar">Cultura</div>
+        <h4>Do "sempre foi assim" à intenção</h4>
+        <p>Enxergar a cultura que a empresa já vive todos os dias — inclusive o que você não escolheu — e construir com intenção a que você deseja, com rituais e pequenas ações no dia a dia.</p>
+      </div>
+      <div class="virada">
+        <div class="vnum">2</div>
+        <div class="vpilar">Gestão</div>
+        <h4>Do operacional ao estratégico</h4>
+        <p>Tirar você do apagar incêndio: papéis claros, responsabilidades no lugar certo, o que é seu e o que não é — e o seu tempo de líder de volta.</p>
+      </div>
+      <div class="virada">
+        <div class="vnum">3</div>
+        <div class="vpilar">Comunicação</div>
+        <h4>Do feedback vazio à influência</h4>
+        <p>Você se conhecer, entender como cada pessoa escuta e comunicar de um jeito que a mudança sai do papel. É aqui que vive a análise comportamental — o diferencial mais forte da Laísse.</p>
+      </div>
+    </div>
+
+    <div class="journey-read">A transformação só acontece se o líder cruzar os três pilares, nessa ordem. É isso que faz a Tríade um caminho, e não uma lista de temas — o que separa o líder que quer virar o jogo do líder que gera resultado.</div>
+  </div>
+</section>
+
+<!-- 07 PRODUTOS -->
+<section style="border-bottom:none;">
+  <div class="wrap reveal">
+    <div class="sec-head">
+      <div class="sec-num">07</div>
+      <h2>Os produtos</h2>
+    </div>
+    <p class="sec-intro">Um método, três profundidades. Cada produto entrega o mesmo Método Tríade em um nível diferente — o que dá clareza pro cliente sobre onde ele entra e por que sobe.</p>
+
+    <div class="journey">
+      <div class="stage">
+        <div class="stnum">ENTRADA / DOWNSELL</div>
+        <h4>Lidere</h4>
+        <p class="sit">Entrega uma parte do método — os conceitos, o suficiente pra pessoa perceber que existe um caminho mais profundo. Já vem incluído no pacote da mentoria (6 meses de acesso).</p>
+        <p class="pay">Cria o desejo pela Tríade, onde o método está inteiro.</p>
+        <div class="arrow" aria-hidden="true">→</div>
+      </div>
+      <div class="stage">
+        <div class="stnum">O MÉTODO COMPLETO · ÂNCORA</div>
+        <h4>Mentoria Tríade</h4>
+        <p class="sit">Os três pilares inteiros — cultura, gestão e comunicação. A transformação completa, do caos ao resultado.</p>
+        <p class="pay">É onde o valor ancora. Produto do meio e foco do lançamento.</p>
+        <div class="arrow" aria-hidden="true">→</div>
+      </div>
+      <div class="stage">
+        <div class="stnum">IMPLEMENTAÇÃO</div>
+        <h4>Consultoria</h4>
+        <p class="sit">O mesmo método, mão na massa, quando o líder quer a Laísse entrando e fazendo acontecer com ele.</p>
+        <p class="pay">Topo da escada, alta fidelização — o cliente fica e indica.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fbrand">Catapulta de Ideias <span>×</span> Nath Freitas</div>
+    <div class="fnote">Uso exclusivo de Laísse Moreira · Laísse Moreira Consultoria</div>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var els = document.querySelectorAll('.reveal');
+    if(!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      els.forEach(function(e){e.classList.add('in');});
+      return;
+    }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    },{threshold:0.12});
+    els.forEach(function(e){io.observe(e);});
+  })();
+</script>
+</body>
+</html>

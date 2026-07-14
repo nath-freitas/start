@@ -171,9 +171,13 @@ const CLIENTE = {
   ],
 
   estrategicas: [
-    { id:"diagnostico",       nome:"Diagnóstico",            resumo:"", status:"em-breve", recursos:[] },
-    { id:"fundamentos",       nome:"Revisão de Fundamentos", resumo:"", status:"em-breve", recursos:[] },
-    { id:"plano-estrategico", nome:"Plano Estratégico",      resumo:"", status:"em-breve", recursos:[] }
+    { id:"diagnostico",       nome:"Diagnóstico",            resumo:"", status:"entregue", recursos:[
+        { titulo:"Diagnóstico", tipo:"documento", url:"https://cliente.catapultadeideias.com.br/laisse/diagnostico" }
+      ] },
+    { id:"fundamentos",       nome:"Revisão de Fundamentos", resumo:"", status:"entregue", recursos:[
+        { titulo:"Panorama de Fundamentos", tipo:"documento", url:"https://cliente.catapultadeideias.com.br/laisse/panorama-fundamentos" }
+      ] },
+    { id:"plano-estrategico", nome:"Plano Estratégico",      resumo:"", status:"em-andamento", recursos:[] }
   ],
 
   calls: [
