@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel de Campanha · Sala de Líderes · Laísse Moreira</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#480ec1; --purple-light:#6b35d9; --purple-dark:#30098a;
+  --yellow:#faa323; --yellow-light:#ffc55a;
+  --bg:#f4f2fb; --card:#ffffff; --text:#1a1a2e; --muted:#6b7280; --border:#e5e0f5;
+  --positive:#16a34a; --negative:#dc2626; --neutral:#2563eb;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Poppins",sans-serif;font-size:15px;line-height:1.55;}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
+h1,h2,h3,h4{font-family:"Poppins",sans-serif;margin:0;}
+p{margin:0;}
+
+/* PAGE NAV (botões na página, não mais barra fixa) */
+.pagenav{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 26px;}
+.pagenav .navbtn{background:#fff;border:1px solid var(--border);color:var(--text);font-family:"Poppins",sans-serif;font-weight:600;font-size:.86rem;padding:11px 20px;border-radius:999px;cursor:pointer;transition:.15s;}
+.pagenav .navbtn:hover{border-color:var(--purple-light);color:var(--purple);}
+.pagenav .navbtn.active{background:var(--purple);border-color:var(--purple);color:#fff;}
+
+/* BRIEFING TOP */
+.briefing-top{margin-bottom:24px;}
+.briefing-top .bt-client{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);font-weight:700;margin-bottom:6px;}
+.briefing-top .bt-campaign{font-size:1.7rem;font-weight:800;color:var(--text);}
+
+/* INFO BOXES */
+.info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;}
+.info-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;}
+.info-box .lab{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);font-weight:700;margin-bottom:12px;}
+.info-box h3{font-size:1.15rem;margin-bottom:8px;}
+.info-box p{font-size:.92rem;color:#3a3a4e;}
+.milestones{list-style:none;margin:0;padding:0;}
+.milestones li{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px dashed var(--border);font-size:.92rem;}
+.milestones li:last-child{border-bottom:none;}
+.milestones li span{color:var(--muted);font-weight:500;}
+.milestones li b{color:var(--text);font-weight:700;}
+.meta-field, .link-field{margin-bottom:14px;}
+.meta-field:last-child, .link-field:last-child{margin-bottom:0;}
+.meta-field label, .link-field label{display:block;font-size:.72rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px;}
+.meta-field input{width:100%;border:1px solid var(--border);border-radius:9px;padding:9px 11px;font-family:"Poppins",sans-serif;font-size:.92rem;background:#fbfaff;}
+.link-row{display:flex;gap:6px;align-items:center;}
+.link-row input{flex:1;min-width:0;border:1px solid var(--border);border-radius:9px;padding:9px 11px;font-family:"Poppins",sans-serif;font-size:.88rem;background:#fbfaff;}
+.link-row a{flex:none;width:34px;height:34px;border-radius:9px;background:var(--purple);color:#fff;display:grid;place-items:center;text-decoration:none;font-weight:700;}
+.link-row a:hover{background:var(--purple-dark);}
+@media(max-width:800px){.info-grid{grid-template-columns:1fr;}}
+
+/* PAGES */
+.page{display:none;padding:34px 0 70px;}
+.page.active{display:block;}
+
+/* HERO (briefing) */
+.hero{background:linear-gradient(120deg,var(--purple),var(--purple-dark));border-radius:20px;padding:36px 34px;color:#fff;margin-bottom:26px;position:relative;overflow:hidden;}
+.hero-label{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--yellow);font-weight:700;margin-bottom:10px;}
+.hero h1{font-size:1.9rem;font-weight:800;margin-bottom:6px;}
+.hero .sub{color:#d9d1f5;font-size:.98rem;}
+.hero-folder{position:absolute;top:22px;right:24px;display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.26);color:#fff;text-decoration:none;font-size:.8rem;font-weight:600;padding:9px 14px;border-radius:999px;transition:.15s;z-index:2;}
+.hero-folder:hover{background:var(--yellow);border-color:var(--yellow);color:#1a1a2e;}
+@media(max-width:560px){.hero-folder span{display:none;}.hero-folder{padding:9px;}}
+
+.cards-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;}
+.ctx-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;}
+.ctx-card .lab{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);font-weight:700;margin-bottom:8px;}
+.ctx-card p{font-size:.92rem;color:#3a3a4e;}
+.ctx-card .status{display:inline-block;margin-top:10px;font-size:.72rem;font-weight:700;padding:4px 10px;border-radius:999px;}
+.status.aberto{background:#fff3e0;color:#b45309;}
+.status.fechado{background:#e7f8ef;color:#15803d;}
+
+.param-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;}
+.param-box h3{font-size:1.05rem;margin-bottom:16px;}
+.param-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+.param{display:flex;flex-direction:column;gap:6px;}
+.param label{font-size:.72rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em;}
+.param input{border:1px solid var(--border);border-radius:9px;padding:9px 11px;font-family:"Poppins",sans-serif;font-size:.92rem;background:#fbfaff;}
+.param input:focus{outline:2px solid var(--purple-light);background:#fff;}
+.param input.pendente::placeholder{color:#c2410c;font-style:italic;}
+@media(max-width:900px){.cards-3{grid-template-columns:1fr;}.param-grid{grid-template-columns:1fr 1fr;}}
+
+/* GANTT */
+.gantt-wrap{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;overflow-x:auto;}
+.gantt-scroll{min-width:760px;position:relative;}
+.gantt-months{display:flex;font-size:.72rem;color:var(--muted);font-weight:600;margin-bottom:6px;position:relative;height:18px;}
+.gantt-row{display:flex;align-items:center;height:44px;position:relative;}
+.gantt-label{width:190px;flex:none;font-size:.85rem;font-weight:600;padding-right:10px;}
+.gantt-track{flex:1;position:relative;height:26px;background:#f0eefa;border-radius:8px;}
+.gantt-bar{position:absolute;top:0;height:26px;border-radius:8px;color:#fff;font-size:.72rem;font-weight:700;display:flex;align-items:center;padding:0 10px;cursor:pointer;white-space:nowrap;overflow:hidden;transition:filter .15s;}
+.gantt-bar:hover{filter:brightness(1.08);}
+.gantt-marker{position:absolute;top:-6px;bottom:-6px;width:2px;background:var(--yellow);z-index:5;}
+.gantt-marker::after{content:"🔥 evento";position:absolute;top:-20px;left:-28px;font-size:.68rem;font-weight:700;color:#b45309;white-space:nowrap;}
+.gantt-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:18px;font-size:.8rem;color:var(--muted);}
+.gantt-legend span{display:inline-flex;align-items:center;gap:6px;}
+.gantt-legend i{width:11px;height:11px;border-radius:3px;display:inline-block;}
+
+/* WORKFLOW */
+.phase-block{background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:18px;overflow:hidden;}
+.phase-head{padding:16px 22px;color:#fff;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.phase-head .ph-name{font-weight:700;font-size:1.02rem;}
+.phase-head .ph-dates{font-size:.8rem;opacity:.9;}
+.phase-body{padding:20px 22px;}
+.phase-goal{font-size:.9rem;color:#4b4b63;margin-bottom:16px;border-left:3px solid var(--border);padding-left:12px;}
+.piece-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;}
+.piece{border:1px solid var(--border);border-radius:12px;padding:14px;font-size:.85rem;display:flex;gap:10px;align-items:flex-start;}
+.piece .ic{font-size:1.1rem;flex:none;}
+.piece .placeholder-note{display:block;font-size:.72rem;color:var(--muted);font-style:italic;margin-top:3px;}
+
+/* CHECKLIST */
+.cl-progress-wrap{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 22px;margin-bottom:20px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+.cl-progress-bar{flex:1;min-width:200px;height:12px;background:#eee;border-radius:99px;overflow:hidden;}
+.cl-progress-bar span{display:block;height:100%;background:linear-gradient(90deg,var(--purple),var(--purple-light));}
+.cl-actions{display:flex;gap:10px;margin-left:auto;}
+.btn{border:none;border-radius:9px;padding:9px 16px;font-family:"Poppins",sans-serif;font-weight:600;font-size:.82rem;cursor:pointer;transition:.15s;}
+.btn-primary{background:var(--purple);color:#fff;}
+.btn-primary:hover{background:var(--purple-dark);}
+.btn-ghost{background:#fff;color:var(--negative);border:1px solid #f3c8c8;}
+.btn-ghost:hover{background:#fef2f2;}
+
+.cl-phase{background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:16px;overflow:hidden;}
+.cl-phase-head{padding:14px 20px;color:#fff;display:flex;align-items:center;gap:14px;cursor:pointer;flex-wrap:wrap;}
+.cl-phase-head .cph-name{font-weight:700;flex:1;}
+.cl-phase-head .cph-dates{font-size:.78rem;opacity:.9;}
+.cl-phase-head .cph-count{font-size:.78rem;background:rgba(255,255,255,.22);padding:3px 10px;border-radius:999px;}
+.cl-phase-head .chev{transition:.2s;}
+.cl-phase-head.collapsed .chev{transform:rotate(-90deg);}
+.cl-items{padding:6px 12px 12px;}
+.cl-phase.collapsed .cl-items{display:none;}
+.cli{display:grid;grid-template-columns:26px minmax(0,1fr) 92px 150px 176px;align-items:center;gap:10px;padding:10px 8px;border-bottom:1px solid #f1eff8;}
+.cli:last-child{border-bottom:none;}
+.cli.done .cli-text{text-decoration:line-through;color:var(--muted);}
+.item-cb{width:20px;height:20px;border-radius:6px;border:2px solid #c9c2e8;cursor:pointer;display:grid;place-items:center;background:#fff;flex:none;}
+.item-cb.checked{background:var(--purple);border-color:var(--purple);color:#fff;font-weight:900;font-size:.8rem;}
+.cli-tags{display:flex;gap:5px;flex-wrap:wrap;}
+.tag{font-size:.66rem;padding:2px 7px;border-radius:999px;font-weight:700;white-space:nowrap;}
+.cli input[type=text]{border:1px solid var(--border);border-radius:7px;padding:6px 8px;font-family:"Poppins",sans-serif;font-size:.78rem;width:100%;}
+.cli input.suggested{color:var(--muted);font-style:italic;}
+.cli-link-cell{display:flex;align-items:center;gap:6px;min-width:0;}
+.cli-link{flex:1;min-width:0;}
+.cli-open{flex:none;width:28px;height:28px;border-radius:7px;background:var(--purple);color:#fff;display:grid;place-items:center;text-decoration:none;font-size:.95rem;font-weight:700;transition:.15s;}
+.cli-open:hover{background:var(--purple-dark);}
+@media(max-width:900px){
+  .cli{grid-template-columns:26px 1fr;grid-template-areas:"cb text" ". tags" ". dl" ". resp" ". link";row-gap:6px;}
+  .item-cb{grid-area:cb;} .cli-text-wrap{grid-area:text;} .cli-tags{grid-area:tags;}
+  .cli-dl{grid-area:dl;} .cli-resp{grid-area:resp;} .cli-link-cell{grid-area:link;}
+}
+
+/* ROAS */
+.roas-top{background:linear-gradient(120deg,var(--purple),var(--purple-dark));border-radius:16px;padding:26px 28px;color:#fff;margin-bottom:24px;}
+.roas-top h3{font-size:1rem;color:var(--yellow);text-transform:uppercase;letter-spacing:.08em;margin-bottom:16px;}
+.roas-save{float:right;font-size:.72rem;opacity:.85;}
+.roas-scenarios{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.scenario{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:16px;}
+.scenario .sc-name{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;opacity:.85;margin-bottom:8px;}
+.scenario .sc-roas{font-size:1.8rem;font-weight:800;margin-bottom:4px;}
+.scenario .sc-kpis{font-size:.78rem;opacity:.9;line-height:1.5;}
+.roas-bar-track{height:8px;background:rgba(255,255,255,.25);border-radius:99px;margin-top:10px;overflow:hidden;}
+.roas-bar-fill{height:100%;border-radius:99px;}
+.roas-tag{display:inline-block;margin-top:8px;font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:999px;}
+
+.roas-input-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.roas-block{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;}
+.roas-block h4{font-size:.95rem;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.roas-block h4 .ic{font-size:1.1rem;}
+.rf-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.rf{display:flex;flex-direction:column;gap:5px;}
+.rf label{font-size:.72rem;color:var(--muted);font-weight:600;}
+.rf input{border:1px solid var(--border);border-radius:9px;padding:8px 10px;font-family:"Poppins",sans-serif;font-size:.9rem;}
+.rf .hint{font-size:.68rem;color:var(--muted);}
+.rf input.warn{border-color:#f59e0b;background:#fffbeb;}
+.details-toggle{font-size:.78rem;color:var(--purple);font-weight:600;cursor:pointer;margin-top:14px;display:inline-block;}
+.details-block{display:none;margin-top:14px;padding-top:14px;border-top:1px dashed var(--border);}
+.details-block.open{display:block;}
+.derived{background:#f7f5ff;border-radius:10px;padding:12px 14px;font-size:.82rem;margin-top:12px;line-height:1.7;}
+.derived b{color:var(--purple-dark);}
+.warn-box{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:10px;padding:12px 14px;font-size:.82rem;margin-bottom:16px;}
+
+footer{background:#000;color:#9a97ad;padding:26px 0;text-align:center;font-size:.8rem;}
+footer strong{color:#fff;}
+
+@media(max-width:900px){
+  .cards-3{grid-template-columns:1fr;}
+  .roas-scenarios{grid-template-columns:1fr;}
+  .roas-input-grid{grid-template-columns:1fr;}
+  .rf-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- PÁGINA 1 — BRIEFING -->
+<section class="page active" id="page-1">
+  <div class="wrap">
+    <div class="pagenav">
+      <button class="navbtn active" data-page="1">Briefing</button>
+      <button class="navbtn" data-page="2">Cronograma</button>
+      <button class="navbtn" data-page="3">Workflow &amp; Peças</button>
+      <button class="navbtn" data-page="4">Checklist</button>
+      <button class="navbtn" data-page="5">Simulador ROAS</button>
+    </div>
+
+    <div class="briefing-top">
+      <div class="bt-client">Laísse Moreira Consultoria</div>
+      <div class="bt-campaign">Sala de Líderes — Lançamento Mentoria Tríade</div>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-box">
+        <div class="lab">Funil</div>
+        <h3>Sala Secreta</h3>
+        <p>Evento gratuito fechado (Zoom, ~2h) + abertura de vendas · captação com tráfego pago e orgânico.</p>
+      </div>
+
+      <div class="info-box">
+        <div class="lab">Marcos principais</div>
+        <ul class="milestones" id="milestonesList"></ul>
+      </div>
+
+      <div class="info-box">
+        <div class="lab">Metas</div>
+        <div class="meta-field"><label>Leads</label><input id="bf_meta_leads" value="100"></div>
+        <div class="meta-field"><label>Vendas</label><input id="bf_meta_vendas" placeholder="a definir"></div>
+        <div class="meta-field"><label>Faturamento</label><input id="bf_meta_faturamento" placeholder="a definir"></div>
+      </div>
+
+      <div class="info-box">
+        <div class="lab">Links úteis</div>
+        <div class="link-field">
+          <label>Documento Mestre</label>
+          <div class="link-row">
+            <input id="bf_link_doc_mestre" placeholder="colar link" oninput="onBfLinkInput('doc_mestre',this)">
+            <a id="open_doc_mestre" href="#" target="_blank" rel="noopener" style="display:none;">↗</a>
+          </div>
+        </div>
+        <div class="link-field">
+          <label>Pasta da Campanha</label>
+          <div class="link-row">
+            <input id="bf_link_pasta" placeholder="colar link" oninput="onBfLinkInput('pasta',this)">
+            <a id="open_pasta" href="#" target="_blank" rel="noopener" style="display:none;">↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PÁGINA 2 — CRONOGRAMA -->
+<section class="page" id="page-2">
+  <div class="wrap">
+    <div class="pagenav">
+      <button class="navbtn" data-page="1">Briefing</button>
+      <button class="navbtn active" data-page="2">Cronograma</button>
+      <button class="navbtn" data-page="3">Workflow &amp; Peças</button>
+      <button class="navbtn" data-page="4">Checklist</button>
+      <button class="navbtn" data-page="5">Simulador ROAS</button>
+    </div>
+    <h2 style="margin-bottom:18px;">Cronograma da campanha</h2>
+    <div class="gantt-wrap">
+      <div class="gantt-scroll">
+        <div class="gantt-months" id="ganttMonths"></div>
+        <div id="ganttRows"></div>
+      </div>
+      <div class="gantt-legend" id="ganttLegend"></div>
+    </div>
+  </div>
+</section>
+
+<!-- PÁGINA 3 — WORKFLOW & PEÇAS -->
+<section class="page" id="page-3">
+  <div class="wrap">
+    <div class="pagenav">
+      <button class="navbtn" data-page="1">Briefing</button>
+      <button class="navbtn" data-page="2">Cronograma</button>
+      <button class="navbtn active" data-page="3">Workflow &amp; Peças</button>
+      <button class="navbtn" data-page="4">Checklist</button>
+      <button class="navbtn" data-page="5">Simulador ROAS</button>
+    </div>
+    <h2 style="margin-bottom:6px;">Workflow &amp; peças por fase</h2>
+    <p style="color:var(--muted);font-size:.9rem;margin-bottom:22px;">As peças abaixo indicam o tipo de material a produzir em cada fase. O conteúdo (headline, narrativa, roteiro) ainda está em validação com a Laísse e não está travado aqui — acompanhe a versão vigente no documento de narrativa central.</p>
+    <div id="workflowPhases"></div>
+  </div>
+</section>
+
+<!-- PÁGINA 4 — CHECKLIST -->
+<section class="page" id="page-4">
+  <div class="wrap">
+    <div class="pagenav">
+      <button class="navbtn" data-page="1">Briefing</button>
+      <button class="navbtn" data-page="2">Cronograma</button>
+      <button class="navbtn" data-page="3">Workflow &amp; Peças</button>
+      <button class="navbtn active" data-page="4">Checklist</button>
+      <button class="navbtn" data-page="5">Simulador ROAS</button>
+    </div>
+    <h2 style="margin-bottom:18px;">Checklist de execução</h2>
+    <div class="cl-progress-wrap">
+      <strong id="clPercent">0%</strong>
+      <div class="cl-progress-bar"><span id="clBarFill" style="width:0%"></span></div>
+      <div class="cl-actions">
+        <button class="btn btn-primary" onclick="exportCSV()">Exportar CSV</button>
+        <button class="btn btn-ghost" onclick="resetChecklist()">Resetar</button>
+      </div>
+    </div>
+    <div id="checklistPhases"></div>
+  </div>
+</section>
+
+<!-- PÁGINA 5 — SIMULADOR ROAS -->
+<section class="page" id="page-5">
+  <div class="wrap">
+    <div class="pagenav">
+      <button class="navbtn" data-page="1">Briefing</button>
+      <button class="navbtn" data-page="2">Cronograma</button>
+      <button class="navbtn" data-page="3">Workflow &amp; Peças</button>
+      <button class="navbtn" data-page="4">Checklist</button>
+      <button class="navbtn active" data-page="5">Simulador ROAS</button>
+    </div>
+    <h2 style="margin-bottom:18px;">Simulador de ROAS</h2>
+
+    <div class="roas-top">
+      <span class="roas-save" id="roas-save-status"></span>
+      <h3>Projeção consolidada</h3>
+      <div class="roas-scenarios" id="roasScenarios"></div>
+    </div>
+
+    <div class="warn-box" id="ticketWarn" style="display:none;">
+      O ticket digital da Mentoria Tríade ainda não está confirmado com a Laísse. Preencha o campo abaixo (ou na página de Briefing) pra ativar o cálculo de faturamento e ROAS.
+    </div>
+
+    <div class="roas-input-grid">
+      <div class="roas-block">
+        <h4><span class="ic">🎯</span> Captação de leads</h4>
+        <div class="rf-grid">
+          <div class="rf"><label>Meta de leads</label><input type="text" id="s_meta_leads" oninput="calcRoas()"></div>
+          <div class="rf"><label>Custo por lead (R$)</label><input type="text" id="s_cpl" oninput="calcRoas()"></div>
+        </div>
+        <div class="derived" id="investDerived"></div>
+        <span class="details-toggle" onclick="toggleDetails('media')">+ detalhamento de mídia (CPM, CTR, connect rate)</span>
+        <div class="details-block" id="details-media">
+          <div class="rf-grid">
+            <div class="rf"><label>CPM (R$)</label><input type="text" id="s_cpm" oninput="calcRoas()"></div>
+            <div class="rf"><label>CTR (%)</label><input type="text" id="s_ctr" oninput="calcRoas()"></div>
+            <div class="rf"><label>Connect rate (%)</label><input type="text" id="s_connect" oninput="calcRoas()"></div>
+            <div class="rf"><label>Conversão LP → lead (%)</label><input type="text" id="s_convlp" oninput="calcRoas()"></div>
+          </div>
+          <div class="derived" id="mediaDerived"></div>
+        </div>
+      </div>
+
+      <div class="roas-block">
+        <h4><span class="ic">💰</span> Conversão em vendas · Mentoria Tríade</h4>
+        <div class="rf"><label>Ticket digital (R$)</label><input type="text" id="s_ticket" oninput="calcRoas()"></div>
+        <div class="rf-grid" style="margin-top:14px;">
+          <div class="rf"><label>Conversão baixa (%)</label><input type="text" id="s_conv_baixa" oninput="calcRoas()"></div>
+          <div class="rf"><label>Conversão média (%)</label><input type="text" id="s_conv_media" oninput="calcRoas()"></div>
+          <div class="rf"><label>Conversão ótima (%)</label><input type="text" id="s_conv_otima" oninput="calcRoas()"></div>
+        </div>
+        <p class="hint" style="margin-top:10px;">Conversão = % dos leads captados que compram a Mentoria Tríade após o Sala de Líderes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Desenvolvido por <strong>Catapulta de Ideias</strong> para uso exclusivo de Laísse Moreira Consultoria
+</footer>
+
+<script>
+/* ---------- NAV ---------- */
+Array.prototype.forEach.call(document.querySelectorAll('.navbtn'), function(btn){
+  btn.addEventListener('click',()=>goToPage(btn.dataset.page));
+});
+function goToPage(n){
+  Array.prototype.forEach.call(document.querySelectorAll('.navbtn'), b=>b.classList.toggle('active',b.dataset.page===String(n)));
+  Array.prototype.forEach.call(document.querySelectorAll('.page'), p=>p.classList.toggle('active',p.id==='page-'+n));
+  window.scrollTo({top:0,behavior:'instant'});
+}
+function goToPhase(id){ goToPage(3); const el=document.getElementById('phase-'+id); if(el) el.scrollIntoView({behavior:'smooth'}); }
+
+/* ---------- DATA ---------- */
+const GSTART = new Date(2026,6,21); // 21/07/2026
+function dOff(ds){ const [y,m,d]=ds.split('-').map(Number); return Math.round((new Date(y,m-1,d)-GSTART)/86400000); }
+function fmtDate(ds){ const [,m,d]=ds.split('-'); return `${d}/${m}`; }
+
+const GANTT_ROWS = [
+  {id:1,name:"Antecipação (sem CTA)",start:"2026-07-21",end:"2026-07-26",color:"#6b7280"},
+  {id:2,name:"Captação / Convite — Sala de Líderes",start:"2026-07-27",end:"2026-08-09",color:"#480ec1"},
+  {id:3,name:"Sala de Líderes (evento ao vivo)",start:"2026-08-10",end:"2026-08-10",color:"#faa323"},
+  {id:4,name:"Vendas / Carrinho aberto",start:"2026-08-10",end:"2026-08-16",color:"#16a34a"},
+];
+const EVENT_DATE = "2026-08-10";
+const GTOTAL = dOff("2026-08-16") - dOff("2026-07-21");
+
+const ICONS = {video:"🎬",email:"📧",wpp:"💬",landing:"🖥️",criativo:"🎯",hotmart:"🛒",organico:"📱",off:"⚙️"};
+const BG = {video:"rgba(239,68,68,0.1)",email:"rgba(37,99,235,0.1)",wpp:"rgba(22,163,74,0.1)",landing:"rgba(124,58,237,0.1)",criativo:"rgba(72,14,193,0.1)",hotmart:"rgba(250,163,35,0.1)",organico:"rgba(6,182,212,0.1)",off:"rgba(107,114,128,0.1)"};
+const TAGLABEL = {video:"Vídeo",email:"E-mail",wpp:"WhatsApp",landing:"Landing Page",criativo:"Criativo/Ads",hotmart:"Vendas",organico:"Orgânico",off:"Estratégico",grupo:"Grupo"};
+const TAGCOLOR = {video:"#dc2626",email:"#2563eb",wpp:"#16a34a",landing:"#7c3aed",criativo:"#480ec1",hotmart:"#faa323",organico:"#0891b2",off:"#6b7280",grupo:"#480ec1"};
+
+const WORKFLOW_PIECES = {
+  1:{goal:"Aquecer a audiência em torno do sintoma real (apaga-incêndio, time sem autonomia) sem convidar pra nada ainda. Preparar toda a infraestrutura técnica antes de abrir CTA.",
+    pieces:[
+      {type:"organico",text:"Conteúdo teaser sobre o sintoma de liderar sozinho",note:"copy final em validação"},
+      {type:"organico",text:"Enquete de validação de dor (Stories)"},
+      {type:"landing",text:"Landing page MVP no ar (domínio HostGator)"},
+      {type:"off",text:"Pixel Meta Ads e MailChimp configurados"},
+      {type:"off",text:"Fechar ticket digital da Mentoria Tríade com a Laísse"},
+    ]},
+  2:{goal:"Converter atenção em inscrição pro Sala de Líderes. Tráfego pago leve complementando o orgânico.",
+    pieces:[
+      {type:"organico",text:"Convite oficial pro Sala de Líderes",note:"headline/subhead a confirmar"},
+      {type:"criativo",text:"Campanha de tráfego pago (Meta Ads)"},
+      {type:"landing",text:"Página de inscrição com formulário integrado ao MailChimp"},
+      {type:"email",text:"Sequência de e-mails de convite"},
+      {type:"wpp",text:"Lembretes por WhatsApp pros inscritos"},
+    ]},
+  3:{goal:"Entregar a experiência ao vivo (diagnóstico dos 3 erros) e conduzir pro pitch da Mentoria Tríade.",
+    pieces:[
+      {type:"off",text:"Teste técnico do Zoom e roteiro do encontro"},
+      {type:"email",text:"Lembrete de última hora"},
+      {type:"video",text:"Sala de Líderes ao vivo (~2h)"},
+      {type:"hotmart",text:"Abertura do carrinho ao final do encontro"},
+    ]},
+  4:{goal:"Sustentar a decisão de compra durante a janela de carrinho aberto.",
+    pieces:[
+      {type:"email",text:"Sequência de e-mails de vendas"},
+      {type:"wpp",text:"Sequência de WhatsApp de vendas"},
+      {type:"organico",text:"Prova social e depoimentos"},
+      {type:"off",text:"Encerramento de carrinho e consolidação de resultados"},
+    ]},
+};
+
+const PHASES = [
+  {id:1,name:"Antecipação (sem CTA)",color:"#6b7280",dates:"21/07 → 26/07",items:[
+    {text:"Configurar domínio e subir landing page MVP (HostGator)",tags:["landing"],dl:"22/07"},
+    {text:"Configurar MailChimp e lista de captação",tags:["off"],dl:"22/07"},
+    {text:"Confirmar pixel Meta Ads instalado na LP",tags:["criativo"],dl:"23/07"},
+    {text:"Fechar ticket digital da Mentoria Tríade com a Laísse",tags:["off"],dl:"23/07"},
+    {text:"Publicar conteúdo teaser sobre o sintoma de liderar sozinho (sem CTA)",tags:["organico"],dl:"24/07"},
+    {text:"Rodar enquete de validação de dor no Instagram",tags:["organico"],dl:"25/07"},
+    {text:"Validar headline, subheadline e narrativa final da campanha",tags:["off"],dl:"26/07"},
+    {text:"Estruturar briefing de criativos de tráfego pago",tags:["criativo"],dl:"26/07"},
+  ]},
+  {id:2,name:"Captação / Convite — Sala de Líderes",color:"#480ec1",dates:"27/07 → 09/08",items:[
+    {text:"Publicar convite oficial pro Sala de Líderes (orgânico)",tags:["organico"],dl:"27/07"},
+    {text:"Subir campanha de tráfego pago (Meta Ads)",tags:["criativo"],dl:"27/07"},
+    {text:"Configurar página de inscrição integrada ao MailChimp",tags:["landing"],dl:"27/07"},
+    {text:"Disparar e-mail de convite",tags:["email"],dl:"28/07"},
+    {text:"Disparar lembretes por WhatsApp pros inscritos",tags:["wpp"],dl:"05/08"},
+    {text:"Monitorar CPL real vs. meta (R$ 8)",tags:["off"],dl:"05/08"},
+    {text:"Preparar roteiro dos 3 erros pro Sala de Líderes",tags:["off"],dl:"08/08"},
+    {text:"Preparar pitch de oferta da Mentoria Tríade",tags:["off"],dl:"09/08"},
+  ]},
+  {id:3,name:"Sala de Líderes (evento ao vivo)",color:"#faa323",dates:"10/08",items:[
+    {text:"Testar link e infraestrutura do Zoom",tags:["off"],dl:"10/08"},
+    {text:"Enviar lembrete de última hora (e-mail + WhatsApp)",tags:["email","wpp"],dl:"10/08"},
+    {text:"Realizar o Sala de Líderes ao vivo (~2h)",tags:["video"],dl:"10/08"},
+    {text:"Apresentar pitch da Mentoria Tríade ao final",tags:["video"],dl:"10/08"},
+    {text:"Abrir carrinho de vendas",tags:["hotmart"],dl:"10/08"},
+  ]},
+  {id:4,name:"Vendas / Carrinho aberto",color:"#16a34a",dates:"10/08 → 16/08",items:[
+    {text:"Disparar sequência de e-mails de vendas",tags:["email"],dl:"11/08"},
+    {text:"Disparar sequência de WhatsApp de vendas",tags:["wpp"],dl:"11/08"},
+    {text:"Postar depoimentos e prova social",tags:["organico"],dl:"13/08"},
+    {text:"Enviar lembrete de fechamento de carrinho",tags:["email"],dl:"15/08"},
+    {text:"Encerrar carrinho e consolidar resultados",tags:["off"],dl:"16/08"},
+  ]},
+];
+
+/* ---------- GANTT ---------- */
+function renderGantt(){
+  const rowsEl=document.getElementById('ganttRows'), legendEl=document.getElementById('ganttLegend');
+  const pxPerDay = 660/GTOTAL;
+  rowsEl.innerHTML='';
+  GANTT_ROWS.forEach(r=>{
+    const s=dOff(r.start), e=dOff(r.end), dur=Math.max(e-s,0)+1;
+    const row=document.createElement('div'); row.className='gantt-row';
+    const evtOffset = dOff(EVENT_DATE)-s;
+    const showMarker = (evtOffset>=0 && evtOffset<=dur-1);
+    row.innerHTML=`
+      <div class="gantt-label">${r.name}</div>
+      <div class="gantt-track">
+        <div class="gantt-bar" style="left:${s*pxPerDay}px;width:${Math.max(dur*pxPerDay-4,26)}px;background:${r.color}" onclick="goToPhase(${r.id})">
+          ${dur<=1? fmtDate(r.start) : fmtDate(r.start)+' → '+fmtDate(r.end)}
+        </div>
+        ${showMarker?`<div class="gantt-marker" style="left:${evtOffset*pxPerDay}px"></div>`:''}
+      </div>`;
+    rowsEl.appendChild(row);
+  });
+  legendEl.innerHTML = GANTT_ROWS.map(r=>`<span><i style="background:${r.color}"></i>${r.name}</span>`).join('');
+}
+
+/* ---------- WORKFLOW ---------- */
+function renderWorkflow(){
+  const el=document.getElementById('workflowPhases'); el.innerHTML='';
+  GANTT_ROWS.forEach(r=>{
+    const wf = WORKFLOW_PIECES[r.id];
+    const block=document.createElement('div'); block.className='phase-block'; block.id='phase-'+r.id;
+    block.innerHTML=`
+      <div class="phase-head" style="background:${r.color}">
+        <span class="ph-name">${r.id}. ${r.name}</span>
+        <span class="ph-dates">${r.start.split('-').reverse().slice(0,2).join('/')} → ${r.end.split('-').reverse().slice(0,2).join('/')}</span>
+      </div>
+      <div class="phase-body">
+        <div class="phase-goal">${wf.goal}</div>
+        <div class="piece-grid">
+          ${wf.pieces.map(p=>`
+            <div class="piece" style="background:${BG[p.type]}">
+              <span class="ic">${ICONS[p.type]}</span>
+              <span>${p.text}${p.note?`<span class="placeholder-note">${p.note}</span>`:''}</span>
+            </div>`).join('')}
+        </div>
+      </div>`;
+    el.appendChild(block);
+  });
+}
+
+/* ---------- CHECKLIST ---------- */
+const S = {}; // runtime state
+function renderChecklist(){
+  const el=document.getElementById('checklistPhases'); el.innerHTML='';
+  PHASES.forEach(p=>{
+    const wrap=document.createElement('div'); wrap.className='cl-phase'; wrap.id='clphase-'+p.id;
+    wrap.innerHTML=`
+      <div class="cl-phase-head" style="background:${p.color}" onclick="togglePhase(${p.id})">
+        <span class="chev">▾</span>
+        <span class="cph-name">${p.id}. ${p.name}</span>
+        <span class="cph-dates">${p.dates}</span>
+        <span class="cph-count" id="clprog-${p.id}">0/${p.items.length}</span>
+      </div>
+      <div class="cl-items" id="clitems-${p.id}"></div>`;
+    el.appendChild(wrap);
+    const itemsEl = wrap.querySelector('#clitems-'+p.id);
+    p.items.forEach((it,i)=>{
+      const row=document.createElement('div'); row.className='cli'; row.id=`cli-${p.id}-${i}`;
+      row.innerHTML=`
+        <div class="item-cb" onclick="toggleDone(${p.id},${i})"></div>
+        <div class="cli-text-wrap"><span class="cli-text">${it.text}</span>
+          <div class="cli-tags">${it.tags.map(t=>`<span class="tag" style="background:${TAGCOLOR[t]}22;color:${TAGCOLOR[t]}">${TAGLABEL[t]}</span>`).join('')}</div>
+        </div>
+        <div class="cli-dl"><input type="text" placeholder="dd/mm" class="suggested" value="${it.dl}" oninput="onFieldInput(${p.id},${i},'dl',this)"></div>
+        <div class="cli-resp"><input type="text" placeholder="Nome do responsável" oninput="onFieldInput(${p.id},${i},'resp',this)"></div>
+        <div class="cli-link-cell">
+          <input class="cli-link" placeholder="colar link da entrega" oninput="onLinkInput(${p.id},${i},this)">
+          <a class="cli-open" id="open-${p.id}-${i}" href="#" target="_blank" rel="noopener" title="Abrir entrega" style="display:none;">↗</a>
+        </div>`;
+      itemsEl.appendChild(row);
+    });
+  });
+}
+function togglePhase(id){ document.getElementById('clphase-'+id).classList.toggle('collapsed'); document.getElementById('clphase-'+id).querySelector('.cl-phase-head').classList.toggle('collapsed'); }
+function toggleDone(pid,i){
+  const key=`${pid}-${i}-done`; S[key]=!S[key];
+  const item=document.getElementById(`cli-${pid}-${i}`); const cb=item.querySelector('.item-cb');
+  item.classList.toggle('done',S[key]); cb.classList.toggle('checked',S[key]); cb.textContent = S[key]?'✓':'';
+  updateProgress(); scheduleGlobalSave();
+}
+function onFieldInput(pid,i,field,el){ S[`${pid}-${i}-${field}`]=el.value; if(field==='dl') el.classList.remove('suggested'); scheduleGlobalSave(); }
+function onLinkInput(pid,i,el){
+  const v=el.value.trim(); S[`${pid}-${i}-link`]=v;
+  const a=document.getElementById(`open-${pid}-${i}`);
+  if(v){ a.href=/^https?:\/\//i.test(v)?v:'https://'+v; a.style.display=''; } else { a.href='#'; a.style.display='none'; }
+  scheduleGlobalSave();
+}
+function updateProgress(){
+  let done=0,total=0;
+  PHASES.forEach(p=>{
+    const d=p.items.filter((_,i)=>S[`${p.id}-${i}-done`]).length;
+    document.getElementById(`clprog-${p.id}`).textContent=`${d}/${p.items.length}`;
+    done+=d; total+=p.items.length;
+  });
+  const pct = total? Math.round(done/total*100):0;
+  document.getElementById('clPercent').textContent = pct+'%';
+  document.getElementById('clBarFill').style.width = pct+'%';
+}
+function exportCSV(){
+  let rows=[['Fase','Tarefa','Tags','Status','Prazo','Responsável','Link da entrega']];
+  PHASES.forEach(p=>p.items.forEach((it,i)=>{
+    rows.push([p.name,it.text,it.tags.join('|'), S[`${p.id}-${i}-done`]?'Concluído':'Pendente', S[`${p.id}-${i}-dl`]||it.dl, S[`${p.id}-${i}-resp`]||'', S[`${p.id}-${i}-link`]||'']);
+  }));
+  const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='checklist-sala-de-lideres.csv'; a.click();
+}
+function resetChecklist(){
+  if(!confirm('Resetar todo o checklist? Isso apaga status, prazos editados, responsáveis e links.')) return;
+  Object.keys(S).forEach(k=>{ if(/-\d+-(done|dl|resp|link)$/.test(k)) delete S[k]; });
+  renderChecklist(); updateProgress(); scheduleGlobalSave();
+}
+
+/* ---------- ROAS ---------- */
+function toggleDetails(name){ document.getElementById('details-'+name).classList.toggle('open'); }
+function num(id){ const v=parseFloat(document.getElementById(id).value.replace(',','.')); return isNaN(v)?0:v; }
+
+function calcRoas(){
+  const metaLeads = num('s_meta_leads')||0;
+  const cpl = num('s_cpl')||0;
+  const ticket = num('s_ticket')||0;
+  const convB = num('s_conv_baixa')/100, convM = num('s_conv_media')/100, convO = num('s_conv_otima')/100;
+  const investimento = metaLeads*cpl;
+
+  document.getElementById('investDerived').innerHTML =
+    `Investimento estimado em tráfego: <b>R$ ${investimento.toFixed(2)}</b> para captar <b>${metaLeads}</b> leads a <b>R$ ${cpl.toFixed(2)}</b> cada.`;
+
+  // detalhamento de mídia (cascata adaptada: conversão LP → lead, no lugar de LP → venda)
+  const cpm=num('s_cpm'), ctr=num('s_ctr')/100, connect=num('s_connect')/100, convlp=num('s_convlp')/100;
+  if(cpm && ctr && connect && convlp){
+    const visitasPorLead = 1/convlp;
+    const cliquesPorLead = visitasPorLead/connect;
+    const impressoesPorLead = cliquesPorLead/ctr;
+    const cplCalculado = impressoesPorLead*(cpm/1000);
+    const cpc = (cpm/1000)/ctr;
+    const custoPorVisita = cpc/connect;
+    document.getElementById('mediaDerived').innerHTML =
+      `CPL calculado a partir da mídia: <b>R$ ${cplCalculado.toFixed(2)}</b><br>`+
+      `CPC: <b>R$ ${cpc.toFixed(2)}</b> · Custo por visita: <b>R$ ${custoPorVisita.toFixed(2)}</b><br>`+
+      `Compare esse número com o CPL de R$ ${cpl.toFixed(2)} usado na projeção ao lado.`;
+  } else {
+    document.getElementById('mediaDerived').innerHTML = `Preencha os 4 campos acima pra calcular o CPL a partir da mídia (CPM, CTR, connect rate e conversão da LP em lead).`;
+  }
+
+  document.getElementById('ticketWarn').style.display = ticket>0 ? 'none':'flex';
+
+  const scenarios = [
+    {name:'Conversão baixa',conv:convB},
+    {name:'Conversão média',conv:convM},
+    {name:'Conversão ótima',conv:convO},
+  ];
+  const el = document.getElementById('roasScenarios'); el.innerHTML='';
+  scenarios.forEach(sc=>{
+    const vendas = metaLeads*sc.conv;
+    const faturamento = vendas*ticket;
+    const roas = (investimento>0 && ticket>0) ? faturamento/investimento : null;
+    let color='#dc2626', tag='Sem dados', tagBg='#dc2626';
+    if(roas!==null){
+      if(roas>=5){color='#16a34a';tag='Excelente ✓';}
+      else if(roas>=3){color='#faa323';tag='Positivo';}
+      else if(roas>=0){color='#dc2626';tag='Abaixo da meta';}
+      if(roas<0){color='#dc2626';tag='Negativo';}
+    }
+    const barPct = roas===null?0:Math.min(roas/8*100,100);
+    const card=document.createElement('div'); card.className='scenario';
+    card.innerHTML=`
+      <div class="sc-name">${sc.name} (${(sc.conv*100).toFixed(0)}%)</div>
+      <div class="sc-roas">${roas===null?'--':roas.toFixed(1)+'×'}</div>
+      <div class="sc-kpis">
+        Vendas: <b>${vendas.toFixed(1)}</b> · Faturamento: <b>R$ ${faturamento.toFixed(2)}</b><br>
+        Investimento: <b>R$ ${investimento.toFixed(2)}</b>
+      </div>
+      <div class="roas-bar-track"><div class="roas-bar-fill" style="width:${barPct}%;background:${color}"></div></div>
+      <span class="roas-tag" style="background:${color}33;color:${color}">${tag}</span>`;
+    el.appendChild(card);
+  });
+}
+
+/* ---------- AUTOSAVE ---------- */
+const BRIEFING_IDS = ['bf_meta_leads','bf_meta_vendas','bf_meta_faturamento','bf_link_doc_mestre','bf_link_pasta'];
+function onBfLinkInput(name, el){
+  const v = el.value.trim();
+  const a = document.getElementById('open_'+name);
+  if(a){ if(v){ a.href = /^https?:\/\//i.test(v) ? v : 'https://'+v; a.style.display=''; } else { a.href='#'; a.style.display='none'; } }
+  scheduleGlobalSave();
+}
+function renderBriefingMilestones(){
+  const start = GANTT_ROWS[1], evento = EVENT_DATE, carrinho = GANTT_ROWS[3];
+  const fmt = ds => { const [,m,d] = ds.split('-'); return `${d}/${m}`; };
+  const el = document.getElementById('milestonesList');
+  if(!el) return;
+  el.innerHTML = `
+    <li><span>Start Captação</span><b>${fmt(start.start)}</b></li>
+    <li><span>Evento</span><b>${fmt(evento)}</b></li>
+    <li><span>Carrinho</span><b>${fmt(carrinho.start)} → ${fmt(carrinho.end)}</b></li>`;
+}
+const ROAS_IDS = ['s_meta_leads','s_cpl','s_ticket','s_conv_baixa','s_conv_media','s_conv_otima','s_cpm','s_ctr','s_connect','s_convlp'];
+let saveTimer=null;
+function scheduleGlobalSave(){ clearTimeout(saveTimer); saveTimer=setTimeout(saveAll,800); }
+function collectBriefing(){ const d={}; BRIEFING_IDS.forEach(id=>{ const el=document.getElementById(id); if(el) d[id]=el.value; }); return d; }
+function collectRoas(){ const d={}; ROAS_IDS.forEach(id=>{ const el=document.getElementById(id); if(el && el.value!=='') d[id]=el.value; }); return d; }
+function collectChecklist(){
+  const d={};
+  PHASES.forEach(p=>p.items.forEach((_,i)=>{
+    const done=S[`${p.id}-${i}-done`], dl=S[`${p.id}-${i}-dl`], resp=S[`${p.id}-${i}-resp`], link=S[`${p.id}-${i}-link`];
+    if(done) d[`${p.id}-${i}-done`]=true;
+    if(dl && dl!=='') d[`${p.id}-${i}-dl`]=dl;
+    if(resp && resp!=='') d[`${p.id}-${i}-resp`]=resp;
+    if(link && link!=='') d[`${p.id}-${i}-link`]=link;
+  }));
+  return d;
+}
+function saveAll(){
+  const status=document.getElementById('roas-save-status');
+  if(status) status.textContent='salvando...';
+  fetch('save.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({briefing:collectBriefing(),checklist:collectChecklist(),roas:collectRoas()})})
+    .then(r=>r.json()).then(()=>{ if(status) status.textContent='salvo ✓'; })
+    .catch(()=>{ if(status) status.textContent='erro ao salvar'; });
+}
+function applyBriefing(d){
+  if(!d) return;
+  Object.keys(d).forEach(k=>{ const el=document.getElementById(k); if(el) el.value=d[k]; });
+  const dm=document.getElementById('bf_link_doc_mestre'); if(dm && dm.value) onBfLinkInput('doc_mestre', dm);
+  const pa=document.getElementById('bf_link_pasta'); if(pa && pa.value) onBfLinkInput('pasta', pa);
+}
+function applyRoasData(d){ if(!d) return; Object.keys(d).forEach(k=>{ const el=document.getElementById(k); if(el) el.value=d[k]; }); calcRoas(); }
+function applyChecklist(d){
+  if(!d) return;
+  Object.keys(d).forEach(k=>{ S[k]=d[k]; });
+  PHASES.forEach(p=>p.items.forEach((it,i)=>{
+    const done=S[`${p.id}-${i}-done`], dl=S[`${p.id}-${i}-dl`], resp=S[`${p.id}-${i}-resp`], link=S[`${p.id}-${i}-link`];
+    const item=document.getElementById(`cli-${p.id}-${i}`); if(!item) return;
+    const cb=item.querySelector('.item-cb');
+    if(done){ item.classList.add('done'); cb.classList.add('checked'); cb.textContent='✓'; }
+    if(dl){ const dlInput=item.querySelector('.cli-dl input'); if(dlInput){ dlInput.value=dl; dlInput.classList.remove('suggested'); } }
+    if(resp){ const respInput=item.querySelector('.cli-resp input'); if(respInput) respInput.value=resp; }
+    if(link){ const linkInput=item.querySelector('.cli-link'); if(linkInput) linkInput.value=link;
+      const a=document.getElementById(`open-${p.id}-${i}`); if(a){ a.href=/^https?:\/\//i.test(link)?link:'https://'+link; a.style.display=''; } }
+  }));
+  updateProgress();
+}
+function loadAll(){
+  fetch('save.php').then(r=>r.json()).then(d=>{
+    applyBriefing(d.briefing); applyChecklist(d.checklist); applyRoasData(d.roas);
+  }).catch(()=>{ calcRoas(); });
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  renderGantt();
+  renderWorkflow();
+  renderChecklist();
+  renderBriefingMilestones();
+  BRIEFING_IDS.forEach(id=>{ const el=document.getElementById(id); if(el) el.addEventListener('input', scheduleGlobalSave); });
+  // seed defaults for ROAS fields before load
+  document.getElementById('s_meta_leads').value=100;
+  document.getElementById('s_cpl').value=8;
+  document.getElementById('s_conv_baixa').value=5;
+  document.getElementById('s_conv_media').value=7;
+  document.getElementById('s_conv_otima').value=10;
+  calcRoas();
+  loadAll();
+});
+</script>
+</body>
+</html>
