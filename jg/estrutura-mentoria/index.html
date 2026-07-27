@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Ciclo da Mentoria Jorge Grimberg</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bege:#EFE7DA; --preto:#1A1A1A; --branco:#FFF; --amarelo:#F2C230; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bege); color:var(--preto); font-family:'Inter',system-ui,sans-serif; padding:56px 40px 72px; }
+  .wrap { max-width:1120px; margin:0 auto; }
+
+  header { border-bottom:2px solid var(--preto); padding-bottom:26px; margin-bottom:46px; }
+  .eyebrow { font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.18em; text-transform:uppercase; opacity:.62; }
+  h1 { font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:clamp(30px,4.6vw,52px);
+        line-height:1.02; letter-spacing:-.02em; margin-top:12px; text-transform:uppercase; }
+  .sub { margin-top:14px; max-width:640px; font-size:15px; line-height:1.55; opacity:.8; }
+
+  h2.secao { font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.18em; text-transform:uppercase;
+              opacity:.62; font-weight:700; margin-bottom:20px; }
+
+  .entrada { display:grid; grid-template-columns:repeat(3,1fr); margin-bottom:60px; }
+  .passo { background:var(--branco); border:2px solid var(--preto); padding:22px 24px 24px; margin-right:-2px; }
+  .passo:last-child { margin-right:0; }
+  .passo .num { font-family:'Space Mono',monospace; font-size:11px; font-weight:700; letter-spacing:.1em; opacity:.5; }
+  .passo h3 { font-family:'Bricolage Grotesque',sans-serif; font-weight:700; font-size:19px; margin:8px 0;
+               text-transform:uppercase; letter-spacing:-.01em; line-height:1.15; }
+  .passo p { font-size:13.5px; line-height:1.5; opacity:.82; }
+  .passo .tag { display:inline-block; margin-top:12px; background:var(--amarelo); font-family:'Space Mono',monospace;
+                 font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; padding:4px 8px;
+                 border:1.5px solid var(--preto); }
+
+  .palco { width:100%; margin:0 auto 52px; }
+  .palco svg { display:block; width:100%; height:auto; overflow:visible; }
+  .no-num { font-family:'Space Mono',monospace; font-size:11px; font-weight:700; fill:var(--preto); }
+  .centro-t { font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:15px; fill:var(--preto); }
+  .centro-s { font-family:'Space Mono',monospace; font-size:10px; fill:var(--preto); opacity:.6; letter-spacing:.08em; }
+  .volta-lbl { font-family:'Space Mono',monospace; font-size:10px; font-weight:700; fill:var(--preto); opacity:.42; letter-spacing:.1em; }
+  .pil-tag { font-family:'Space Mono',monospace; font-size:10px; font-weight:700; fill:var(--bege); letter-spacing:.06em; }
+  .pil-nome { font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:21px; fill:var(--preto); letter-spacing:-.01em; }
+  .pil-desc { font-family:'Inter',sans-serif; font-size:12.5px; fill:var(--preto); opacity:.75; }
+
+  .renova { border:2px solid var(--preto); background:var(--amarelo); padding:30px 34px;
+             display:grid; grid-template-columns:1fr 1.7fr; gap:34px; align-items:center; }
+  .renova .lead { font-family:'Space Mono',monospace; font-size:10.5px; letter-spacing:.14em;
+                   text-transform:uppercase; opacity:.7; margin-bottom:10px; }
+  .renova h3 { font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:26px;
+                text-transform:uppercase; line-height:1.05; letter-spacing:-.015em; }
+  .renova p { font-size:14.5px; line-height:1.58; }
+
+  .legenda { margin-top:38px; border-top:1px solid rgba(26,26,26,.25); padding-top:18px; display:flex;
+              gap:32px; flex-wrap:wrap; font-family:'Space Mono',monospace; font-size:10.5px;
+              letter-spacing:.05em; text-transform:uppercase; opacity:.68; }
+  .legenda span { display:flex; align-items:center; gap:9px; }
+  .dot { width:13px; height:13px; border:2px solid var(--preto); border-radius:50%; }
+  .dot.am { background:var(--amarelo); }
+  .dot.pr { background:var(--preto); }
+
+  @media (max-width:820px) {
+    body { padding:32px 18px 48px; }
+    .entrada { grid-template-columns:1fr; }
+    .passo { margin-right:0; margin-bottom:-2px; }
+    .renova { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Mentoria Jorge Grimberg · Arquitetura do programa</div>
+    <h1>O ciclo não termina.<br/>Ele volta mais largo.</h1>
+    <p class="sub">A pessoa entra a qualquer momento e percorre os mesmos quatro pilares em toda volta.
+    O que muda a cada passagem não é o pilar, é quem ela é ao chegar nele.</p>
+  </header>
+
+  <h2 class="secao">Entrada</h2>
+  <div class="entrada">
+    <div class="passo">
+      <div class="num">01</div>
+      <h3>Entrada contínua</h3>
+      <p>Não existe turma nem data de corte. Quem compra hoje já recebe todo o acervo gravado e não perdeu nada do que veio antes.</p>
+      <span class="tag">Sem lançamento</span>
+    </div>
+    <div class="passo">
+      <div class="num">02</div>
+      <h3>Diagnóstico e plano de ação</h3>
+      <p>Sessão individual que define onde a pessoa está e por onde ela começa. Feita pelo Jorge no início e, depois, por alguém treinado no método.</p>
+      <span class="tag">1:1 · Individual</span>
+    </div>
+    <div class="passo">
+      <div class="num">03</div>
+      <h3>Trilha priorizada</h3>
+      <p>Ela acessa os conteúdos metodológicos gravados na ordem que a sessão de diagnóstico definiu. A metodologia é a mesma para todos; a trilha é dela.</p>
+      <span class="tag">Metodologia Gravada</span>
+    </div>
+  </div>
+
+  <h2 class="secao">O ciclo</h2>
+  <div class="palco">
+    <svg viewBox="0 0 1000 900" xmlns="http://www.w3.org/2000/svg">
+      <line x1="500.0" y1="392.0" x2="500.0" y2="112.0" stroke="#1A1A1A" stroke-opacity="0.15" stroke-width="1" stroke-dasharray="3 6"/>
+      <line x1="548.0" y1="440.0" x2="828.0" y2="440.0" stroke="#1A1A1A" stroke-opacity="0.15" stroke-width="1" stroke-dasharray="3 6"/>
+      <line x1="500.0" y1="488.0" x2="500.0" y2="768.0" stroke="#1A1A1A" stroke-opacity="0.15" stroke-width="1" stroke-dasharray="3 6"/>
+      <line x1="452.0" y1="440.0" x2="172.0" y2="440.0" stroke="#1A1A1A" stroke-opacity="0.15" stroke-width="1" stroke-dasharray="3 6"/>
+      <path d="M 500.0,370.0 L 502.5,369.6 L 504.9,369.4 L 507.4,369.2 L 510.0,369.1 L 512.5,369.1 L 515.1,369.2 L 517.6,369.3 L 520.2,369.6 L 522.8,370.0 L 525.3,370.4 L 527.9,371.0 L 530.4,371.6 L 533.0,372.4 L 535.5,373.2 L 538.0,374.1 L 540.5,375.2 L 543.0,376.3 L 545.4,377.5 L 547.8,378.8 L 550.2,380.2 L 552.5,381.7 L 554.8,383.3 L 557.0,384.9 L 559.2,386.7 L 561.4,388.5 L 563.4,390.4 L 565.4,392.4 L 567.4,394.5 L 569.3,396.7 L 571.1,398.9 L 572.9,401.3 L 574.5,403.7 L 576.1,406.1 L 577.6,408.6 L 579.1,411.2 L 580.4,413.9 L 581.6,416.6 L 582.8,419.4 L 583.9,422.2 L 584.8,425.0 L 585.7,428.0 L 586.5,430.9 L 587.1,433.9 L 587.7,436.9 L 588.2,440.0 L 588.5,443.1 L 588.8,446.2 L 588.9,449.3 L 588.9,452.5 L 588.8,455.7 L 588.6,458.8 L 588.3,462.0 L 587.9,465.2 L 587.3,468.4 L 586.6,471.5 L 585.9,474.7 L 585.0,477.8 L 584.0,481.0 L 582.8,484.0 L 581.6,487.1 L 580.2,490.1 L 578.8,493.1 L 577.2,496.1 L 575.5,499.0 L 573.7,501.9 L 571.8,504.7 L 569.8,507.4 L 567.7,510.1 L 565.5,512.7 L 563.2,515.3 L 560.7,517.7 L 558.2,520.1 L 555.6,522.5 L 552.9,524.7 L 550.1,526.8 L 547.3,528.9 L 544.3,530.9 L 541.3,532.7 L 538.2,534.5 L 535.0,536.1 L 531.7,537.7 L 528.4,539.1 L 525.0,540.4 L 521.6,541.6 L 518.1,542.7 L 514.6,543.7 L 511.0,544.5 L 507.4,545.3 L 503.7,545.9 L 500.0,546.3 L 496.3,546.7 L 492.5,546.9 L 488.8,547.0 L 485.0,546.9 L 481.2,546.7 L 477.4,546.4 L 473.6,545.9 L 469.8,545.3 L 466.0,544.6 L 462.3,543.7 L 458.5,542.7 L 454.8,541.6 L 451.1,540.3 L 447.4,538.9 L 443.8,537.3 L 440.2,535.7 L 436.7,533.8 L 433.2,531.9 L 429.8,529.8 L 426.5,527.6 L 423.2,525.3 L 420.0,522.9 L 416.8,520.3 L 413.8,517.6 L 410.8,514.8 L 407.9,511.9 L 405.2,508.9 L 402.5,505.8 L 399.9,502.6 L 397.4,499.2 L 395.1,495.8 L 392.8,492.3 L 390.7,488.7 L 388.7,485.0 L 386.8,481.2 L 385.0,477.3 L 383.4,473.4 L 381.9,469.4 L 380.6,465.4 L 379.4,461.3 L 378.3,457.1 L 377.4,452.9 L 376.6,448.6 L 376.0,444.3 L 375.5,440.0 L 375.2,435.6 L 375.0,431.3 L 375.0,426.9 L 375.1,422.4 L 375.4,418.0 L 375.9,413.6 L 376.5,409.2 L 377.2,404.8 L 378.1,400.4 L 379.2,396.0 L 380.4,391.7 L 381.8,387.4 L 383.4,383.1 L 385.1,378.9 L 386.9,374.7 L 388.9,370.6 L 391.1,366.5 L 393.4,362.5 L 395.8,358.6 L 398.4,354.8 L 401.2,351.0 L 404.1,347.3 L 407.1,343.8 L 410.2,340.3 L 413.5,336.9 L 416.9,333.6 L 420.4,330.5 L 424.1,327.4 L 427.8,324.5 L 431.7,321.7 L 435.7,319.0 L 439.8,316.5 L 443.9,314.1 L 448.2,311.8 L 452.6,309.7 L 457.0,307.8 L 461.6,306.0 L 466.2,304.3 L 470.8,302.8 L 475.6,301.5 L 480.4,300.3 L 485.2,299.3 L 490.1,298.5 L 495.0,297.8 L 500.0,297.3 L 500.0,297.3" fill="none" stroke="#1A1A1A" stroke-width="2.2" stroke-opacity="0.42" stroke-linecap="round"/>
+      <path d="M 500.0,297.3 L 505.0,297.0 L 510.0,296.9 L 515.0,296.9 L 520.1,297.1 L 525.1,297.5 L 530.2,298.1 L 535.2,298.8 L 540.2,299.8 L 545.2,300.9 L 550.2,302.1 L 555.1,303.6 L 560.0,305.2 L 564.8,307.1 L 569.6,309.0 L 574.4,311.2 L 579.0,313.5 L 583.6,316.0 L 588.1,318.7 L 592.6,321.5 L 596.9,324.5 L 601.1,327.7 L 605.3,331.0 L 609.3,334.4 L 613.2,338.1 L 617.0,341.8 L 620.7,345.7 L 624.2,349.7 L 627.6,353.9 L 630.9,358.2 L 634.0,362.6 L 637.0,367.1 L 639.8,371.8 L 642.5,376.6 L 645.0,381.4 L 647.3,386.4 L 649.5,391.4 L 651.5,396.6 L 653.3,401.8 L 654.9,407.1 L 656.4,412.4 L 657.7,417.8 L 658.7,423.3 L 659.6,428.8 L 660.3,434.4 L 660.8,440.0 L 661.1,445.6 L 661.2,451.3 L 661.2,456.9 L 660.9,462.6 L 660.4,468.3 L 659.7,473.9 L 658.8,479.6 L 657.7,485.2 L 656.4,490.8 L 654.9,496.4 L 653.2,501.9 L 651.4,507.4 L 649.3,512.8 L 647.0,518.2 L 644.5,523.4 L 641.9,528.7 L 639.0,533.8 L 636.0,538.8 L 632.8,543.7 L 629.4,548.6 L 625.8,553.3 L 622.1,557.9 L 618.2,562.4 L 614.1,566.7 L 609.9,570.9 L 605.5,575.0 L 600.9,578.9 L 596.3,582.7 L 591.4,586.3 L 586.5,589.8 L 581.4,593.1 L 576.2,596.2 L 570.8,599.1 L 565.4,601.8 L 559.8,604.4 L 554.2,606.8 L 548.4,609.0 L 542.6,610.9 L 536.7,612.7 L 530.7,614.3 L 524.7,615.7 L 518.6,616.8 L 512.4,617.8 L 506.2,618.5 L 500.0,619.0 L 493.7,619.3 L 487.5,619.4 L 481.2,619.2 L 474.9,618.9 L 468.6,618.3 L 462.3,617.5 L 456.0,616.4 L 449.8,615.2 L 443.6,613.7 L 437.4,612.0 L 431.3,610.1 L 425.2,608.0 L 419.2,605.6 L 413.3,603.0 L 407.5,600.3 L 401.7,597.3 L 396.1,594.1 L 390.5,590.7 L 385.1,587.1 L 379.8,583.3 L 374.6,579.3 L 369.5,575.2 L 364.6,570.8 L 359.8,566.3 L 355.1,561.5 L 350.7,556.7 L 346.4,551.6 L 342.2,546.4 L 338.3,541.1 L 334.5,535.6 L 330.9,529.9 L 327.5,524.1 L 324.3,518.2 L 321.3,512.2 L 318.5,506.1 L 315.9,499.8 L 313.6,493.5 L 311.4,487.0 L 309.5,480.5 L 307.8,473.9 L 306.4,467.2 L 305.1,460.5 L 304.1,453.7 L 303.4,446.9 L 302.8,440.0 L 302.5,433.1 L 302.5,426.2 L 302.7,419.3 L 303.2,412.3 L 303.8,405.4 L 304.8,398.5 L 305.9,391.6 L 307.4,384.8 L 309.0,377.9 L 310.9,371.2 L 313.1,364.5 L 315.5,357.8 L 318.1,351.3 L 320.9,344.8 L 324.0,338.4 L 327.3,332.1 L 330.9,325.9 L 334.6,319.8 L 338.6,313.9 L 342.8,308.1 L 347.2,302.4 L 351.8,296.9 L 356.6,291.5 L 361.6,286.3 L 366.8,281.2 L 372.1,276.4 L 377.7,271.7 L 383.4,267.2 L 389.3,262.9 L 395.4,258.8 L 401.6,254.9 L 407.9,251.2 L 414.4,247.7 L 421.0,244.5 L 427.7,241.4 L 434.6,238.7 L 441.5,236.1 L 448.6,233.8 L 455.7,231.7 L 463.0,229.9 L 470.3,228.4 L 477.6,227.1 L 485.0,226.0 L 492.5,225.2 L 500.0,224.7 L 500.0,224.7" fill="none" stroke="#1A1A1A" stroke-width="3.7" stroke-opacity="0.64" stroke-linecap="round"/>
+      <path d="M 500.0,224.7 L 507.5,224.4 L 515.1,224.4 L 522.6,224.6 L 530.2,225.2 L 537.7,226.0 L 545.3,227.0 L 552.8,228.3 L 560.2,229.9 L 567.7,231.8 L 575.0,233.9 L 582.3,236.2 L 589.6,238.9 L 596.7,241.7 L 603.7,244.9 L 610.7,248.3 L 617.5,251.9 L 624.3,255.8 L 630.8,259.9 L 637.3,264.3 L 643.6,268.9 L 649.8,273.7 L 655.8,278.7 L 661.6,284.0 L 667.2,289.4 L 672.7,295.1 L 678.0,301.0 L 683.0,307.0 L 687.9,313.3 L 692.5,319.7 L 697.0,326.3 L 701.2,333.0 L 705.2,339.9 L 708.9,347.0 L 712.4,354.2 L 715.6,361.5 L 718.6,369.0 L 721.4,376.5 L 723.8,384.2 L 726.0,392.0 L 728.0,399.8 L 729.6,407.7 L 731.0,415.7 L 732.1,423.8 L 733.0,431.9 L 733.5,440.0 L 733.8,448.2 L 733.7,456.3 L 733.4,464.5 L 732.8,472.7 L 731.9,480.9 L 730.8,489.1 L 729.3,497.2 L 727.6,505.3 L 725.5,513.3 L 723.2,521.2 L 720.6,529.1 L 717.7,536.9 L 714.6,544.7 L 711.2,552.3 L 707.5,559.8 L 703.5,567.2 L 699.3,574.4 L 694.8,581.5 L 690.0,588.5 L 685.1,595.3 L 679.8,601.9 L 674.4,608.4 L 668.7,614.6 L 662.7,620.7 L 656.6,626.6 L 650.2,632.3 L 643.7,637.7 L 636.9,643.0 L 629.9,647.9 L 622.8,652.7 L 615.5,657.2 L 608.0,661.5 L 600.4,665.5 L 592.6,669.2 L 584.7,672.7 L 576.6,675.9 L 568.5,678.8 L 560.2,681.4 L 551.8,683.8 L 543.4,685.9 L 534.8,687.6 L 526.2,689.1 L 517.5,690.2 L 508.8,691.1 L 500.0,691.7 L 491.2,691.9 L 482.4,691.9 L 473.6,691.5 L 464.8,690.8 L 455.9,689.8 L 447.2,688.5 L 438.4,686.9 L 429.7,685.0 L 421.1,682.8 L 412.5,680.3 L 404.1,677.5 L 395.7,674.3 L 387.4,670.9 L 379.2,667.2 L 371.1,663.2 L 363.2,658.9 L 355.4,654.3 L 347.8,649.5 L 340.3,644.4 L 333.0,639.0 L 325.9,633.3 L 319.0,627.4 L 312.3,621.3 L 305.8,614.9 L 299.5,608.3 L 293.4,601.4 L 287.6,594.3 L 282.0,587.1 L 276.6,579.6 L 271.6,571.9 L 266.7,564.0 L 262.2,556.0 L 257.9,547.8 L 253.9,539.4 L 250.2,530.9 L 246.8,522.3 L 243.7,513.5 L 240.9,504.6 L 238.4,495.6 L 236.3,486.5 L 234.4,477.3 L 232.8,468.1 L 231.6,458.8 L 230.7,449.4 L 230.2,440.0 L 229.9,430.6 L 230.0,421.1 L 230.4,411.7 L 231.2,402.2 L 232.3,392.8 L 233.7,383.4 L 235.4,374.0 L 237.5,364.7 L 239.9,355.5 L 242.6,346.3 L 245.7,337.3 L 249.1,328.3 L 252.8,319.4 L 256.8,310.7 L 261.1,302.1 L 265.7,293.6 L 270.6,285.3 L 275.8,277.1 L 281.3,269.2 L 287.1,261.4 L 293.2,253.8 L 299.5,246.4 L 306.1,239.2 L 313.0,232.3 L 320.1,225.6 L 327.4,219.1 L 335.0,212.9 L 342.8,206.9 L 350.8,201.2 L 359.0,195.8 L 367.4,190.7 L 376.0,185.9 L 384.8,181.3 L 393.8,177.1 L 402.9,173.2 L 412.1,169.6 L 421.5,166.3 L 431.0,163.3 L 440.6,160.7 L 450.3,158.4 L 460.1,156.4 L 470.0,154.8 L 480.0,153.5 L 490.0,152.6 L 500.0,152.0" fill="none" stroke="#1A1A1A" stroke-width="5.2" stroke-opacity="0.86" stroke-linecap="round"/>
+      <text x="518" y="350" class="volta-lbl">VOLTA 1</text>
+      <text x="518" y="277" class="volta-lbl">VOLTA 2</text>
+      <text x="518" y="205" class="volta-lbl">VOLTA 3</text>
+      <circle cx="500" cy="440" r="44" fill="#FFFFFF" stroke="#1A1A1A" stroke-width="2.2"/>
+      <text x="500" y="438" text-anchor="middle" class="centro-t">ENTRA</text>
+      <text x="500" y="454" text-anchor="middle" class="centro-s">AQUI</text>
+      <circle cx="500.0" cy="370.0" r="12" fill="#F2C230" stroke="#1A1A1A" stroke-width="2.2"/>
+      <text x="500.0" y="373.8" text-anchor="middle" class="no-num">1</text>
+      <circle cx="588.2" cy="440.0" r="8.5" fill="#1A1A1A" stroke="#1A1A1A" stroke-width="2.2"/>
+      <circle cx="500.0" cy="546.3" r="8.5" fill="#1A1A1A" stroke="#1A1A1A" stroke-width="2.2"/>
+      <circle cx="375.5" cy="440.0" r="8.5" fill="#1A1A1A" stroke="#1A1A1A" stroke-width="2.2"/>
+      <circle cx="500.0" cy="297.3" r="12" fill="#F2C230" stroke="#1A1A1A" stroke-width="2.2"/>
+      <text x="500.0" y="301.1" text-anchor="middle" class="no-num">2</text>
+      <circle cx="660.8" cy="440.0" r="8.5" fill="#1A1A1A" stroke="#1A1A1A" stroke-width="2.2"/>
+      <circle cx="500.0" cy="619.0" r="8.5" fill="#1A1A1A" stroke="#1A1A1A" stroke-width="2.2"/>
+      <circle cx="302.8" cy="440.0" r="8.5" fill="#1A1A1A" stroke="#1A1A1A" stroke-width="2.2"/>
+      <circle cx="500.0" cy="224.7" r="12" fill="#F2C230" stroke="#1A1A1A" stroke-width="2.2"/>
+      <text x="500.0" y="228.5" text-anchor="middle" class="no-num">3</text>
+      <circle cx="733.5" cy="440.0" r="8.5" fill="#1A1A1A" stroke="#1A1A1A" stroke-width="2.2"/>
+      <circle cx="500.0" cy="691.7" r="8.5" fill="#1A1A1A" stroke="#1A1A1A" stroke-width="2.2"/>
+      <circle cx="230.2" cy="440.0" r="8.5" fill="#1A1A1A" stroke="#1A1A1A" stroke-width="2.2"/>
+      <circle cx="500.0" cy="152.0" r="12" fill="#F2C230" stroke="#1A1A1A" stroke-width="2.2"/>
+      <text x="500.0" y="155.8" text-anchor="middle" class="no-num">4</text>
+      <rect x="485" y="26" width="30" height="17" fill="#1A1A1A"/>
+      <text x="500" y="39" text-anchor="middle" class="pil-tag">P1</text>
+      <text x="500" y="60" text-anchor="middle" class="pil-nome">SELF DESIGN</text>
+      <text x="500" y="80" text-anchor="middle" class="pil-desc">Organizar o repertório.</text>
+      <text x="500" y="95" text-anchor="middle" class="pil-desc">Quem ela é agora.</text>
+      <rect x="846" y="380" width="30" height="17" fill="#1A1A1A"/>
+      <text x="861" y="393" text-anchor="middle" class="pil-tag">P2</text>
+      <text x="846" y="414" text-anchor="start" class="pil-nome">COOLHUNTING</text>
+      <text x="846" y="434" text-anchor="start" class="pil-desc">Ler os movimentos</text>
+      <text x="846" y="449" text-anchor="start" class="pil-desc">culturais do momento.</text>
+      <rect x="485" y="768" width="30" height="17" fill="#1A1A1A"/>
+      <text x="500" y="781" text-anchor="middle" class="pil-tag">P3</text>
+      <text x="500" y="802" text-anchor="middle" class="pil-nome">AUTENTICIDADE</text>
+      <text x="500" y="822" text-anchor="middle" class="pil-desc">Criar o que só ela pode</text>
+      <text x="500" y="837" text-anchor="middle" class="pil-desc">criar. E comunicar.</text>
+      <rect x="124" y="380" width="30" height="17" fill="#1A1A1A"/>
+      <text x="139" y="393" text-anchor="middle" class="pil-tag">P4</text>
+      <text x="154" y="414" text-anchor="end" class="pil-nome">ESTRATÉGIA</text>
+      <text x="154" y="434" text-anchor="end" class="pil-desc">Virar posicionamento</text>
+      <text x="154" y="449" text-anchor="end" class="pil-desc">e plano de ação.</text>
+    </svg>
+  </div>
+
+  <div class="renova">
+    <div>
+      <div class="lead">Por que a espiral</div>
+      <h3>Ela não volta ao mesmo lugar</h3>
+    </div>
+    <div>
+      <p>Depois de rodar o plano de ação e aplicar a estratégia, quem chega de volta ao P1 não é a mesma pessoa que começou.
+      O repertório mudou, o mercado mudou e o projeto cresceu. Por isso ela refaz o Self Design e refaz o plano de ação com o Jorge
+      em nova sessão individual, e entra na volta seguinte partindo de outro ponto.<br/><br/>
+      É isso que sustenta a renovação de ciclo: não é o mesmo conteúdo de novo, é o mesmo método aplicado a alguém maior.</p>
+    </div>
+  </div>
+
+  <div class="legenda">
+    <span><i class="dot am"></i> Sessão individual e novo plano de ação</span>
+    <span><i class="dot pr"></i> Passagem por um pilar</span>
+    <span>Traço mais grosso, projeto mais maduro</span>
+  </div>
+
+</div>
+</body>
+</html>
