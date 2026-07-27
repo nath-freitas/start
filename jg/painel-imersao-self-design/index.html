@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Painel de Campanha · Imersão Self Design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#480ec1; --purple-light:#6b35d9; --purple-dark:#30098a;
+  --yellow:#faa323; --yellow-light:#ffc55a;
+  --bg:#f4f2fb; --card:#ffffff; --text:#1a1a2e; --muted:#6b7280;
+  --border:#e5e0f5; --positive:#16a34a; --negative:#dc2626; --neutral:#2563eb;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Poppins',system-ui,sans-serif;font-size:15px}
+
+nav{background:#000;border-bottom:3px solid var(--yellow);position:sticky;top:0;z-index:50;display:flex;overflow-x:auto}
+nav button{background:none;border:none;color:#fff;font-family:inherit;font-size:.82rem;font-weight:600;
+  padding:16px 22px;cursor:pointer;white-space:nowrap;transition:.15s;border-bottom:3px solid transparent;margin-bottom:-3px}
+nav button:hover{background:rgba(255,255,255,.08)}
+nav button.active{background:var(--purple);border-bottom-color:var(--yellow)}
+
+.page{display:none;max-width:1240px;margin:0 auto;padding:32px 24px 70px}
+.page.active{display:block}
+
+.hero{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--purple-dark) 0%,var(--purple) 55%,var(--purple-light) 100%);
+  color:#fff;border-radius:18px;padding:38px 40px 34px;margin-bottom:28px}
+.hero .label{color:var(--yellow);font-size:.72rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+.hero h1{font-size:2.15rem;font-weight:800;line-height:1.1;margin-top:10px;letter-spacing:-.02em}
+.hero p{margin-top:12px;font-size:.95rem;opacity:.88;max-width:660px;line-height:1.55}
+.hero-folder{position:absolute;top:22px;right:24px;display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.26);color:#fff;text-decoration:none;font-size:.8rem;font-weight:600;padding:9px 14px;border-radius:999px;transition:.15s;z-index:2}
+.hero-folder:hover{background:var(--yellow);border-color:var(--yellow);color:#1a1a2e}
+.hero-folder svg{flex:none}
+@media(max-width:560px){.hero-folder span{display:none}.hero-folder{padding:9px}}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:26px 28px}
+.card h2{font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:16px}
+.card h3{font-size:1.35rem;font-weight:700;margin-bottom:8px}
+.card p.desc{color:var(--muted);font-size:.93rem;line-height:1.55}
+
+.marco{display:flex;justify-content:space-between;align-items:center;padding:15px 0;border-bottom:1px dashed var(--border)}
+.marco:last-child{border-bottom:none}
+.marco span{font-size:1rem;font-weight:500}
+.marco b{font-size:1rem;font-weight:800}
+
+label.fl{display:block;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:16px 0 6px}
+label.fl:first-of-type{margin-top:0}
+input.fi{width:100%;background:#faf9ff;border:1px solid var(--border);border-radius:10px;padding:13px 15px;
+  font-family:inherit;font-size:.95rem;color:var(--text);transition:.15s}
+input.fi:focus{outline:none;border-color:var(--purple);background:#fff}
+input.fi::placeholder{color:#b6b3c7}
+.linkrow{display:flex;gap:8px;align-items:center}
+.linkrow input{flex:1;min-width:0}
+.lopen{flex:none;width:42px;height:44px;border-radius:10px;background:var(--purple);color:#fff;display:grid;place-items:center;
+  text-decoration:none;font-size:1rem;font-weight:700;transition:.15s}
+.lopen:hover{background:var(--purple-dark)}
+
+.gwrap{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;overflow-x:auto}
+.gtable{min-width:940px}
+.grow{display:grid;grid-template-columns:230px 1fr;align-items:center;gap:14px;margin-bottom:9px}
+.gname{font-size:.83rem;font-weight:600;line-height:1.25}
+.gtrack{position:relative;height:32px;background:#f7f5fd;border-radius:8px}
+.gbar{position:absolute;height:32px;border-radius:8px;display:flex;align-items:center;padding:0 11px;color:#fff;
+  font-size:.72rem;font-weight:700;cursor:pointer;transition:.15s;white-space:nowrap;overflow:hidden}
+.gbar:hover{filter:brightness(1.14);transform:translateY(-1px)}
+.gaxis{display:grid;grid-template-columns:230px 1fr;gap:14px;margin-bottom:14px}
+.gticks{position:relative;height:22px;border-bottom:1px solid var(--border);overflow:visible}
+.gtick{position:absolute;font-size:.66rem;font-weight:700;color:var(--muted);transform:translateX(-50%)}
+.gmark{position:absolute;top:0;bottom:0;width:2px;background:var(--yellow);z-index:3}
+.gmark-lbl{position:absolute;top:-19px;transform:translateX(-50%);background:var(--yellow);color:#1a1a2e;
+  font-size:.62rem;font-weight:800;padding:2px 7px;border-radius:5px;white-space:nowrap}
+
+.phase{background:var(--card);border:1px solid var(--border);border-radius:16px;margin-bottom:20px;overflow:hidden}
+.phase-bar{display:flex;align-items:center;gap:14px;padding:16px 24px;color:#fff}
+.phase-bar .n{width:32px;height:32px;border-radius:9px;background:rgba(255,255,255,.22);display:grid;place-items:center;font-weight:800;font-size:.9rem;flex:none}
+.phase-bar .t{font-weight:700;font-size:1.02rem;flex:1}
+.phase-bar .d{font-size:.76rem;font-weight:600;opacity:.9}
+.phase-body{padding:22px 24px 24px}
+.objetivo{background:#faf9ff;border-left:3px solid var(--purple);border-radius:0 10px 10px 0;padding:13px 16px;margin-bottom:18px;
+  font-size:.89rem;line-height:1.55;color:#3d3a52}
+.pecas{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:12px}
+.peca{border:1px solid var(--border);border-radius:11px;padding:13px 15px;display:flex;gap:11px;align-items:flex-start}
+.peca .ico{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;font-size:1rem;flex:none}
+.peca .txt{font-size:.85rem;line-height:1.42}
+.who{display:inline-block;font-size:.62rem;font-weight:800;letter-spacing:.06em;padding:2px 7px;border-radius:5px}
+.peca .who{margin-top:6px}
+.who.jg{background:rgba(250,163,35,.18);color:#8a5200}
+.who.nf{background:rgba(72,14,193,.12);color:var(--purple)}
+.who.both{background:rgba(22,163,74,.14);color:#15803d}
+
+.prog{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px 26px;margin-bottom:22px}
+.progtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:12px}
+.progtop b{font-size:1.5rem;font-weight:800;color:var(--purple)}
+.progbar{height:11px;background:#eae5f8;border-radius:99px;overflow:hidden}
+.progfill{height:100%;background:linear-gradient(90deg,var(--purple),var(--purple-light));border-radius:99px;transition:.3s;width:0}
+.btn{background:var(--purple);color:#fff;border:none;border-radius:9px;padding:10px 17px;font-family:inherit;
+  font-size:.8rem;font-weight:600;cursor:pointer;transition:.15s}
+.btn:hover{background:var(--purple-dark)}
+.btn.ghost{background:none;border:1px solid var(--border);color:var(--muted)}
+.btn.ghost:hover{background:#f7f5fd;color:var(--text)}
+
+.clphase{background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:14px;overflow:hidden}
+.clhead{display:flex;align-items:center;gap:12px;padding:14px 20px;cursor:pointer;color:#fff}
+.clhead .t{flex:1;font-weight:700;font-size:.95rem}
+.clhead .c{font-size:.76rem;font-weight:700;background:rgba(255,255,255,.24);padding:3px 10px;border-radius:99px}
+.clbody{padding:8px 0}
+.clbody.hidden{display:none}
+.cli{display:grid;grid-template-columns:26px minmax(0,1fr) 90px 148px 176px 74px;gap:11px;align-items:center;
+  padding:11px 20px;border-bottom:1px solid #f2effa}
+.cli:last-child{border-bottom:none}
+.item-cb{width:20px;height:20px;border:2px solid var(--border);border-radius:6px;cursor:pointer;display:grid;place-items:center;transition:.15s}
+.item-cb.checked{background:var(--purple);border-color:var(--purple)}
+.item-cb.checked::after{content:'✓';color:#fff;font-size:.72rem;font-weight:800}
+.cli.done .cli-txt{text-decoration:line-through;opacity:.45}
+.cli-txt{font-size:.87rem;line-height:1.4}
+.tags{display:flex;gap:5px;margin-top:5px;flex-wrap:wrap}
+.tag{font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:5px;letter-spacing:.03em}
+.cli input{background:#faf9ff;border:1px solid var(--border);border-radius:8px;padding:7px 10px;
+  font-family:inherit;font-size:.78rem;color:var(--text);width:100%;min-width:0}
+.cli input:focus{outline:none;border-color:var(--purple);background:#fff}
+.cli input.suggested{font-style:italic;color:#a5a1b8}
+.cli-link-cell{display:flex;align-items:center;gap:6px;min-width:0}
+.cli-link{flex:1;min-width:0}
+.cli-open{flex:none;width:28px;height:28px;border-radius:7px;background:var(--purple);color:#fff;display:grid;
+  place-items:center;text-decoration:none;font-size:.95rem;font-weight:700;transition:.15s}
+.cli-open:hover{background:var(--purple-dark)}
+.ownchip{font-size:.62rem;font-weight:800;letter-spacing:.05em;padding:4px 8px;border-radius:6px;text-align:center}
+
+.consol{background:linear-gradient(135deg,var(--purple-dark),var(--purple));color:#fff;border-radius:16px;padding:28px 30px;margin-bottom:24px}
+.consol h2{font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--yellow);margin-bottom:18px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:18px;margin-bottom:22px}
+.kpi .k{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.75}
+.kpi .v{font-size:1.6rem;font-weight:800;margin-top:4px;letter-spacing:-.02em}
+.roasbar{height:13px;background:rgba(255,255,255,.2);border-radius:99px;overflow:hidden;margin-top:6px}
+.roasfill{height:100%;border-radius:99px;transition:.3s;width:0}
+.roaslbl{display:flex;justify-content:space-between;font-size:.78rem;font-weight:700;margin-top:9px}
+
+.simgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.simblock{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px 26px}
+.simblock.wide{grid-column:1/-1}
+.simblock h3{font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);margin-bottom:16px}
+.simrow{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:11px}
+.simrow label{font-size:.85rem;font-weight:500;flex:1}
+.simrow input{width:118px;background:#faf9ff;border:1px solid var(--border);border-radius:8px;padding:8px 11px;
+  font-family:inherit;font-size:.85rem;text-align:right;color:var(--text)}
+.simrow input:focus{outline:none;border-color:var(--purple);background:#fff}
+.simout{display:flex;justify-content:space-between;padding:9px 0;border-top:1px solid var(--border);margin-top:12px;font-size:.87rem}
+.simout b{font-weight:800;color:var(--purple)}
+.simout.hi{background:#fff8ec;border-top:1px solid var(--yellow);padding:11px 12px;border-radius:0 0 8px 8px}
+.simsub{font-size:.74rem;color:var(--muted);margin-top:8px;line-height:1.5}
+
+table.cen{width:100%;border-collapse:collapse;font-size:.85rem}
+table.cen th{text-align:right;font-size:.66rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);padding:0 10px 10px;border-bottom:1px solid var(--border)}
+table.cen th:first-child,table.cen td:first-child{text-align:left}
+table.cen td{text-align:right;padding:12px 10px;border-bottom:1px solid #f2effa}
+table.cen tr.med{background:#faf9ff}
+table.cen tr.med td{font-weight:700}
+.cenchip{display:inline-block;font-size:.6rem;font-weight:800;letter-spacing:.06em;padding:2px 7px;border-radius:5px;margin-left:7px}
+
+.savest{font-size:.72rem;font-weight:600;color:var(--muted)}
+footer{text-align:center;padding:26px;font-size:.78rem;color:var(--muted);border-top:1px solid var(--border)}
+
+@media(max-width:860px){
+  .grid2{grid-template-columns:1fr}
+  .hero h1{font-size:1.6rem}
+  .cli{grid-template-columns:26px minmax(0,1fr);gap:9px}
+  .cli>*:nth-child(n+3){grid-column:2}
+  table.cen{font-size:.76rem}
+  table.cen td,table.cen th{padding:9px 5px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <button class="active" onclick="go(0,this)">1 · Briefing</button>
+  <button onclick="go(1,this)">2 · Cronograma</button>
+  <button onclick="go(2,this)">3 · Workflow &amp; Peças</button>
+  <button onclick="go(3,this)">4 · Checklist</button>
+  <button onclick="go(4,this)">5 · Simulador ROAS</button>
+</nav>
+
+<!-- ============ PÁGINA 1 ============ -->
+<div class="page active" id="p0">
+  <div class="hero">
+    <a class="hero-folder" id="bf_pasta_link" href="#" target="_blank" rel="noopener" title="Abrir a pasta da campanha">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h5l2 2h9a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
+      <span>Pasta da campanha</span>
+    </a>
+    <div class="label">Catapulta de Ideias</div>
+    <h1>Imersão Self Design — Jorge Grimberg</h1>
+    <p>Lançamento pago do produto de entrada de 3 noites, com a Mentoria Jorge Grimberg como ascensão imediata no fechamento.</p>
+  </div>
+
+  <div class="grid2" style="margin-bottom:22px">
+    <div class="card">
+      <h2>Funil</h2>
+      <h3>Lançamento pago</h3>
+      <p class="desc">Venda de um produto de entrada com kit de ascensão logo na sequência. A imersão de R$ 297 é vendida por tráfego pago e orgânico durante 13 dias, entregue em 3 noites ao vivo, e o pitch da mentoria acontece no fechamento da noite 3. A conversão para a mentoria é fechada no bastidor por venda consultiva.</p>
+    </div>
+    <div class="card">
+      <h2>Marcos principais</h2>
+      <div class="marco"><span>Concepção e produção</span><b>27/07 → 04/08</b></div>
+      <div class="marco"><span>Vendas da imersão</span><b>05/08 → 17/08</b></div>
+      <div class="marco"><span>Pitch da mentoria</span><b>20/08</b></div>
+      <div class="marco"><span>Vendas da mentoria</span><b>20/08 → 31/08</b></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h2>Metas</h2>
+      <label class="fl">Vendas imersão lote 1</label>
+      <input class="fi" id="bf_meta_l1" value="130">
+      <label class="fl">Vendas imersão lote 2</label>
+      <input class="fi" id="bf_meta_l2" value="70">
+      <label class="fl">Total de vendas da imersão</label>
+      <input class="fi" id="bf_meta_imersao" value="200">
+      <label class="fl">Vendas da mentoria (cenário médio)</label>
+      <input class="fi" id="bf_meta_mentoria" value="14">
+      <label class="fl">Faturamento projetado (cenário médio)</label>
+      <input class="fi" id="bf_meta_fat" value="R$ 190.900">
+      <label class="fl">Verba de tráfego</label>
+      <input class="fi" id="bf_verba" value="R$ 15.625">
+    </div>
+
+    <div class="card">
+      <h2>Links úteis</h2>
+      <label class="fl">Documento mestre da campanha</label>
+      <div class="linkrow">
+        <input class="fi lk" id="bf_doc_mestre" placeholder="colar link">
+        <a class="lopen" id="op_bf_doc_mestre" href="#" target="_blank" rel="noopener" style="display:none">↗</a>
+      </div>
+      <label class="fl">Pasta da campanha</label>
+      <div class="linkrow">
+        <input class="fi lk" id="bf_pasta" placeholder="colar link">
+        <a class="lopen" id="op_bf_pasta" href="#" target="_blank" rel="noopener" style="display:none">↗</a>
+      </div>
+      <label class="fl">Página de vendas</label>
+      <div class="linkrow">
+        <input class="fi lk" id="bf_lp" placeholder="colar link">
+        <a class="lopen" id="op_bf_lp" href="#" target="_blank" rel="noopener" style="display:none">↗</a>
+      </div>
+      <label class="fl">Checkout Hotmart</label>
+      <div class="linkrow">
+        <input class="fi lk" id="bf_checkout" placeholder="colar link">
+        <a class="lopen" id="op_bf_checkout" href="#" target="_blank" rel="noopener" style="display:none">↗</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PÁGINA 2 ============ -->
+<div class="page" id="p1">
+  <h2 style="font-size:1.5rem;font-weight:800;margin-bottom:6px">Cronograma da campanha</h2>
+  <p style="color:var(--muted);font-size:.9rem;margin-bottom:22px">Concepção e produção correm juntas de 27/07 a 04/08. Clique em qualquer barra para ir às peças da fase.</p>
+  <div class="gwrap"><div class="gtable">
+    <div class="gaxis"><div></div><div class="gticks" id="gticks"></div></div>
+    <div id="ganttrows"></div>
+  </div></div>
+</div>
+
+<!-- ============ PÁGINA 3 ============ -->
+<div class="page" id="p2">
+  <h2 style="font-size:1.5rem;font-weight:800;margin-bottom:6px">Workflow &amp; Peças</h2>
+  <p style="color:var(--muted);font-size:.9rem;margin-bottom:22px;display:flex;gap:18px;flex-wrap:wrap;align-items:center">
+    <span><span class="who jg">JG</span> audiovisual é entrega do Jorge</span>
+    <span><span class="who nf">NF</span> estratégia, copy e tráfego são entrega da Nath</span>
+    <span><span class="who both">JG+NF</span> decisão conjunta</span>
+  </p>
+  <div id="workflow"></div>
+</div>
+
+<!-- ============ PÁGINA 4 ============ -->
+<div class="page" id="p3">
+  <div class="prog">
+    <div class="progtop">
+      <div><div style="font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--purple)">Progresso geral</div>
+        <b id="progpct">0%</b> <span style="font-size:.85rem;color:var(--muted)" id="progtxt">0 de 0 tarefas</span></div>
+      <div style="display:flex;gap:9px">
+        <button class="btn ghost" onclick="exportCSV()">Exportar CSV</button>
+        <button class="btn ghost" onclick="resetAll()">Resetar</button>
+      </div>
+    </div>
+    <div class="progbar"><div class="progfill" id="progfill"></div></div>
+  </div>
+  <div id="checklist"></div>
+</div>
+
+<!-- ============ PÁGINA 5 ============ -->
+<div class="page" id="p4">
+  <div class="consol">
+    <h2>Projeção consolidada · cenário médio <span class="savest" id="roas-save-status" style="color:rgba(255,255,255,.6);float:right;text-transform:none;letter-spacing:0"></span></h2>
+    <div class="kpis">
+      <div class="kpi"><div class="k">Receita imersão</div><div class="v" id="o_rec_imersao">—</div></div>
+      <div class="kpi"><div class="k">Receita mentoria</div><div class="v" id="o_rec_mentoria">—</div></div>
+      <div class="kpi"><div class="k">Receita total</div><div class="v" id="o_rec_total">—</div></div>
+      <div class="kpi"><div class="k">Investimento</div><div class="v" id="o_invest">—</div></div>
+      <div class="kpi"><div class="k">CPA médio</div><div class="v" id="o_cpa_med">—</div></div>
+    </div>
+    <div class="roasbar"><div class="roasfill" id="roasfill"></div></div>
+    <div class="roaslbl"><span id="roastxt">ROAS —</span><span id="roasstatus"></span></div>
+  </div>
+
+  <div class="simgrid">
+    <div class="simblock">
+      <h3>Mídia e aquisição</h3>
+      <div class="simrow"><label>CPM (R$)</label><input id="s_cpm" value="45"></div>
+      <div class="simrow"><label>CTR (%)</label><input id="s_ctr" value="1.2"></div>
+      <div class="simrow"><label>Connect rate (%)</label><input id="s_connect" value="80"></div>
+      <div class="simrow"><label>Conversão da página (%)</label><input id="s_convlp" value="3"></div>
+      <div class="simrow"><label>Vendas por orgânico (%)</label><input id="s_org" value="50"></div>
+      <div class="simout"><span>CPC</span><b id="o_cpc">—</b></div>
+      <div class="simout"><span>Custo por visita</span><b id="o_cpv">—</b></div>
+      <div class="simout"><span>Vendas pagas / orgânicas</span><b id="o_split">—</b></div>
+      <div class="simout"><span>CAC da venda paga</span><b id="o_cac">—</b></div>
+      <div class="simout hi"><span>CPA médio diluído</span><b id="o_cpa2">—</b></div>
+      <p class="simsub">Cascata: visitas por venda = 1 / conversão · cliques = visitas / connect · impressões = cliques / CTR · CAC = impressões × CPM / 1000. O CPA médio divide o investimento total pelo total de alunos, pagos e orgânicos.</p>
+    </div>
+
+    <div class="simblock">
+      <h3>Imersão</h3>
+      <div class="simrow"><label>Ticket lote 1 (R$)</label><input id="s_t1" value="297"></div>
+      <div class="simrow"><label>Vendas lote 1</label><input id="s_q1" value="130"></div>
+      <div class="simrow"><label>Ticket lote 2 (R$)</label><input id="s_t2" value="397"></div>
+      <div class="simrow"><label>Vendas lote 2</label><input id="s_q2" value="70"></div>
+      <div class="simrow"><label>Order bump gravação (R$)</label><input id="s_bump" value="250"></div>
+      <div class="simrow"><label>Adesão ao bump (%)</label><input id="s_bumptx" value="25"></div>
+      <div class="simout"><span>Alunos na imersão</span><b id="o_alunos">—</b></div>
+      <div class="simout hi"><span>Receita da imersão</span><b id="o_rec_i2">—</b></div>
+    </div>
+
+    <div class="simblock">
+      <h3>Ascensão para a mentoria</h3>
+      <div class="simrow"><label>Ticket da mentoria (R$)</label><input id="s_tment" value="8000"></div>
+      <div class="simrow"><label>Meta mínima (%)</label><input id="s_asc_min" value="5"></div>
+      <div class="simrow"><label>Meta média (%)</label><input id="s_asc_med" value="7"></div>
+      <div class="simrow"><label>Meta ótima (%)</label><input id="s_asc_ot" value="10"></div>
+      <p class="simsub">A projeção consolidada no topo usa sempre o cenário médio. A tabela abaixo compara os três.</p>
+    </div>
+
+    <div class="simblock wide">
+      <h3>Cenários de ascensão</h3>
+      <table class="cen">
+        <thead><tr><th>Cenário</th><th>Taxa</th><th>Vendas mentoria</th><th>Receita mentoria</th><th>Receita total</th><th>Investimento</th><th>ROAS</th></tr></thead>
+        <tbody id="cenbody"></tbody>
+      </table>
+      <p class="simsub">A receita da imersão e o investimento não mudam entre cenários. O que muda é quanto da ascensão a campanha captura, e é isso que define se o lançamento se paga.</p>
+    </div>
+  </div>
+</div>
+
+<footer>Desenvolvido por <strong>Catapulta de Ideias</strong> para uso exclusivo de Jorge Grimberg</footer>
+
+<script>
+/* ================= DADOS ================= */
+const C = {narr:'#480ec1', prod:'#6b35d9', vend:'#faa323', pitch:'#16a34a', ment:'#30098a'};
+
+const GANTT_ROWS = [
+  {id:1, name:"Narrativa e Ferramentas", start:"2026-07-27", end:"2026-07-31", color:C.narr},
+  {id:2, name:"Concepção e Produção",    start:"2026-07-27", end:"2026-08-04", color:C.prod},
+  {id:3, name:"Vendas da Imersão",       start:"2026-08-05", end:"2026-08-17", color:C.vend},
+  {id:4, name:"Pitch da Mentoria",       start:"2026-08-16", end:"2026-08-20", color:C.pitch},
+  {id:5, name:"Vendas da Mentoria",      start:"2026-08-20", end:"2026-08-31", color:C.ment},
+];
+
+const OBJETIVOS = {
+  1:"Fechar o que a campanha diz antes de produzir qualquer peça e deixar a operação de venda montada. Sem narrativa definida e sem checkout no ar, toda peça produzida vira retrabalho.",
+  2:"Definir o recorte do método que cabe em 6 horas, empacotar a oferta e produzir todas as peças antes da largada. Concepção e produção correm juntas porque o prazo é curto: o corte do método é do Jorge, o empacotamento e a copy são da Nath.",
+  3:"Vender a imersão em 13 dias, com virada de lote no dia 12/08 para criar urgência na segunda semana. É a fase que define o tamanho da sala e, por consequência, o tamanho do pitch.",
+  4:"Entregar as três noites e fechar com a oferta da mentoria. A noite 3 é a peça comercial mais importante de toda a campanha, e o closer precisa estar treinado antes dela.",
+  5:"Transformar interessados em alunos da mentoria por venda consultiva que passa pelos quatro pilares, e deixar a campanha perpétua no ar para a demanda não morrer com o fim do lançamento.",
+};
+
+const ICO = {
+  video:['🎬','rgba(239,68,68,0.1)'], email:['📧','rgba(37,99,235,0.1)'], wpp:['💬','rgba(22,163,74,0.1)'],
+  landing:['🖥️','rgba(124,58,237,0.1)'], criativo:['🎯','rgba(72,14,193,0.1)'], hotmart:['🛒','rgba(250,163,35,0.1)'],
+  organico:['📱','rgba(6,182,212,0.1)'], off:['⚙️','rgba(107,114,128,0.1)'], grupo:['👥','rgba(217,70,239,0.1)']
+};
+const TAGCOR = {video:'#ef4444',email:'#2563eb',wpp:'#16a34a',landing:'#7c3aed',criativo:'#480ec1',hotmart:'#faa323',organico:'#0891b2',off:'#6b7280',grupo:'#d946ef'};
+
+const PHASES = [
+{id:1,name:"Narrativa e Ferramentas",color:C.narr,dates:"27/07 → 31/07",items:[
+  {text:"Confirmar em definitivo o nome Self Design para método e imersão",tags:["off"],dl:"27/07",own:"JG+NF"},
+  {text:"Escrever a narrativa mestre: promessa, mecanismo, inimigo e prova",tags:["off"],dl:"29/07",own:"NF"},
+  {text:"Definir a big idea e o ângulo de comunicação da imersão",tags:["off"],dl:"29/07",own:"NF"},
+  {text:"Validar narrativa e oferta no encontro presencial em São Paulo",tags:["off"],dl:"29/07",own:"JG+NF"},
+  {text:"Acionar contato na Hotmart e negociar tarifa",tags:["hotmart"],dl:"28/07",own:"NF"},
+  {text:"Criar produto e checkout na Hotmart: lote 1, lote 2 e order bump da gravação",tags:["hotmart"],dl:"31/07",own:"NF"},
+  {text:"Contratar ferramenta de e-mail e importar base do Substack e dos grupos de WhatsApp",tags:["off","email"],dl:"30/07",own:"NF"},
+  {text:"Criar Business Manager, conta de anúncios e aprovar a verba",tags:["criativo"],dl:"29/07",own:"NF"},
+  {text:"Instalar pixel do Meta e configurar eventos de conversão",tags:["criativo"],dl:"31/07",own:"NF"},
+  {text:"Definir stack de entrega ao vivo: sala, plataforma e gravação",tags:["off"],dl:"31/07",own:"JG"},
+]},
+{id:2,name:"Concepção e Produção",color:C.prod,dates:"27/07 → 04/08",items:[
+  {text:"Entregar os módulos-base do método já pensados como aulas gravadas",tags:["off"],dl:"28/07",own:"JG"},
+  {text:"Definir o recorte da imersão: C, O, D, I e G, cortando o Orquestrar",tags:["off"],dl:"29/07",own:"JG+NF"},
+  {text:"Fechar política de lotes, data de virada e prazo de carrinho",tags:["off"],dl:"29/07",own:"NF"},
+  {text:"Desenhar o exercício de autoconhecimento que abre a imersão",tags:["off"],dl:"30/07",own:"JG"},
+  {text:"Roteiro dos vídeos orgânicos de aquecimento",tags:["organico"],dl:"30/07",own:"NF"},
+  {text:"Escrever a oferta completa: promessa, entregáveis, bônus e garantia",tags:["off"],dl:"31/07",own:"NF"},
+  {text:"Montar a estrutura das 3 noites com objetivo e entregável por noite",tags:["off"],dl:"01/08",own:"JG"},
+  {text:"Copy da página de vendas da imersão",tags:["landing"],dl:"01/08",own:"NF"},
+  {text:"Roteiro de 6 criativos de anúncio com ângulos distintos",tags:["criativo"],dl:"01/08",own:"NF"},
+  {text:"Gravação do banco de vídeos orgânicos para o período de campanha",tags:["video"],dl:"01/08",own:"JG"},
+  {text:"Construir o pitch da mentoria para o fim da noite 3",tags:["off"],dl:"02/08",own:"JG+NF"},
+  {text:"Gravação dos criativos de anúncio",tags:["video"],dl:"02/08",own:"JG"},
+  {text:"Sequência de e-mails de captação e vendas",tags:["email"],dl:"02/08",own:"NF"},
+  {text:"Sequência de WhatsApp para a base quente de ex-alunos",tags:["wpp"],dl:"02/08",own:"NF"},
+  {text:"Edição e entrega dos criativos nos formatos de mídia",tags:["video"],dl:"03/08",own:"JG"},
+  {text:"Artes e cards de stories da campanha",tags:["criativo"],dl:"03/08",own:"JG"},
+  {text:"Kit de divulgação para palco: QR code e CTA de tela",tags:["criativo"],dl:"03/08",own:"NF"},
+  {text:"Página de vendas no ar com pixel e checkout testados",tags:["landing"],dl:"04/08",own:"NF"},
+  {text:"Página de obrigado com orientação de acesso e entrada no grupo",tags:["landing"],dl:"04/08",own:"NF"},
+]},
+{id:3,name:"Vendas da Imersão",color:C.vend,dates:"05/08 → 17/08",items:[
+  {text:"Subir campanhas de tráfego pago para a página de vendas",tags:["criativo"],dl:"05/08",own:"NF"},
+  {text:"Disparar a sequência de e-mails para toda a base",tags:["email"],dl:"05/08",own:"NF"},
+  {text:"Publicar conteúdo orgânico diário de aquecimento",tags:["organico"],dl:"05/08",own:"JG"},
+  {text:"Disparar a sequência de WhatsApp para a base quente",tags:["wpp"],dl:"06/08",own:"NF"},
+  {text:"Abrir e ativar o grupo de WhatsApp dos inscritos",tags:["grupo"],dl:"12/08",own:"NF"},
+  {text:"Virada para o lote 2 com comunicação de urgência",tags:["email","organico"],dl:"12/08",own:"NF"},
+  {text:"CTA da imersão nos três palcos de agosto",tags:["off"],dl:"14/08",own:"JG"},
+  {text:"Post e story de prova social após cada palco",tags:["organico"],dl:"14/08",own:"JG"},
+  {text:"Stories diários de bastidor, repertório e prova",tags:["organico"],dl:"17/08",own:"JG"},
+  {text:"Otimização diária de campanhas e leitura de CPL e CPA",tags:["criativo"],dl:"17/08",own:"NF"},
+  {text:"Sequência final de fechamento de carrinho",tags:["email","wpp"],dl:"17/08",own:"NF"},
+]},
+{id:4,name:"Pitch da Mentoria",color:C.pitch,dates:"16/08 → 20/08",items:[
+  {text:"Escrever o roteiro de venda consultiva pelos quatro pilares",tags:["off"],dl:"14/08",own:"NF"},
+  {text:"Treinar o closer no método e no roteiro",tags:["off"],dl:"15/08",own:"JG+NF"},
+  {text:"Ensaio técnico da sala, do material e da gravação",tags:["off"],dl:"16/08",own:"JG"},
+  {text:"Noite 1: repertório e autoconhecimento",tags:["off"],dl:"18/08",own:"JG"},
+  {text:"Noite 2: coolhunting, observação e decodificação",tags:["off"],dl:"19/08",own:"JG"},
+  {text:"Página e link de inscrição da mentoria no ar antes da noite 3",tags:["landing"],dl:"19/08",own:"NF"},
+  {text:"Noite 3: autenticidade e pitch da mentoria",tags:["off"],dl:"20/08",own:"JG"},
+  {text:"Gravação integral das três noites",tags:["video"],dl:"20/08",own:"JG"},
+]},
+{id:5,name:"Vendas da Mentoria",color:C.ment,dates:"20/08 → 31/08",items:[
+  {text:"Segmentar e distribuir a lista de interessados para o comercial",tags:["off"],dl:"21/08",own:"NF"},
+  {text:"Entrega da gravação a quem comprou o order bump",tags:["landing"],dl:"22/08",own:"NF"},
+  {text:"Pesquisa de satisfação e captura de depoimentos",tags:["email"],dl:"22/08",own:"NF"},
+  {text:"Subir a campanha perpétua da mentoria",tags:["criativo"],dl:"26/08",own:"NF"},
+  {text:"Follow-up de e-mail e WhatsApp para quem não fechou",tags:["email","wpp"],dl:"28/08",own:"NF"},
+  {text:"Calls de diagnóstico com os interessados",tags:["off"],dl:"31/08",own:"JG"},
+]},
+];
+
+/* ================= NAV ================= */
+function go(i,btn){
+  document.querySelectorAll('.page').forEach((p,k)=>p.classList.toggle('active',k===i));
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  window.scrollTo(0,0);
+}
+function goToPhase(id){
+  go(2,document.querySelectorAll('nav button')[2]);
+  setTimeout(()=>{const el=document.getElementById('phase-'+id); if(el) el.scrollIntoView({behavior:'smooth',block:'start'});},60);
+}
+
+/* ================= GANTT ================= */
+const GSTART = new Date(2026,6,27);
+function dOff(ds){const a=ds.split('-').map(Number);return Math.round((new Date(a[0],a[1]-1,a[2])-GSTART)/86400000);}
+function fmtDate(ds){const a=ds.split('-');return a[2]+'/'+a[1];}
+const GTOTAL = dOff("2026-08-31")+1;
+
+function renderGantt(){
+  const ticks=document.getElementById('gticks');
+  [["2026-07-27","27/07"],["2026-08-03","03/08"],["2026-08-10","10/08"],["2026-08-17","17/08"],["2026-08-24","24/08"],["2026-08-31","31/08"]]
+    .forEach(function(t){const s=document.createElement('div');s.className='gtick';
+      s.style.left=((dOff(t[0])/GTOTAL)*100)+'%';s.style.top='2px';s.textContent=t[1];ticks.appendChild(s);});
+  const mk=document.createElement('div');mk.className='gmark-lbl';
+  mk.style.left=((dOff("2026-08-20")/GTOTAL)*100)+'%';mk.textContent='PITCH 20/08';
+  ticks.appendChild(mk);
+
+  const wrap=document.getElementById('ganttrows');
+  GANTT_ROWS.forEach(function(r){
+    const row=document.createElement('div');row.className='grow';
+    const l=(dOff(r.start)/GTOTAL)*100, w=Math.max(((dOff(r.end)-dOff(r.start)+1)/GTOTAL)*100,3.2);
+    const um=(dOff("2026-08-20")/GTOTAL)*100;
+    row.innerHTML='<div class="gname">'+r.id+'. '+r.name+'</div>'+
+      '<div class="gtrack"><div class="gmark" style="left:'+um+'%"></div>'+
+      '<div class="gbar" style="left:'+l+'%;width:'+w+'%;background:'+r.color+'" onclick="goToPhase('+r.id+')">'+
+      fmtDate(r.start)+(r.start===r.end?'':' → '+fmtDate(r.end))+'</div></div>';
+    wrap.appendChild(row);
+  });
+}
+
+/* ================= WORKFLOW ================= */
+function ownClass(o){return o==='JG'?'jg':(o==='NF'?'nf':'both');}
+function ownStyle(o){
+  return o==='JG' ? 'background:rgba(250,163,35,.18);color:#8a5200'
+       : o==='NF' ? 'background:rgba(72,14,193,.12);color:#480ec1'
+       : 'background:rgba(22,163,74,.14);color:#15803d';
+}
+function renderWorkflow(){
+  const wrap=document.getElementById('workflow');
+  PHASES.forEach(function(p){
+    const div=document.createElement('div');div.className='phase';div.id='phase-'+p.id;
+    let pecas='';
+    p.items.forEach(function(it){
+      const t=it.tags[0];const ar=ICO[t]||ICO.off;
+      pecas+='<div class="peca"><div class="ico" style="background:'+ar[1]+'">'+ar[0]+'</div>'+
+             '<div><div class="txt">'+it.text+'</div><span class="who '+ownClass(it.own)+'">'+it.own+'</span></div></div>';
+    });
+    div.innerHTML='<div class="phase-bar" style="background:'+p.color+'">'+
+      '<div class="n">'+p.id+'</div><div class="t">'+p.name+'</div><div class="d">'+p.dates+' · '+p.items.length+' peças</div></div>'+
+      '<div class="phase-body"><div class="objetivo"><strong>Objetivo da fase.</strong> '+OBJETIVOS[p.id]+'</div>'+
+      '<div class="pecas">'+pecas+'</div></div>';
+    wrap.appendChild(div);
+  });
+}
+
+/* ================= CHECKLIST ================= */
+const S={};
+function renderChecklist(){
+  const wrap=document.getElementById('checklist');
+  PHASES.forEach(function(p){
+    const div=document.createElement('div');div.className='clphase';
+    let rows='';
+    p.items.forEach(function(it,i){
+      let tags='';it.tags.forEach(function(t){tags+='<span class="tag" style="background:'+TAGCOR[t]+'22;color:'+TAGCOR[t]+'">'+t+'</span>';});
+      rows+='<div class="cli" id="cli-'+p.id+'-'+i+'">'+
+        '<div class="item-cb" onclick="tog('+p.id+','+i+',this)"></div>'+
+        '<div><div class="cli-txt">'+it.text+'</div><div class="tags">'+tags+'</div></div>'+
+        '<input placeholder="dd/mm" class="suggested" value="'+it.dl+'" oninput="onF('+p.id+','+i+',\'dl\',this)">'+
+        '<input placeholder="Nome do responsável" oninput="onF('+p.id+','+i+',\'resp\',this)">'+
+        '<div class="cli-link-cell"><input class="cli-link" placeholder="colar link da entrega" oninput="onLinkInput('+p.id+','+i+',this)">'+
+        '<a class="cli-open" id="open-'+p.id+'-'+i+'" href="#" target="_blank" rel="noopener" title="Abrir entrega" style="display:none">↗</a></div>'+
+        '<div class="ownchip" style="'+ownStyle(it.own)+'">'+it.own+'</div>'+
+        '</div>';
+    });
+    div.innerHTML='<div class="clhead" style="background:'+p.color+'" onclick="tglPhase(this)">'+
+      '<div class="t">'+p.id+'. '+p.name+'</div><div style="font-size:.76rem;opacity:.9">'+p.dates+'</div>'+
+      '<div class="c" id="clprog-'+p.id+'">0/'+p.items.length+'</div></div>'+
+      '<div class="clbody">'+rows+'</div>';
+    wrap.appendChild(div);
+  });
+  updateProgress();
+}
+function tglPhase(el){el.nextElementSibling.classList.toggle('hidden');}
+function tog(pid,i,el){
+  const k=pid+'-'+i+'-done';S[k]=!S[k];
+  el.classList.toggle('checked',!!S[k]);
+  document.getElementById('cli-'+pid+'-'+i).classList.toggle('done',!!S[k]);
+  const p=PHASES.find(function(x){return x.id===pid;});
+  const done=p.items.filter(function(_,j){return S[pid+'-'+j+'-done'];}).length;
+  document.getElementById('clprog-'+pid).textContent=done+'/'+p.items.length;
+  updateProgress();scheduleGlobalSave();
+}
+function onF(pid,i,f,el){S[pid+'-'+i+'-'+f]=el.value;if(f==='dl')el.classList.remove('suggested');scheduleGlobalSave();}
+function onLinkInput(pid,i,el){
+  const v=el.value.trim();S[pid+'-'+i+'-link']=v;
+  const a=document.getElementById('open-'+pid+'-'+i);
+  if(a){ if(v){a.href=/^https?:\/\//i.test(v)?v:'https://'+v;a.style.display='';} else {a.href='#';a.style.display='none';} }
+  scheduleGlobalSave();
+}
+function updateProgress(){
+  let tot=0,dn=0;
+  PHASES.forEach(function(p){p.items.forEach(function(_,i){tot++;if(S[p.id+'-'+i+'-done'])dn++;});});
+  const pct=tot?Math.round(dn/tot*100):0;
+  document.getElementById('progpct').textContent=pct+'%';
+  document.getElementById('progtxt').textContent=dn+' de '+tot+' tarefas';
+  document.getElementById('progfill').style.width=pct+'%';
+}
+function exportCSV(){
+  let csv='Fase,Tarefa,Tags,Status,Prazo,Responsável,Link da entrega\n';
+  PHASES.forEach(function(p){p.items.forEach(function(it,i){
+    csv+='"'+p.name+'","'+it.text+'","'+it.tags.join(' ')+'","'+(S[p.id+'-'+i+'-done']?'Concluído':'Pendente')+'","'+
+      (S[p.id+'-'+i+'-dl']||it.dl)+'","'+(S[p.id+'-'+i+'-resp']||it.own)+'","'+(S[p.id+'-'+i+'-link']||'')+'"\n';
+  });});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
+  a.download='checklist_imersao_self_design.csv';a.click();
+}
+function resetAll(){
+  if(!confirm('Isso apaga todos os checks, prazos, responsáveis e links. Continuar?'))return;
+  Object.keys(S).forEach(function(k){delete S[k];});
+  document.getElementById('checklist').innerHTML='';renderChecklist();scheduleGlobalSave();
+}
+
+/* ================= ROAS ================= */
+const ROAS_IDS=['s_cpm','s_ctr','s_connect','s_convlp','s_org','s_t1','s_q1','s_t2','s_q2','s_bump','s_bumptx',
+  's_tment','s_asc_min','s_asc_med','s_asc_ot'];
+const BRIEFING_IDS=['bf_meta_l1','bf_meta_l2','bf_meta_imersao','bf_meta_mentoria','bf_meta_fat','bf_verba',
+  'bf_doc_mestre','bf_pasta','bf_lp','bf_checkout'];
+const LINK_IDS=['bf_doc_mestre','bf_pasta','bf_lp','bf_checkout'];
+const n=function(id){return parseFloat((document.getElementById(id).value+'').replace(',','.'))||0;};
+const brl=function(v){return 'R$ '+Math.round(v).toLocaleString('pt-BR');};
+
+function calc(){
+  const cpm=n('s_cpm'), ctr=n('s_ctr')/100, con=n('s_connect')/100, cv=n('s_convlp')/100;
+  let cac=0,cpc=0,cpv=0;
+  if(cv>0&&con>0&&ctr>0){
+    const visitas=1/cv, cliques=visitas/con, imps=cliques/ctr;
+    cac=imps*(cpm/1000); cpc=(cpm/1000)/ctr; cpv=cpc/con;
+  }
+  const alunos=n('s_q1')+n('s_q2');
+  const org=Math.min(Math.max(n('s_org'),0),100)/100;
+  const vOrg=alunos*org, vPagas=alunos-vOrg;
+  const inv=vPagas*cac;
+  const cpaMedio=alunos>0?inv/alunos:0;
+
+  const recI=n('s_q1')*n('s_t1')+n('s_q2')*n('s_t2')+alunos*(n('s_bumptx')/100)*n('s_bump');
+  const tment=n('s_tment');
+
+  document.getElementById('o_cpc').textContent=brl(cpc);
+  document.getElementById('o_cpv').textContent=brl(cpv);
+  document.getElementById('o_cac').textContent=brl(cac);
+  document.getElementById('o_cpa2').textContent=brl(cpaMedio);
+  document.getElementById('o_cpa_med').textContent=brl(cpaMedio);
+  document.getElementById('o_split').textContent=Math.round(vPagas)+' / '+Math.round(vOrg);
+  document.getElementById('o_alunos').textContent=Math.round(alunos);
+  document.getElementById('o_rec_i2').textContent=brl(recI);
+  document.getElementById('o_rec_imersao').textContent=brl(recI);
+  document.getElementById('o_invest').textContent=brl(inv);
+
+  const cen=[['Mínima',n('s_asc_min'),'#dc2626'],['Média',n('s_asc_med'),'#faa323'],['Ótima',n('s_asc_ot'),'#16a34a']];
+  let html='';
+  let medTotal=0, medRecM=0, medRoas=0;
+  cen.forEach(function(c,idx){
+    const vendas=alunos*(c[1]/100), recM=vendas*tment, total=recI+recM, roas=inv>0?total/inv:0;
+    if(idx===1){medTotal=total;medRecM=recM;medRoas=roas;}
+    html+='<tr class="'+(idx===1?'med':'')+'"><td>'+c[0]+
+      (idx===1?'<span class="cenchip" style="background:'+c[2]+'22;color:'+c[2]+'">base</span>':'')+'</td>'+
+      '<td>'+c[1].toFixed(1)+'%</td><td>'+vendas.toFixed(1)+'</td><td>'+brl(recM)+'</td>'+
+      '<td>'+brl(total)+'</td><td>'+brl(inv)+'</td>'+
+      '<td style="color:'+(roas>=5?'#16a34a':(roas>=3?'#faa323':'#dc2626'))+';font-weight:800">'+roas.toFixed(2)+'×</td></tr>';
+  });
+  document.getElementById('cenbody').innerHTML=html;
+
+  document.getElementById('o_rec_mentoria').textContent=brl(medRecM);
+  document.getElementById('o_rec_total').textContent=brl(medTotal);
+
+  let cor,txt;
+  if(medRoas>=5){cor='#16a34a';txt='Excelente ✓';}
+  else if(medRoas>=3){cor='#faa323';txt='Positivo';}
+  else if(medRoas>=0){cor='#dc2626';txt='Abaixo da meta';}
+  else {cor='#dc2626';txt='Negativo';}
+  document.getElementById('roasfill').style.width=Math.min(medRoas/15*100,100)+'%';
+  document.getElementById('roasfill').style.background=cor;
+  document.getElementById('roastxt').textContent='ROAS '+medRoas.toFixed(2)+'×';
+  document.getElementById('roasstatus').textContent=txt;
+}
+function initRoas(){
+  ROAS_IDS.forEach(function(id){const e=document.getElementById(id);
+    if(e)e.addEventListener('input',function(){calc();scheduleGlobalSave();});});
+  calc();
+}
+
+/* ================= SAVE ================= */
+let saveT=null;
+function scheduleGlobalSave(){clearTimeout(saveT);saveT=setTimeout(saveAll,800);}
+function collectBriefing(){const d={};BRIEFING_IDS.forEach(function(id){const e=document.getElementById(id);if(e&&e.value!=='')d[id]=e.value;});return d;}
+function collectChecklist(){
+  const d={};
+  PHASES.forEach(function(p){p.items.forEach(function(_,i){
+    const done=S[p.id+'-'+i+'-done'], dl=S[p.id+'-'+i+'-dl'], resp=S[p.id+'-'+i+'-resp'], link=S[p.id+'-'+i+'-link'];
+    if(done) d[p.id+'-'+i+'-done']=true;
+    if(dl&&dl!=='') d[p.id+'-'+i+'-dl']=dl;
+    if(resp&&resp!=='') d[p.id+'-'+i+'-resp']=resp;
+    if(link&&link!=='') d[p.id+'-'+i+'-link']=link;
+  });});
+  return d;
+}
+function collectRoas(){const d={};ROAS_IDS.forEach(function(id){const e=document.getElementById(id);if(e)d[id]=e.value;});return d;}
+function setStatus(t){const e=document.getElementById('roas-save-status');if(e)e.textContent=t;}
+function saveAll(){
+  setStatus('salvando...');
+  const payload={briefing:collectBriefing(),checklist:collectChecklist(),roas:collectRoas()};
+  fetch('save.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+    .then(function(r){return r.json();}).then(function(){setStatus('salvo no servidor');})
+    .catch(function(){try{localStorage.setItem('painel_jg',JSON.stringify(payload));setStatus('salvo localmente');}catch(e){setStatus('não foi possível salvar');}});
+}
+function applyBriefing(d){
+  if(!d)return;
+  Object.keys(d).forEach(function(k){const e=document.getElementById(k);if(e)e.value=d[k];});
+  refreshLinks();
+}
+function applyChecklist(d){
+  if(!d)return;
+  Object.keys(d).forEach(function(k){S[k]=d[k];});
+  PHASES.forEach(function(p){p.items.forEach(function(_,i){
+    const done=S[p.id+'-'+i+'-done'], dl=S[p.id+'-'+i+'-dl'], resp=S[p.id+'-'+i+'-resp'], link=S[p.id+'-'+i+'-link'];
+    const item=document.getElementById('cli-'+p.id+'-'+i);
+    if(!item)return;
+    const cb=item.querySelector('.item-cb');
+    if(done){item.classList.add('done');if(cb)cb.classList.add('checked');}
+    else{item.classList.remove('done');if(cb)cb.classList.remove('checked');}
+    if(dl){const e=item.querySelector('input[placeholder="dd/mm"]');if(e){e.value=dl;e.classList.remove('suggested');}}
+    if(resp){const e=item.querySelector('input[placeholder="Nome do responsável"]');if(e)e.value=resp;}
+    if(link){
+      const e=item.querySelector('.cli-link');if(e)e.value=link;
+      const a=document.getElementById('open-'+p.id+'-'+i);
+      if(a){a.href=/^https?:\/\//i.test(link)?link:'https://'+link;a.style.display='';}
+    }
+  });});
+  PHASES.forEach(function(p){
+    const done=p.items.filter(function(_,i){return S[p.id+'-'+i+'-done'];}).length;
+    const el=document.getElementById('clprog-'+p.id);
+    if(el)el.textContent=done+'/'+p.items.length;
+  });
+  updateProgress();
+}
+function applyRoasData(d){if(!d)return;Object.keys(d).forEach(function(k){const e=document.getElementById(k);if(e)e.value=d[k];});calc();}
+function loadAll(){
+  fetch('save.php').then(function(r){return r.json();}).then(function(d){
+    applyBriefing(d.briefing);applyChecklist(d.checklist);applyRoasData(d.roas);
+    if(d._saved_at)setStatus('carregado do servidor');
+  }).catch(function(){
+    try{const d=JSON.parse(localStorage.getItem('painel_jg')||'{}');
+      applyBriefing(d.briefing);applyChecklist(d.checklist);applyRoasData(d.roas);setStatus('carregado localmente');}catch(e){}
+  });
+}
+
+function refreshLinks(){
+  LINK_IDS.forEach(function(id){
+    const inp=document.getElementById(id), a=document.getElementById('op_'+id);
+    if(!inp||!a)return;
+    const v=inp.value.trim();
+    if(v){a.href=/^https?:\/\//i.test(v)?v:'https://'+v;a.style.display='';}
+    else{a.href='#';a.style.display='none';}
+  });
+  const p=document.getElementById('bf_pasta'), hf=document.getElementById('bf_pasta_link');
+  if(p&&hf){const v=p.value.trim();hf.href=v?(/^https?:\/\//i.test(v)?v:'https://'+v):'#';}
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  renderChecklist();
+  renderGantt();
+  renderWorkflow();
+  initRoas();
+  BRIEFING_IDS.forEach(function(id){
+    const el=document.getElementById(id);
+    if(el)el.addEventListener('input',function(){refreshLinks();scheduleGlobalSave();});
+  });
+  loadAll();
+});
+</script>
+</body>
+</html>
