@@ -1,5 +1,5 @@
 <?php
-// Persistência do "Painel de Campanha — Imersão Self Design".
+// Persistência do "Painel de Campanha — Imersão Coolhunting na Era da IA".
 // Grava FORA da pasta publicada, para que nenhum deploy do Git apague o que o
 // cliente/time preencher. O painel faz fetch('save.php') relativo a esta pasta.
 $FILE = '/home/u346131448/dados/jg-painel-imersao-self-design.json';
