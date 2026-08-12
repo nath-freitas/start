@@ -1,0 +1,11 @@
+# jorgegrimberg.com.br — raiz do domínio
+# Enquanto o Jorge não tem site próprio, a raiz encaminha para a landing da imersão.
+# 302 (temporário) DE PROPÓSITO: um 301 ficaria em cache no navegador de quem
+# visitou e continuaria mandando pra /imersao/ mesmo depois de existir um site.
+RedirectMatch 302 ^/$ /imersao/
+
+Options -Indexes
+
+<FilesMatch "^\.ht">
+  Require all denied
+</FilesMatch>

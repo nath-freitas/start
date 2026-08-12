@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- REMOVER NO LANÇAMENTO: mantém a página fora do Google enquanto está em aprovação -->
+<meta name="robots" content="noindex,nofollow">
+<title>Imersão Coolhunting na Era da IA — Jorge Grimberg</title>
+<meta name="description" content="Duas noites, 25 e 26 de agosto, ao vivo e online com Jorge Grimberg. Reaprenda a pesquisar e ative o seu olhar autoral.">
+
+<!--
+  ======================================================================
+  VERSÃO 2 — 12/08/2026 · ajustes pedidos pelo Jorge (doc "JG edit")
+  ----------------------------------------------------------------------
+  APLICADO NESTA VERSÃO
+  1. Fundo preto, tipografia branca.
+  2. Fontes do Jorge, self-hosted (KMR Waldenburg + Helvetica Now Display).
+  3. Logo (JORGE GRIMBERG) no hero e no rodapé.
+  4. Hierarquia do hero invertida: nome do evento grande, pergunta menor.
+  5. Nova pergunta e nova subheadline do hero.
+  6. Hero em duas colunas no desktop — texto NÃO fica mais em cima da foto.
+  7. Mobile: foto em bloco 4:5 no topo, rosto inteiro, sem corte.
+  8. Novos títulos dos 4 cards "por que agora".
+  9. "3 Minutos de Moda" na faixa de autoridade (junto de WGSN, Vogue e BoF).
+  10. Nova seção "A imersão" com os dois módulos reescritos.
+
+  VERSÃO 2.1 — 12/08/2026 · segunda rodada de ajustes do Jorge
+  11. Rodapé: os nomes dos veículos saíram; ao lado do logo entra o nome da
+      imersão. Os veículos seguem na faixa de autoridade e na bio.
+  12. CTA da seção de preço em verde (--green). Os demais CTAs seguem vermelhos.
+
+  PENDÊNCIAS ANTES DE PUBLICAR
+  1. INSERIR_LINK_CHECKOUT  → todos os CTAs apontam pra esse placeholder.
+     Find & replace por todo o arquivo pelo link real da Hotmart.
+  2. PIXELS DE TRACKEAMENTO → ainda não inseridos.
+     Preciso dos IDs: Meta Pixel, Clarity/Hotjar, GA4, script da Hotmart.
+  3. Barra de progresso de lote → não incluída (sem dado real de venda ainda).
+  4. A VALIDAR com o Jorge: ele escreveu só "25 de agosto" no bloco da imersão,
+     mas o produto são DUAS noites. Mantido 25 e 26 de agosto, que é a data
+     confirmada pela Nath em 12/08.
+  5. A VALIDAR: licença de uso web (webfont) da Helvetica Now Display.
+  6. <meta robots noindex,nofollow> ativo — tirar quando a página for pro ar.
+  ======================================================================
+  NO AR (aprovação): https://cliente.catapultadeideias.com.br/imersao-ago26/
+  Publicada pelo repo nath-freitas/start, branch deploy/cliente,
+  pasta imersao-ago26/ (index.html + fonts/ + images/).
+  ======================================================================
+-->
+
+<!-- Fontes do Jorge — self-hosted, subsetadas, ~66KB no total -->
+<style>
+  @font-face{
+    font-family:'Waldenburg Display';
+    src:url('fonts/waldenburg-schwer-schmal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:swap;
+  }
+  @font-face{
+    font-family:'Waldenburg';
+    src:url('fonts/waldenburg-buch.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:swap;
+  }
+  @font-face{
+    font-family:'Helvetica Now Display';
+    src:url('fonts/helveticanow-bold.woff2') format('woff2');
+    font-weight:700; font-style:normal; font-display:swap;
+  }
+  @font-face{
+    font-family:'Helvetica Now Display';
+    src:url('fonts/helveticanow-extrabold.woff2') format('woff2');
+    font-weight:800; font-style:normal; font-display:swap;
+  }
+</style>
+
+<!-- TRACKING: GA4 — inserir gtag aqui quando o ID for enviado -->
+<!-- TRACKING: Meta Pixel base — inserir aqui quando o ID for enviado -->
+<!-- TRACKING: Clarity/Hotjar — inserir aqui quando o ID for enviado -->
+
+<style>
+  :root{
+    --ink:#000000;
+    --ink-2:#0B0B0B;
+    --paper:#FFFFFF;
+    --soft:#B9B9B9;
+    --mute:#7C7C7C;
+    --line:#242424;
+    --line-light:#D9D9D9;
+    --red:#B31F1E;
+    --red-bright:#E23A2E;
+    /* verde usado APENAS no CTA de compra da seção de preço */
+    --green:#077A40;
+    --green-deep:#05602F;
+    --font-display:'Waldenburg Display','Helvetica Now Display',Impact,sans-serif;
+    --font-body:'Waldenburg','Helvetica Now Display',Helvetica,Arial,sans-serif;
+    --font-ui:'Helvetica Now Display',Helvetica,Arial,sans-serif;
+    --maxw:1240px;
+    /* trocar para none se o Jorge preferir as fotos coloridas */
+    --photo-filter:grayscale(1) contrast(1.06);
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:var(--font-body);
+    background:var(--ink);
+    color:var(--paper);
+    line-height:1.55;
+    text-transform:uppercase;
+    letter-spacing:.005em;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  img{max-width:100%; display:block;}
+  a{color:inherit;}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 32px;}
+  :focus-visible{outline:3px solid var(--red-bright); outline-offset:3px;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important;}
+  }
+
+  /* ---------- utilitários de tipo ---------- */
+  .kicker{
+    font-family:var(--font-ui); font-weight:700;
+    font-size:11.5px; letter-spacing:.16em; color:var(--mute);
+  }
+  .eyebrow{
+    font-family:var(--font-ui); font-weight:700;
+    font-size:11.5px; letter-spacing:.16em; color:var(--red-bright);
+  }
+  .logo-jg{width:190px; height:auto;}
+
+  /* ================= HERO ================= */
+  .hero{
+    display:grid;
+    grid-template-columns:1.05fr .95fr;
+    min-height:100vh; min-height:100svh;
+    background:var(--ink);
+    border-bottom:1px solid var(--line);
+  }
+  .hero-col{
+    display:flex; flex-direction:column; justify-content:center;
+    padding:72px 0 72px 0;
+  }
+  .hero-inner{max-width:620px; margin-left:auto; margin-right:auto; padding:0 32px; width:100%;}
+  .hero-kicker{
+    font-family:var(--font-ui); font-weight:700;
+    font-size:12px; letter-spacing:.05em; line-height:1.6;
+    color:var(--soft); max-width:440px;
+    margin:26px 0 30px;
+  }
+  .hero-title{
+    font-family:var(--font-display); font-weight:400;
+    font-size:clamp(46px, 6.4vw, 96px);
+    line-height:.92; letter-spacing:-0.005em;
+    margin-bottom:26px;
+  }
+  .hero-title .em{color:var(--red-bright);}
+  .hero-question{
+    font-family:var(--font-ui); font-weight:800;
+    font-size:clamp(16px, 1.55vw, 21px);
+    line-height:1.3; letter-spacing:.01em;
+    max-width:470px;
+    padding-left:18px; border-left:3px solid var(--red);
+    margin-bottom:20px;
+  }
+  .hero-sub{
+    font-family:var(--font-body);
+    font-size:clamp(14px, 1.15vw, 16px);
+    line-height:1.55; color:var(--soft);
+    max-width:460px; margin-bottom:34px;
+  }
+  .hero-cta-row{display:flex; gap:16px; flex-wrap:wrap; margin-bottom:24px;}
+  .hero-meta{
+    display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+    font-family:var(--font-ui); font-weight:700;
+    font-size:12px; letter-spacing:.06em; color:var(--paper);
+  }
+  .hero-meta .dot{width:4px; height:4px; border-radius:50%; background:var(--red-bright); flex:none;}
+
+  .hero-photo-col{position:relative; overflow:hidden; background:#111;}
+  .hero-photo-col img{
+    width:100%; height:100%; object-fit:cover; object-position:center 18%;
+    filter:var(--photo-filter);
+  }
+  .hero-photo-col::after{
+    content:""; position:absolute; inset:0;
+    background:linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 24%);
+    pointer-events:none;
+  }
+  .hero-photo-mobile{display:none;}
+
+  /* ---------- botões ---------- */
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:10px;
+    font-family:var(--font-ui); font-weight:800;
+    font-size:12.5px; letter-spacing:.08em;
+    padding:18px 30px;
+    background:var(--red); color:var(--paper);
+    border:none; cursor:pointer; text-decoration:none;
+    transition:background .15s ease, transform .15s ease;
+  }
+  .btn:hover{background:var(--red-bright); transform:translateY(-2px);}
+  .btn-ghost{background:transparent; border:1.5px solid var(--paper); color:var(--paper);}
+  .btn-ghost:hover{background:var(--paper); color:var(--ink);}
+  /* CTA de compra (seção de preço) — verde, a pedido do Jorge (12/08/2026) */
+  .btn-buy{background:var(--green); color:var(--paper);}
+  .btn-buy:hover{background:var(--green-deep);}
+
+  /* ================= TRANSIÇÃO ================= */
+  .transition{
+    padding:120px 0; text-align:center;
+    border-bottom:1px solid var(--line);
+  }
+  .transition p{
+    font-family:var(--font-display); font-weight:400;
+    font-size:clamp(26px, 3.9vw, 50px);
+    line-height:1.08; max-width:960px; margin:0 auto;
+  }
+  .transition .em{color:var(--red-bright);}
+
+  /* ================= POR QUE AGORA ================= */
+  .why{padding:120px 0;}
+  .section-head{max-width:680px; margin-bottom:60px;}
+  .section-head .eyebrow{display:block; margin-bottom:16px;}
+  .section-head h2{
+    font-family:var(--font-display); font-weight:400;
+    font-size:clamp(30px, 4.2vw, 54px);
+    line-height:1.02;
+  }
+  .why-grid{
+    display:grid; grid-template-columns:repeat(2,1fr);
+    gap:1px; background:var(--line); border:1px solid var(--line);
+  }
+  .why-card{background:var(--ink); padding:46px 42px;}
+  .why-card .num{
+    display:block; font-family:var(--font-ui); font-weight:800;
+    font-size:11.5px; letter-spacing:.16em; color:var(--red-bright); margin-bottom:20px;
+  }
+  .why-card h3{
+    font-family:var(--font-display); font-weight:400;
+    font-size:clamp(21px, 2.1vw, 27px); line-height:1.08; margin-bottom:16px;
+  }
+  .why-card p{font-size:14.5px; line-height:1.65; color:var(--soft); text-transform:none;}
+
+  /* ================= AUTORIDADE (faixa invertida) ================= */
+  .authority{
+    background:var(--paper); color:var(--ink);
+    padding:76px 0; text-align:center;
+  }
+  .authority .kicker{color:var(--mute); display:block; margin-bottom:26px;}
+  .authority-names{
+    display:flex; align-items:center; justify-content:center;
+    gap:20px; flex-wrap:wrap;
+    font-family:var(--font-display); font-weight:400;
+    font-size:clamp(20px, 3vw, 38px); line-height:1;
+  }
+  .authority-names .sep{color:var(--red); }
+
+  /* ================= A IMERSÃO ================= */
+  .how{padding:120px 0; border-bottom:1px solid var(--line);}
+  .how-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:24px;}
+  .how-card{
+    border:1px solid var(--line);
+    padding:48px 42px; min-height:340px;
+    display:flex; flex-direction:column; justify-content:flex-end;
+    transition:border-color .2s ease;
+  }
+  .how-card:hover{border-color:var(--red);}
+  .how-card .night{
+    font-family:var(--font-ui); font-weight:700;
+    font-size:11.5px; letter-spacing:.16em; color:var(--red-bright); margin-bottom:14px;
+  }
+  .how-card .num{
+    font-family:var(--font-display); font-weight:400;
+    font-size:72px; line-height:.9; color:var(--line-light); margin-bottom:22px;
+  }
+  .how-card h3{
+    font-family:var(--font-display); font-weight:400;
+    font-size:clamp(22px, 2.2vw, 30px); line-height:1.05; margin-bottom:14px;
+  }
+  .how-card p{font-size:14.5px; line-height:1.65; color:var(--soft); text-transform:none;}
+
+  /* ================= PREÇO ================= */
+  .price{padding:120px 0;}
+  .price-grid{display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:center;}
+  .price-quote{
+    font-family:var(--font-display); font-weight:400;
+    font-size:clamp(22px, 2.7vw, 34px); line-height:1.12;
+    border-left:3px solid var(--red); padding-left:28px;
+  }
+  .price-quote span{
+    display:block; margin-top:22px;
+    font-family:var(--font-ui); font-weight:700;
+    font-size:12px; letter-spacing:.14em; color:var(--mute);
+  }
+  .price-card{background:var(--paper); color:var(--ink); padding:46px;}
+  .price-card .product{
+    font-family:var(--font-ui); font-weight:700;
+    font-size:11.5px; letter-spacing:.14em; color:var(--mute); margin-bottom:14px;
+  }
+  .price-card .amount{
+    font-family:var(--font-display); font-weight:400;
+    font-size:76px; line-height:.9; letter-spacing:-0.01em; margin-bottom:8px;
+  }
+  .price-card .amount sup{font-size:26px; top:-1.1em; position:relative;}
+  .price-card .installments{font-size:14px; color:#4A4A4A; margin-bottom:16px;}
+  .price-card .lote{
+    font-family:var(--font-ui); font-weight:800;
+    font-size:11.5px; letter-spacing:.14em; color:var(--red); margin-bottom:28px;
+  }
+  .price-card .btn{width:100%; margin-bottom:28px;}
+  .price-list{list-style:none;}
+  .price-list li{
+    display:flex; gap:12px; align-items:flex-start;
+    font-size:14px; line-height:1.5; color:#2A2A2A;
+    padding:12px 0; border-top:1px solid var(--line-light);
+    text-transform:none;
+  }
+  .price-list li:first-child{border-top:none;}
+  .price-list li::before{content:"—"; color:var(--red); flex:none;}
+
+  /* ================= BIO ================= */
+  .bio{padding:120px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .bio-grid{display:grid; grid-template-columns:360px 1fr; gap:64px; align-items:center;}
+  .bio-photo img{width:100%; height:auto; filter:var(--photo-filter);}
+  .bio-text .eyebrow{display:block; margin-bottom:20px;}
+  .bio-text p{
+    font-size:16px; line-height:1.7; color:var(--soft);
+    margin-bottom:20px; max-width:600px; text-transform:none;
+  }
+  .bio-text p:last-of-type{
+    font-family:var(--font-display); font-weight:400;
+    font-size:clamp(20px, 2.1vw, 27px); line-height:1.12;
+    color:var(--paper); text-transform:uppercase; margin-bottom:0;
+  }
+
+  /* ================= FAQ ================= */
+  .faq{padding:120px 0;}
+  .faq-item{border-top:1px solid var(--line);}
+  .faq-item:last-child{border-bottom:1px solid var(--line);}
+  .faq-q{
+    width:100%; background:none; border:none;
+    display:flex; align-items:center; justify-content:space-between; gap:20px;
+    padding:26px 4px; text-align:left; cursor:pointer;
+    font-family:var(--font-display); font-weight:400;
+    font-size:clamp(17px, 1.7vw, 21px); line-height:1.15; color:var(--paper);
+    list-style:none;
+  }
+  .faq-q::-webkit-details-marker{display:none;}
+  .faq-q .plus{font-family:var(--font-ui); font-weight:700; font-size:20px; color:var(--red-bright); flex:none; transition:transform .2s ease;}
+  .faq-item[open] .plus{transform:rotate(45deg);}
+  .faq-a{padding:0 4px 28px; font-size:14.5px; line-height:1.65; color:var(--soft); max-width:680px; text-transform:none;}
+
+  /* ================= FOOTER ================= */
+  footer{padding:64px 0 110px; background:var(--ink);}
+  .foot-top{display:flex; justify-content:space-between; align-items:center; gap:28px; flex-wrap:wrap; margin-bottom:34px;}
+  /* rodapé fecha com o nome da imersão (os veículos ficam só na faixa de autoridade) */
+  .foot-event{
+    font-family:var(--font-display); font-weight:400;
+    font-size:clamp(26px, 3vw, 40px); line-height:1.02;
+    letter-spacing:-.01em; color:var(--paper);
+    text-align:right;
+  }
+  .foot-event span{color:var(--red-bright);}
+  .foot-legal{
+    font-family:var(--font-ui); font-weight:700;
+    font-size:11px; letter-spacing:.1em; color:#5A5A5A;
+    padding-top:26px; border-top:1px solid var(--line);
+  }
+  footer .logo-jg{width:150px; opacity:.9;}
+
+  /* ================= STICKY CTA (mobile) ================= */
+  .sticky-cta{display:none;}
+
+  /* ================= RESPONSIVO ================= */
+  @media (max-width: 980px){
+    .wrap{padding:0 20px;}
+    .hero{grid-template-columns:1fr; min-height:0;}
+    .hero-col{padding:36px 0 56px; order:2;}
+    .hero-inner{padding:0 20px; max-width:100%;}
+    .hero-photo-col{display:none;}
+    .hero-photo-mobile{
+      display:block; order:1; position:relative;
+      width:100%; height:min(48svh, 112vw);
+      overflow:hidden; background:#111;
+    }
+    .hero-photo-mobile img{
+      width:100%; height:100%; object-fit:cover; object-position:center top;
+      filter:var(--photo-filter);
+    }
+    .hero-photo-mobile::after{
+      content:""; position:absolute; left:0; right:0; bottom:0; height:34%;
+      background:linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.92) 82%, #000 100%);
+    }
+    .hero-kicker{margin:22px 0 22px; max-width:100%;}
+    .hero-title{font-size:clamp(38px, 11.5vw, 62px);}
+    .hero-question, .hero-sub{max-width:100%;}
+    .hero-question{font-size:16px;}
+    .section-head, .bio-text p, .faq-a, .price-quote, .transition p{max-width:100%;}
+    .hero-cta-row{flex-direction:column; align-items:stretch;}
+
+    .why-grid{grid-template-columns:1fr;}
+    .how-grid{grid-template-columns:1fr;}
+    .price-grid{grid-template-columns:1fr; gap:40px;}
+    .bio-grid{grid-template-columns:1fr; gap:32px;}
+    .bio-photo{max-width:300px;}
+
+    .why, .how, .price, .bio, .faq{padding:80px 0;}
+    .transition{padding:80px 0;}
+    .authority{padding:56px 0;}
+    .authority-names{flex-direction:column; gap:10px;}
+    .authority-names .sep{display:none;}
+
+    .foot-top{gap:34px;}
+    .foot-event{text-align:left;}
+
+    .sticky-cta{
+      display:flex; align-items:center; justify-content:space-between; gap:14px;
+      position:fixed; left:0; right:0; bottom:0; z-index:50;
+      background:var(--paper); color:var(--ink);
+      padding:12px 16px; padding-bottom:calc(12px + env(safe-area-inset-bottom));
+    }
+    .sticky-cta .info{font-family:var(--font-ui); font-weight:700; font-size:11px; letter-spacing:.08em; line-height:1.35; flex:1 1 auto; min-width:0;}
+    .sticky-cta .info strong{display:block; font-family:var(--font-display); font-weight:400; font-size:22px; letter-spacing:0;}
+    .sticky-cta .btn{padding:14px 18px; font-size:11.5px; flex:0 0 auto; white-space:nowrap;}
+    body{padding-bottom:76px;}
+  }
+
+  @media (max-width: 520px){
+    .why-card{padding:36px 26px;}
+    .how-card{padding:36px 26px; min-height:0;}
+    .price-card{padding:34px 26px;}
+  }
+
+  /* reveal on scroll */
+  .reveal{opacity:0; transform:translateY(14px); transition:opacity .6s ease, transform .6s ease;}
+  .reveal.in{opacity:1; transform:none;}
+</style>
+</head>
+<body>
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <div class="hero-photo-mobile">
+    <img src="images/hero-mobile.jpg" alt="Jorge Grimberg" fetchpriority="high" decoding="async" width="1080" height="1350">
+  </div>
+
+  <div class="hero-col">
+    <div class="hero-inner">
+      <img class="logo-jg" src="images/logo-jg.png" alt="(Jorge Grimberg)" width="900" height="106">
+      <p class="hero-kicker">A IA deu as mesmas ferramentas pra todo mundo. E de repente tudo ficou igual.</p>
+      <h1 class="hero-title">Imersão<br>Coolhunting<br>na <span class="em">era da IA</span></h1>
+      <p class="hero-question">Na era da IA, o que fará de você insubstituível?</p>
+      <p class="hero-sub">Duas noites para você reaprender a pesquisar e ativar o seu olhar autoral.</p>
+      <div class="hero-cta-row">
+        <a href="INSERIR_LINK_CHECKOUT" class="btn" data-cta="hero">Garanta sua vaga · Lote 01</a>
+      </div>
+      <div class="hero-meta">
+        <span>25 e 26 de agosto</span>
+        <span class="dot"></span>
+        <span>Ao vivo e 100% online, via Zoom</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-photo-col">
+    <img src="images/hero-desktop.jpg" alt="Jorge Grimberg, retrato" fetchpriority="high" decoding="async" width="1500" height="1875">
+  </div>
+</header>
+
+<!-- ================= TRANSIÇÃO ================= -->
+<section class="transition reveal">
+  <div class="wrap">
+    <p>Pesquisar tendência nunca foi sobre prever o futuro.<br>É sobre <span class="em">enxergar o presente</span> melhor que todo mundo.</p>
+  </div>
+</section>
+
+<!-- ================= POR QUE ESSA IMERSÃO EXISTE AGORA ================= -->
+<section class="why">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Por que agora</span>
+      <h2>Por que essa imersão existe agora</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card reveal">
+        <span class="num">01</span>
+        <h3>Tudo está muito parecido</h3>
+        <p>Você tem a mesma IA que todo mundo. Lê o mesmo relatório de tendência que todo mundo. Salva a mesma referência que todo mundo salvou. E não é coincidência que tudo está ficando igual.</p>
+      </div>
+      <div class="why-card reveal">
+        <span class="num">02</span>
+        <h3>Nossas identidades estão se perdendo com a IA</h3>
+        <p>A IA não roubou sua criatividade. Ela expôs quanto do que você chamava de criatividade era, na verdade, repetição.</p>
+      </div>
+      <div class="why-card reveal">
+        <span class="num">03</span>
+        <h3>O que o mercado irá valorizar</h3>
+        <p>O que ficou raro não é o acesso à informação, todo mundo já tem. É a interpretação. É olhar a mesma cultura que todo mundo olha e enxergar o que ninguém enxergou.</p>
+      </div>
+      <div class="why-card reveal">
+        <span class="num">04</span>
+        <h3>Por que isso é importante agora</h3>
+        <p>Vivemos uma recessão cultural: nunca se produziu tanto, nunca se criou tão pouco. Quando todo mundo fica igual, quem pensa diferente vale mais.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= AUTORIDADE INSTITUCIONAL ================= -->
+<section class="authority reveal">
+  <div class="wrap">
+    <span class="kicker">Vinte anos formando o olhar de quem decide o que vem a seguir</span>
+    <div class="authority-names">
+      <span>WGSN</span><span class="sep">·</span>
+      <span>Vogue</span><span class="sep">·</span>
+      <span>Business of Fashion</span><span class="sep">·</span>
+      <span>3 Minutos de Moda</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= A IMERSÃO ================= -->
+<section class="how">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">A imersão</span>
+      <h2>Duas noites, a sua inspiração e criatividade de volta</h2>
+    </div>
+    <div class="how-grid">
+      <div class="how-card reveal">
+        <span class="night">25 de agosto</span>
+        <span class="num">01</span>
+        <h3>Coolhunting e repertório</h3>
+        <p>Você aprende a interpretar cultura com o mesmo critério que Jorge usa para pesquisar e criar, com a experiência de quem passou por WGSN, Business of Fashion e Vogue, e criou o 3 Minutos de Moda.</p>
+      </div>
+      <div class="how-card reveal">
+        <span class="night">26 de agosto</span>
+        <span class="num">02</span>
+        <h3>Posicionamento e estratégia</h3>
+        <p>A partir do desenvolvimento do seu olhar único, você aplica no seu próprio projeto e sai com um conceito cultural só seu.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= QUANTO CUSTA ================= -->
+<section class="price">
+  <div class="wrap">
+    <div class="price-grid">
+      <div class="reveal">
+        <p class="price-quote">
+          "O objetivo dessas duas noites é simples: você sair com um conceito que é seu, de verdade, não uma cópia bem-feita do que todo mundo está fazendo."
+          <span>— Jorge Grimberg</span>
+        </p>
+      </div>
+      <div class="price-card reveal">
+        <p class="product">Imersão Coolhunting na Era da IA</p>
+        <p class="amount"><sup>R$</sup>297</p>
+        <p class="installments">ou 12x de R$30,72</p>
+        <p class="lote">Lote 01 — Vagas limitadas</p>
+        <a href="INSERIR_LINK_CHECKOUT" class="btn btn-buy" data-cta="price">Comprar ingresso</a>
+        <ul class="price-list">
+          <li>As duas noites de imersão ao vivo com o Jorge, 100% online via Zoom</li>
+          <li>Aplicação guiada no seu próprio projeto</li>
+          <li>Um conceito cultural autoral, seu, ao final</li>
+          <li>Acesso ao grupo da turma</li>
+          <li>Garantia de 7 dias</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= BIO ================= -->
+<section class="bio">
+  <div class="wrap">
+    <div class="bio-grid">
+      <div class="bio-photo reveal">
+        <img src="images/bio-jorge.jpg" alt="Jorge Grimberg" loading="lazy" decoding="async" width="592" height="789">
+      </div>
+      <div class="bio-text reveal">
+        <span class="eyebrow">Pesquisador de tendências, jornalista, mentor</span>
+        <p>Passei vinte anos dentro do mercado de moda e cultura. Dez deles na WGSN, cheguei a diretor de tendências da América Latina. Passei pela Vogue, pela Business of Fashion, e criei o 3 Minutos de Moda. Sou mestre em design, arquitetura e urbanismo.</p>
+        <p>Só que o que mais me marcou nesses vinte anos não foi nenhum relatório que eu escrevi. Foi perceber que o que as pessoas mais me pediam não era informação. Era ajuda pra enxergar o que estava na frente delas o tempo todo, e que elas não conseguiam ver sozinhas.</p>
+        <p>Essas duas noites são sobre isso. Sobre destravar o seu olhar, não sobre te ensinar o meu.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section class="faq">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Antes de decidir</span>
+      <h2>Perguntas frequentes</h2>
+    </div>
+    <div class="reveal">
+      <details class="faq-item">
+        <summary class="faq-q">É online ou presencial?<span class="plus">+</span></summary>
+        <div class="faq-a">100% online, ao vivo, via Zoom.</div>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q">Fica gravado?<span class="plus">+</span></summary>
+        <div class="faq-a">Sim, quem garantir o acesso à gravação recebe o link após o encerramento.</div>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q">Preciso ter experiência em moda, marca ou pesquisa de tendência?<span class="plus">+</span></summary>
+        <div class="faq-a">Não. O ponto de partida é o seu próprio repertório, não bagagem técnica prévia.</div>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q">Vou sair com o quê, na prática?<span class="plus">+</span></summary>
+        <div class="faq-a">Um conceito cultural autoral, nomeado, aplicado no seu próprio projeto ou carreira.</div>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q">Tem certificado?<span class="plus">+</span></summary>
+        <div class="faq-a">Não. É um curso livre de aperfeiçoamento, não certificado.</div>
+      </details>
+      <details class="faq-item">
+        <summary class="faq-q">Posso pedir reembolso?<span class="plus">+</span></summary>
+        <div class="faq-a">Sim, garantia incondicional de 7 dias.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <img class="logo-jg" src="images/logo-jg.png" alt="(Jorge Grimberg)" loading="lazy" width="900" height="106">
+      <div class="foot-event">Imersão Coolhunting<br>na <span>Era da IA</span></div>
+    </div>
+    <div class="foot-legal">© 2026 Jorge Grimberg · Método JG. Todos os direitos reservados.</div>
+  </div>
+</footer>
+
+<!-- ================= STICKY CTA (mobile) ================= -->
+<div class="sticky-cta">
+  <div class="info"><strong>R$297</strong>25 e 26/08 · Lote 01</div>
+  <a href="INSERIR_LINK_CHECKOUT" class="btn" data-cta="sticky">Garantir vaga</a>
+</div>
+
+<script>
+  // Reveal on scroll — respeita prefers-reduced-motion via CSS acima
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  } else {
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+  }
+
+  // TRACKING: disparo de evento de conversão nos CTAs.
+  // Ativar quando os pixels forem inseridos no <head>.
+  document.querySelectorAll('[data-cta]').forEach(btn => {
+    btn.addEventListener('click', function () {
+      // if (typeof fbq === 'function') fbq('track', 'InitiateCheckout');
+      // if (typeof gtag === 'function') gtag('event', 'begin_checkout');
+    });
+  });
+</script>
+
+</body>
+</html>
