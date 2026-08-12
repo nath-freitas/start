@@ -3,19 +3,365 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- REMOVER QUANDO O JORGE APROVAR O TEXTO: mantém a página fora do Google enquanto é provisória -->
 <meta name="robots" content="noindex,nofollow">
-<!-- Rede de segurança: o redirecionamento de verdade está no .htaccess da raiz.
-     Este arquivo só aparece se o mod_alias estiver desligado no servidor. -->
-<meta http-equiv="refresh" content="0; url=/imersao/">
-<title>Jorge Grimberg</title>
+<title>Jorge Grimberg — Pesquisador de tendências</title>
+<meta name="description" content="Jorge Grimberg, pesquisador de tendências, jornalista e mentor. Vinte anos entre WGSN, Vogue e Business of Fashion. Criador do 3 Minutos de Moda e do Método JG.">
+<link rel="canonical" href="https://jorgegrimberg.com.br/">
+
+<!-- Open Graph: o link já chega no WhatsApp com título, texto e imagem -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Jorge Grimberg">
+<meta property="og:title" content="Jorge Grimberg">
+<meta property="og:description" content="Pesquisador de tendências, jornalista e mentor. Vinte anos entre WGSN, Vogue e Business of Fashion.">
+<meta property="og:url" content="https://jorgegrimberg.com.br/">
+<meta property="og:image" content="https://jorgegrimberg.com.br/images/retrato-jorge.jpg">
+<meta name="twitter:card" content="summary_large_image">
+
+<!--
+  ======================================================================
+  HOME INSTITUCIONAL PROVISÓRIA — jorgegrimberg.com.br
+  12/08/2026 · Catapulta de Ideias
+  ----------------------------------------------------------------------
+  O QUE É
+  Página de apresentação provisória, pedida pela Nath em 12/08.
+  Fundo branco, tipografia preta: é a INVERSÃO da página da imersão
+  (que é preta), usando a mesma identidade do Jorge — o logo entre
+  parênteses, as fontes dele (Waldenburg + Helvetica Now), foto P&B e o
+  vermelho #B31F1E como único acento.
+
+  ESTRUTURA
+  1. Hero: logo, quem ele é, retrato.
+  2. Faixa de autoridade: WGSN · Vogue · Business of Fashion · 3 Minutos de Moda.
+  3. Bio, em primeira pessoa.
+  4. Método JG, em narrativa (NÃO como produto, NÃO como grade de pilares).
+  5. Rodapé.
+
+  REGRAS DO PROJETO RESPEITADAS
+  - Tendência é o MECANISMO, posicionamento é o RESULTADO. O texto do
+    Método JG chega em posicionamento, nunca vende "leitura de tendência".
+  - O método não é o produto: em nenhum lugar se diz "aprenda o método".
+  - Nada de bege/amarelo da Catapulta. Identidade é a do Jorge.
+  - Texto não passa por cima do rosto: colunas separadas no desktop,
+    blocos empilhados no mobile.
+
+  PENDÊNCIAS
+  1. <meta robots noindex> ativo — tirar quando o Jorge aprovar o texto.
+  2. Sem link de redes sociais: o Instagram/Substack dele não está
+     documentado no projeto. Bloco pronto no rodapé, comentado abaixo.
+  3. Texto escrito pela Catapulta na voz dele. Precisa do de-acordo dele.
+  4. LINHA DA IMERSÃO no rodapé: linha discreta apontando pra /imersao/,
+     pra não orfanar a oferta agora que a raiz do domínio deixou de
+     redirecionar. Marcada abaixo, é UMA linha, sai em um segundo.
+  ======================================================================
+-->
+
 <style>
-  html,body{height:100%;margin:0;background:#000;color:#fff;
-    font-family:Helvetica,Arial,sans-serif;display:flex;align-items:center;
-    justify-content:center;text-align:center}
-  a{color:#B31F1E;font-size:14px;letter-spacing:.08em;text-transform:uppercase}
+  @font-face{
+    font-family:'Waldenburg Display';
+    src:url('fonts/waldenburg-schwer-schmal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:swap;
+  }
+  @font-face{
+    font-family:'Waldenburg';
+    src:url('fonts/waldenburg-buch.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:swap;
+  }
+  @font-face{
+    font-family:'Helvetica Now Display';
+    src:url('fonts/helveticanow-bold.woff2') format('woff2');
+    font-weight:700; font-style:normal; font-display:swap;
+  }
+  @font-face{
+    font-family:'Helvetica Now Display';
+    src:url('fonts/helveticanow-extrabold.woff2') format('woff2');
+    font-weight:800; font-style:normal; font-display:swap;
+  }
+</style>
+
+<style>
+  :root{
+    --paper:#FFFFFF;
+    --ink:#000000;
+    --ink-soft:#3A3A3A;
+    --mute:#767676;
+    --line:#DEDEDE;
+    --red:#B31F1E;
+    --font-display:'Waldenburg Display','Helvetica Now Display',Impact,sans-serif;
+    --font-body:'Waldenburg','Helvetica Now Display',Helvetica,Arial,sans-serif;
+    --font-ui:'Helvetica Now Display',Helvetica,Arial,sans-serif;
+    --maxw:1180px;
+    /* trocar para none se o Jorge preferir a foto colorida */
+    --photo-filter:grayscale(1) contrast(1.04);
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:var(--font-body);
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  img{max-width:100%; display:block;}
+  a{color:inherit;}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 32px;}
+  :focus-visible{outline:3px solid var(--red); outline-offset:3px;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.01ms !important; transition-duration:.01ms !important; scroll-behavior:auto !important;}
+  }
+
+  .kicker{
+    font-family:var(--font-ui); font-weight:700;
+    font-size:11.5px; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--mute);
+  }
+  .eyebrow{
+    font-family:var(--font-ui); font-weight:700;
+    font-size:11.5px; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--red);
+  }
+  .logo-jg{width:200px; height:auto;}
+
+  /* ================= HERO ================= */
+  .hero{
+    display:grid;
+    grid-template-columns:1.05fr .95fr;
+    gap:64px;
+    align-items:center;
+    min-height:100vh; min-height:100svh;
+    max-width:var(--maxw);
+    margin:0 auto;
+    padding:56px 32px 72px;
+  }
+  .hero-title{
+    font-family:var(--font-display); font-weight:400;
+    font-size:clamp(38px, 4.6vw, 68px);
+    line-height:.98; letter-spacing:-.005em;
+    text-transform:uppercase;
+    margin:34px 0 26px;
+  }
+  .hero-title .em{color:var(--red);}
+  .hero-lede{
+    font-size:clamp(15px, 1.25vw, 18px);
+    line-height:1.6; color:var(--ink-soft);
+    max-width:480px;
+    padding-left:20px; border-left:3px solid var(--red);
+  }
+  .hero-role{margin-top:30px;}
+  .hero-photo img{
+    width:100%; height:auto;
+    filter:var(--photo-filter);
+  }
+
+  /* ================= AUTORIDADE ================= */
+  .authority{
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    padding:56px 0; text-align:center;
+  }
+  .authority .kicker{display:block; margin-bottom:24px;}
+  .authority-names{
+    display:flex; align-items:center; justify-content:center;
+    gap:20px; flex-wrap:wrap;
+    font-family:var(--font-display); font-weight:400;
+    text-transform:uppercase;
+    font-size:clamp(19px, 2.7vw, 34px); line-height:1;
+  }
+  .authority-names .sep{color:var(--red);}
+
+  /* ================= BIO ================= */
+  .bio{padding:110px 0;}
+  .bio-grid{display:grid; grid-template-columns:1fr 1.25fr; gap:72px; align-items:start;}
+  .bio-head h2{
+    font-family:var(--font-display); font-weight:400;
+    font-size:clamp(30px, 3.6vw, 50px); line-height:1.02;
+    text-transform:uppercase;
+    margin-top:16px;
+  }
+  .bio-text p{
+    font-size:16.5px; line-height:1.75; color:var(--ink-soft);
+    margin-bottom:22px; max-width:620px;
+  }
+  .bio-text p:last-child{margin-bottom:0;}
+
+  /* ================= MÉTODO ================= */
+  .method{
+    border-top:1px solid var(--line);
+    padding:110px 0;
+  }
+  .method-grid{display:grid; grid-template-columns:1fr 1.25fr; gap:72px; align-items:start;}
+  .method-head h2{
+    font-family:var(--font-display); font-weight:400;
+    font-size:clamp(30px, 3.6vw, 50px); line-height:1.02;
+    text-transform:uppercase;
+    margin-top:16px;
+  }
+  .method-text p{
+    font-size:16.5px; line-height:1.75; color:var(--ink-soft);
+    margin-bottom:22px; max-width:620px;
+  }
+  .method-text .pull{
+    font-family:var(--font-display); font-weight:400;
+    font-size:clamp(22px, 2.4vw, 32px); line-height:1.12;
+    text-transform:uppercase; color:var(--ink);
+    border-left:3px solid var(--red); padding-left:24px;
+    margin:34px 0;
+  }
+  .method-text .close{
+    font-family:var(--font-ui); font-weight:700;
+    font-size:clamp(15px, 1.3vw, 18px); line-height:1.5;
+    color:var(--ink); max-width:560px; margin-bottom:0;
+  }
+
+  /* ================= FOOTER ================= */
+  footer{border-top:1px solid var(--line); padding:60px 0 72px;}
+  .foot-top{
+    display:flex; justify-content:space-between; align-items:center;
+    gap:28px; flex-wrap:wrap; margin-bottom:34px;
+  }
+  footer .logo-jg{width:170px;}
+  .foot-tag{
+    font-family:var(--font-ui); font-weight:700;
+    font-size:11.5px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--mute); text-align:right;
+  }
+  .foot-next{
+    display:inline-flex; align-items:center; gap:10px;
+    font-family:var(--font-ui); font-weight:700;
+    font-size:12px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--ink); text-decoration:none;
+    padding-bottom:3px; border-bottom:2px solid var(--red);
+    transition:color .15s ease;
+  }
+  .foot-next:hover{color:var(--red);}
+  .foot-next .arrow{color:var(--red);}
+  .foot-legal{
+    font-family:var(--font-ui); font-weight:700;
+    font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+    color:#9A9A9A;
+    padding-top:26px; margin-top:34px; border-top:1px solid var(--line);
+  }
+
+  /* ================= RESPONSIVO ================= */
+  @media (max-width: 900px){
+    .wrap{padding:0 20px;}
+    .hero{
+      grid-template-columns:1fr; gap:36px;
+      min-height:0; padding:32px 20px 64px;
+    }
+    .hero-photo{order:1;}
+    .hero-copy{order:2;}
+    .hero-title{font-size:clamp(34px, 10vw, 54px); margin:26px 0 22px;}
+    .hero-lede{max-width:100%;}
+
+    .authority{padding:44px 0;}
+    .authority-names{flex-direction:column; gap:8px;}
+    .authority-names .sep{display:none;}
+
+    .bio, .method{padding:72px 0;}
+    .bio-grid, .method-grid{grid-template-columns:1fr; gap:28px;}
+    .bio-text p, .method-text p{max-width:100%;}
+
+    .foot-top{gap:24px;}
+    .foot-tag{text-align:left;}
+  }
 </style>
 </head>
 <body>
-  <a href="/imersao/">Imersão Coolhunting na Era da IA</a>
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <div class="hero-photo">
+    <img src="images/retrato-jorge.jpg" alt="Jorge Grimberg" fetchpriority="high" decoding="async" width="1500" height="1875">
+  </div>
+
+  <div class="hero-copy">
+    <img class="logo-jg" src="images/logo-jg-preto.png" alt="(Jorge Grimberg)" width="900" height="106">
+    <h1 class="hero-title">Vinte anos<br>lendo cultura<br>antes que ela<br>vire <span class="em">tendência</span></h1>
+    <p class="hero-lede">Só que o que eu entrego no fim não é tendência. É a clareza de saber o que só você pode dizer.</p>
+    <p class="kicker hero-role">Pesquisador de tendências · Jornalista · Mentor</p>
+  </div>
+</header>
+
+<!-- ================= AUTORIDADE ================= -->
+<section class="authority">
+  <div class="wrap">
+    <span class="kicker">Vinte anos formando o olhar de quem decide o que vem a seguir</span>
+    <div class="authority-names">
+      <span>WGSN</span><span class="sep">·</span>
+      <span>Vogue</span><span class="sep">·</span>
+      <span>Business of Fashion</span><span class="sep">·</span>
+      <span>3 Minutos de Moda</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= BIO ================= -->
+<section class="bio">
+  <div class="wrap">
+    <div class="bio-grid">
+      <div class="bio-head">
+        <span class="eyebrow">Quem eu sou</span>
+        <h2>Jorge<br>Grimberg</h2>
+      </div>
+      <div class="bio-text">
+        <p>Passei vinte anos dentro do mercado de moda e cultura. Dez deles na WGSN, onde cheguei a diretor de tendências da América Latina. Passei pela Vogue, pela Business of Fashion, e criei o 3 Minutos de Moda. Sou mestre em design, arquitetura e urbanismo.</p>
+        <p>Só que o que mais me marcou nesses vinte anos não foi nenhum relatório que eu escrevi. Foi perceber que o que as pessoas mais me pediam não era informação. Era ajuda pra enxergar o que estava na frente delas o tempo todo, e que elas não conseguiam ver sozinhas.</p>
+        <p>Hoje é isso que eu faço. Trabalho com gente que precisa parar de repetir o que o mercado já está dizendo, e começar a dizer alguma coisa que seja dela.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MÉTODO JG ================= -->
+<section class="method">
+  <div class="wrap">
+    <div class="method-grid">
+      <div class="method-head">
+        <span class="eyebrow">Como eu trabalho</span>
+        <h2>Método<br>JG</h2>
+      </div>
+      <div class="method-text">
+        <p>Método JG é o nome do jeito como eu leio cultura. Não é uma fórmula que se aplica em cima de um briefing. É um olhar que se constrói, e que depois não desliga mais.</p>
+        <p>A leitura de tendência é o instrumento, não o destino. Ela serve pra chegar em outro lugar: entender qual é o seu lugar dentro do que está acontecendo agora, e o que só você pode dizer a partir dali.</p>
+        <p class="pull">Tendência é o caminho. Posicionamento é onde a gente chega.</p>
+        <p>Ele se apoia em quatro coisas: repertório, leitura de cultura, autenticidade e estratégia. Nenhuma funciona sozinha. Repertório sem autenticidade vira cópia bem feita. Autenticidade sem repertório vira opinião.</p>
+        <p>Vivemos uma recessão cultural. Nunca se produziu tanto, nunca se criou tão pouco. Todo mundo tem a mesma IA, lê o mesmo relatório e salva a mesma referência. O que ficou raro não é o acesso à informação. É a interpretação.</p>
+        <p class="close">Será que o que te falta é mais informação? Ou será que é um jeito de olhar pra informação que já passa na sua frente todo dia?</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <img class="logo-jg" src="images/logo-jg-preto.png" alt="(Jorge Grimberg)" loading="lazy" width="900" height="106">
+      <div class="foot-tag">Pesquisador de tendências<br>Jornalista · Mentor</div>
+    </div>
+
+    <!-- LINHA DA IMERSÃO — remover esta linha se a home tiver que ficar 100% institucional -->
+    <a class="foot-next" href="/imersao/">
+      Imersão Coolhunting na Era da IA · 25 e 26 de agosto
+      <span class="arrow">&rarr;</span>
+    </a>
+
+    <!-- REDES SOCIAIS — descomentar quando os links forem confirmados
+    <div class="foot-social">
+      <a href="INSERIR_INSTAGRAM">Instagram</a>
+      <a href="INSERIR_SUBSTACK">Substack</a>
+    </div>
+    -->
+
+    <div class="foot-legal">© 2026 Jorge Grimberg · Método JG. Todos os direitos reservados.</div>
+  </div>
+</footer>
+
 </body>
 </html>

@@ -1,11 +1,23 @@
 # jorgegrimberg.com.br — raiz do domínio
-# Enquanto o Jorge não tem site próprio, a raiz encaminha para a landing da imersão.
-# 302 (temporário) DE PROPÓSITO: um 301 ficaria em cache no navegador de quem
-# visitou e continuaria mandando pra /imersao/ mesmo depois de existir um site.
-RedirectMatch 302 ^/$ /imersao/
+#
+# 12/08/2026: a raiz passou a servir a HOME INSTITUCIONAL PROVISÓRIA
+# (index.html + fonts/ + images/). O RedirectMatch 302 que mandava a raiz
+# para /imersao/ foi REMOVIDO nesta data. A landing da imersão continua
+# intacta em /imersao/ e é linkada no rodapé da home.
+#
+# Para voltar a encaminhar a raiz para a campanha, basta descomentar:
+# RedirectMatch 302 ^/$ /imersao/
 
 Options -Indexes
 
 <FilesMatch "^\.ht">
   Require all denied
 </FilesMatch>
+
+# Cache longo para fontes e imagens (arquivos versionados por deploy)
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 6 months"
+  ExpiresByType image/png  "access plus 6 months"
+</IfModule>
