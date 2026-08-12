@@ -29,21 +29,38 @@
       imersão. Os veículos seguem na faixa de autoridade e na bio.
   12. CTA da seção de preço em verde (--green). Os demais CTAs seguem vermelhos.
 
+  VERSÃO 2.2 — 12/08/2026 · ajustes finais + trackeamento
+  13. Bloco 03 da seção "por que agora" reescrito pelo Jorge:
+      "Tudo está mudando muito rápido".
+  14. Bloco 04 reescrito pelo Jorge: "Estamos perdendo a capacidade de pensar".
+  15. CHECKOUT REAL: https://pay.hotmart.com/M107130082L
+      Está em UM único lugar — o botão da seção de preço (data-cta="checkout").
+  16. CTA do hero deixou de ir pro checkout: agora rola pra #a-imersao.
+      Texto trocado de "Garanta sua vaga · Lote 01" para "Conheça a imersão",
+      porque um botão que promete vaga e leva pra conteúdo queima confiança.
+  17. Sticky mobile: passou a rolar pra #preco (onde está o botão de compra),
+      já que o checkout deve ficar só na seção de preço.
+  18. Meta Pixel 1083464857674974 (PageView + InitiateCheckout no checkout).
+  19. Microsoft Clarity y1d4e0gfdx.
+  20. GA4 dispensado a pedido da Nath.
+  21. Script de UTM → sck da Hotmart, no fim do body.
+
   PENDÊNCIAS ANTES DE PUBLICAR
-  1. INSERIR_LINK_CHECKOUT  → todos os CTAs apontam pra esse placeholder.
-     Find & replace por todo o arquivo pelo link real da Hotmart.
-  2. PIXELS DE TRACKEAMENTO → ainda não inseridos.
-     Preciso dos IDs: Meta Pixel, Clarity/Hotjar, GA4, script da Hotmart.
-  3. Barra de progresso de lote → não incluída (sem dado real de venda ainda).
-  4. A VALIDAR com o Jorge: ele escreveu só "25 de agosto" no bloco da imersão,
+  1. Barra de progresso de lote → não incluída (sem dado real de venda ainda).
+  2. A VALIDAR com o Jorge: ele escreveu só "25 de agosto" no bloco da imersão,
      mas o produto são DUAS noites. Mantido 25 e 26 de agosto, que é a data
      confirmada pela Nath em 12/08.
-  5. A VALIDAR: licença de uso web (webfont) da Helvetica Now Display.
-  6. <meta robots noindex,nofollow> ativo — tirar quando a página for pro ar.
+  3. A VALIDAR: licença de uso web (webfont) da Helvetica Now Display.
+  4. <meta robots noindex,nofollow> ATIVO. O motivo original (checkout falso)
+     caiu — agora é decisão de negócio da Nath, não trava técnica.
+  5. Sem tags Open Graph: link compartilhado no WhatsApp sai como URL crua.
+  6. Verificar jorgegrimberg.com.br no Business Manager antes de rodar tráfego
+     apontando pro domínio dele.
   ======================================================================
-  NO AR (aprovação): https://cliente.catapultadeideias.com.br/imersao-ago26/
-  Publicada pelo repo nath-freitas/start, branch deploy/cliente,
-  pasta imersao-ago26/ (index.html + fonts/ + images/).
+  NO AR em duas URLs — atualizar SEMPRE as duas:
+  · https://cliente.catapultadeideias.com.br/imersao-ago26/  (deploy/cliente)
+  · https://jorgegrimberg.com.br/imersao/                    (deploy/jorgegrimberg)
+  Repo nath-freitas/start. Publicar = index.html + fonts/ + images/.
   ======================================================================
 -->
 
@@ -71,9 +88,34 @@
   }
 </style>
 
-<!-- TRACKING: GA4 — inserir gtag aqui quando o ID for enviado -->
-<!-- TRACKING: Meta Pixel base — inserir aqui quando o ID for enviado -->
-<!-- TRACKING: Clarity/Hotjar — inserir aqui quando o ID for enviado -->
+<!-- ===================== TRACKEAMENTO =====================
+     GA4: dispensado a pedido da Nath (12/08/2026). Não inserir.
+     ======================================================== -->
+
+<!-- Meta Pixel — 1083464857674974 -->
+<script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window,document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1083464857674974');
+  fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1083464857674974&ev=PageView&noscript=1" alt=""></noscript>
+
+<!-- Microsoft Clarity — y1d4e0gfdx -->
+<script type="text/javascript">
+  (function(c,l,a,r,i,t,y){
+    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window, document, "clarity", "script", "y1d4e0gfdx");
+</script>
 
 <style>
   :root{
@@ -453,7 +495,8 @@
       <p class="hero-question">Na era da IA, o que fará de você insubstituível?</p>
       <p class="hero-sub">Duas noites para você reaprender a pesquisar e ativar o seu olhar autoral.</p>
       <div class="hero-cta-row">
-        <a href="INSERIR_LINK_CHECKOUT" class="btn" data-cta="hero">Garanta sua vaga · Lote 01</a>
+        <!-- CTA do hero NÃO vai pro checkout: leva pra seção "A imersão" (pedido 12/08) -->
+        <a href="#a-imersao" class="btn" data-cta="hero-para-imersao">Conheça a imersão</a>
       </div>
       <div class="hero-meta">
         <span>25 e 26 de agosto</span>
@@ -495,13 +538,13 @@
       </div>
       <div class="why-card reveal">
         <span class="num">03</span>
-        <h3>O que o mercado irá valorizar</h3>
-        <p>O que ficou raro não é o acesso à informação, todo mundo já tem. É a interpretação. É olhar a mesma cultura que todo mundo olha e enxergar o que ninguém enxergou.</p>
+        <h3>Tudo está mudando muito rápido</h3>
+        <p>Hoje todo mundo tem acesso à informação. O que vai ser cada vez mais valioso é a interpretação. O gosto pessoal, olhar e discernimento para ver o que ninguém mais viu.</p>
       </div>
       <div class="why-card reveal">
         <span class="num">04</span>
-        <h3>Por que isso é importante agora</h3>
-        <p>Vivemos uma recessão cultural: nunca se produziu tanto, nunca se criou tão pouco. Quando todo mundo fica igual, quem pensa diferente vale mais.</p>
+        <h3>Estamos perdendo a capacidade de pensar</h3>
+        <p>Estamos constantemente sobrecarregados e exaustos. Usamos IA para conseguir atalhos e gastamos muito tempo em telas. Porém é possível ganhar sua mente de volta.</p>
       </div>
     </div>
   </div>
@@ -521,7 +564,7 @@
 </section>
 
 <!-- ================= A IMERSÃO ================= -->
-<section class="how">
+<section class="how" id="a-imersao">
   <div class="wrap">
     <div class="section-head reveal">
       <span class="eyebrow">A imersão</span>
@@ -545,7 +588,7 @@
 </section>
 
 <!-- ================= QUANTO CUSTA ================= -->
-<section class="price">
+<section class="price" id="preco">
   <div class="wrap">
     <div class="price-grid">
       <div class="reveal">
@@ -559,7 +602,8 @@
         <p class="amount"><sup>R$</sup>297</p>
         <p class="installments">ou 12x de R$30,72</p>
         <p class="lote">Lote 01 — Vagas limitadas</p>
-        <a href="INSERIR_LINK_CHECKOUT" class="btn btn-buy" data-cta="price">Comprar ingresso</a>
+        <!-- ÚNICO link de checkout da página. As UTMs entram aqui via script no fim do body. -->
+        <a href="https://pay.hotmart.com/M107130082L" class="btn btn-buy" data-cta="checkout">Comprar ingresso</a>
         <ul class="price-list">
           <li>As duas noites de imersão ao vivo com o Jorge, 100% online via Zoom</li>
           <li>Aplicação guiada no seu próprio projeto</li>
@@ -638,7 +682,8 @@
 <!-- ================= STICKY CTA (mobile) ================= -->
 <div class="sticky-cta">
   <div class="info"><strong>R$297</strong>25 e 26/08 · Lote 01</div>
-  <a href="INSERIR_LINK_CHECKOUT" class="btn" data-cta="sticky">Garantir vaga</a>
+  <!-- leva pra seção de preço, onde está o único botão de checkout -->
+  <a href="#preco" class="btn" data-cta="sticky-para-preco">Garantir vaga</a>
 </div>
 
 <script>
@@ -652,14 +697,61 @@
     document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
   }
 
-  // TRACKING: disparo de evento de conversão nos CTAs.
-  // Ativar quando os pixels forem inseridos no <head>.
+  // Evento de conversão — só no clique que sai da página pro checkout da Hotmart.
+  // Os CTAs de hero e sticky são âncoras internas: viram evento de intenção, não de checkout.
   document.querySelectorAll('[data-cta]').forEach(btn => {
     btn.addEventListener('click', function () {
-      // if (typeof fbq === 'function') fbq('track', 'InitiateCheckout');
-      // if (typeof gtag === 'function') gtag('event', 'begin_checkout');
+      const tag = this.getAttribute('data-cta');
+      if (tag === 'checkout') {
+        if (typeof fbq === 'function') fbq('track', 'InitiateCheckout', {value: 297, currency: 'BRL'});
+        if (typeof clarity === 'function') clarity('set', 'cta', 'checkout');
+      } else {
+        if (typeof clarity === 'function') clarity('set', 'cta', tag);
+      }
     });
   });
+</script>
+
+<!-- ============================================================
+     UTMs → link de checkout da Hotmart (script da Nath).
+     Roda no fim do body (DOM pronto) em vez de window.onload:
+     assim as UTMs já estão no link antes de as imagens do hero
+     carregarem, e um clique rápido não perde o rastreio.
+     Ignora todo href com "#", ou seja, só toca no link da Hotmart.
+     ============================================================ -->
+<script>
+function parametros() {
+    const parametros = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"]
+    const urlParamsCapt = new URLSearchParams(window.location.search)
+    const urlParamsCaptReferrer = new URLSearchParams(document.referrer.split('?')[1] || '')
+    let utms = {}
+    let scks = []
+    parametros.forEach(el => {
+        if (el == "utm_source") {
+            utms[el] = urlParamsCapt.get(el) ?? (document.referrer ? (urlParamsCaptReferrer.get(el) ?? new URL(document.referrer).hostname) : "direto")
+        } else {
+            utms[el] = urlParamsCapt.get(el) ?? (urlParamsCaptReferrer.get(el) ?? "")
+        }
+    })
+    for (utm in utms) {
+        scks.push(utms[utm])
+    }
+    scks = scks.filter(function (el) {
+        return el != ""
+    })
+    let sck = "sck=" + scks.join('|')
+    let href = ""
+    for (el in utms) {
+        utms[el] ? href += el + "=" + utms[el] + "&" : ""
+    }
+    href += sck
+    document.querySelectorAll('a').forEach(el => {
+        if (!el.href.includes("#")) {
+            el.href.includes("?") ? el.href += "&" + href : el.href += "?" + href
+        }
+    })
+}
+parametros()
 </script>
 
 </body>
