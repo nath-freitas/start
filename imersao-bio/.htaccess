@@ -1,0 +1,2 @@
+RewriteEngine On
+RewriteRule ^$ https://jorgegrimberg.com.br/imersao/?utm_source=instagram&utm_medium=bio&utm_campaign=imc_ago26_lp [R=302,L]
