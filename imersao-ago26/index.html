@@ -6,7 +6,7 @@
 <!-- REMOVER NO LANÇAMENTO: mantém a página fora do Google enquanto está em aprovação -->
 <meta name="robots" content="noindex,nofollow">
 <title>Imersão Coolhunting na Era da IA — Jorge Grimberg</title>
-<meta name="description" content="Duas noites, 25 e 26 de agosto, ao vivo e online com Jorge Grimberg. Reaprenda a pesquisar e ative o seu olhar autoral.">
+<meta name="description" content="Duas noites, 25 e 26 de agosto, das 19h às 21h, ao vivo e online com Jorge Grimberg. Reaprenda a pesquisar e ative o seu olhar autoral.">
 
 <!--
   ======================================================================
@@ -44,6 +44,13 @@
   19. Microsoft Clarity y1d4e0gfdx.
   20. GA4 dispensado a pedido da Nath.
   21. Script de UTM → sck da Hotmart, no fim do body.
+
+  VERSÃO 2.3 — 12/08/2026 · horário
+  22. HORÁRIO 19h às 21h em TODOS os pontos que citam a data:
+      meta description, hero-meta, os dois cards da seção "A imersão",
+      o primeiro item da lista do card de preço e a barra fixa do mobile.
+      Na barra fixa, "Lote 01" saiu para o horário caber em uma linha
+      (o lote continua no card de preço, que é onde a escassez pesa).
 
   PENDÊNCIAS ANTES DE PUBLICAR
   1. Barra de progresso de lote → não incluída (sem dado real de venda ainda).
@@ -440,6 +447,10 @@
     .hero-question{font-size:16px;}
     .section-head, .bio-text p, .faq-a, .price-quote, .transition p{max-width:100%;}
     .hero-cta-row{flex-direction:column; align-items:stretch;}
+    /* com o horário são 3 itens: no mobile empilham, senão o separador
+       sobra pendurado no fim da linha quebrada */
+    .hero-meta{flex-direction:column; align-items:flex-start; gap:7px;}
+    .hero-meta .dot{display:none;}
 
     .why-grid{grid-template-columns:1fr;}
     .how-grid{grid-template-columns:1fr;}
@@ -500,6 +511,8 @@
       </div>
       <div class="hero-meta">
         <span>25 e 26 de agosto</span>
+        <span class="dot"></span>
+        <span>Das 19h às 21h</span>
         <span class="dot"></span>
         <span>Ao vivo e 100% online, via Zoom</span>
       </div>
@@ -572,13 +585,13 @@
     </div>
     <div class="how-grid">
       <div class="how-card reveal">
-        <span class="night">25 de agosto</span>
+        <span class="night">25 de agosto · 19h às 21h</span>
         <span class="num">01</span>
         <h3>Coolhunting e repertório</h3>
         <p>Você aprende a interpretar cultura com o mesmo critério que Jorge usa para pesquisar e criar, com a experiência de quem passou por WGSN, Business of Fashion e Vogue, e criou o 3 Minutos de Moda.</p>
       </div>
       <div class="how-card reveal">
-        <span class="night">26 de agosto</span>
+        <span class="night">26 de agosto · 19h às 21h</span>
         <span class="num">02</span>
         <h3>Posicionamento e estratégia</h3>
         <p>A partir do desenvolvimento do seu olhar único, você aplica no seu próprio projeto e sai com um conceito cultural só seu.</p>
@@ -605,7 +618,7 @@
         <!-- ÚNICO link de checkout da página. As UTMs entram aqui via script no fim do body. -->
         <a href="https://pay.hotmart.com/M107130082L" class="btn btn-buy" data-cta="checkout">Comprar ingresso</a>
         <ul class="price-list">
-          <li>As duas noites de imersão ao vivo com o Jorge, 100% online via Zoom</li>
+          <li>As duas noites de imersão ao vivo com o Jorge, das 19h às 21h, 100% online via Zoom</li>
           <li>Aplicação guiada no seu próprio projeto</li>
           <li>Um conceito cultural autoral, seu, ao final</li>
           <li>Acesso ao grupo da turma</li>
@@ -681,7 +694,7 @@
 
 <!-- ================= STICKY CTA (mobile) ================= -->
 <div class="sticky-cta">
-  <div class="info"><strong>R$297</strong>25 e 26/08 · Lote 01</div>
+  <div class="info"><strong>R$297</strong>25 e 26/08 · 19h às 21h</div>
   <!-- leva pra seção de preço, onde está o único botão de checkout -->
   <a href="#preco" class="btn" data-cta="sticky-para-preco">Garantir vaga</a>
 </div>
