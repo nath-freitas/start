@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business Model Canvas — JG Studio · essencial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bege:#E4DCCB;
+    --bege-fundo:#DED5C2;
+    --branco:#FBFAF6;
+    --preto:#15130F;
+    --tinta:#6B6354;
+    --amarelo:#FFCE1A;
+    --linha:#15130F;
+    --display:'Archivo', system-ui, sans-serif;
+    --mono:'Space Mono', ui-monospace, monospace;
+    --corpo:'Inter', system-ui, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;background:var(--bege-fundo);color:var(--preto);
+    font-family:var(--corpo);line-height:1.45;padding:28px 24px 80px;
+  }
+
+  .topo{
+    max-width:1400px;margin:0 auto 26px;display:flex;flex-wrap:wrap;
+    align-items:flex-end;justify-content:space-between;gap:20px;
+    border-bottom:2px solid var(--linha);padding-bottom:18px;
+  }
+  .marca{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--tinta);margin:0 0 8px;}
+  h1{font-family:var(--display);font-weight:800;font-size:clamp(26px,4.4vw,46px);line-height:.96;letter-spacing:-.01em;text-transform:uppercase;margin:0;}
+  .sub{font-family:var(--mono);font-size:12px;color:var(--tinta);margin:10px 0 0;max-width:54ch;}
+  .sub b{color:var(--preto);font-weight:700;}
+
+  .ferramentas{display:flex;flex-direction:column;align-items:flex-end;gap:12px;}
+  .status{font-family:var(--mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--tinta);display:flex;align-items:center;gap:8px;min-height:14px;}
+  .ponto{width:8px;height:8px;background:var(--amarelo);border:1px solid var(--linha);display:inline-block;}
+  .ponto.salvando{animation:pisca .9s ease-in-out infinite;}
+  @keyframes pisca{50%{opacity:.25;}}
+  .botoes{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;}
+  button{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;background:var(--branco);color:var(--preto);border:1.5px solid var(--linha);padding:9px 14px;cursor:pointer;transition:background .12s,color .12s;}
+  button:hover{background:var(--preto);color:var(--branco);}
+  button.destaque{background:var(--amarelo);}
+  button.destaque:hover{background:var(--preto);color:var(--amarelo);}
+  button:focus-visible{outline:3px solid var(--amarelo);outline-offset:2px;}
+
+  .canvas{
+    max-width:1400px;margin:0 auto;display:grid;
+    grid-template-columns:repeat(5,1fr);grid-auto-rows:minmax(210px,auto);
+    border:2px solid var(--linha);background:var(--linha);gap:2px;
+  }
+  .bloco{background:var(--branco);display:flex;flex-direction:column;padding:14px 14px 12px;min-width:0;}
+  .cab{display:flex;align-items:baseline;gap:9px;margin-bottom:10px;}
+  .num{font-family:var(--display);font-weight:800;font-size:13px;color:var(--branco);background:var(--preto);width:22px;height:22px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .titulo{font-family:var(--display);font-weight:700;font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;line-height:1.05;margin:0;padding-top:3px;}
+  .pergunta{
+    font-family:var(--mono);font-size:12px;line-height:1.5;color:var(--preto);
+    padding-left:14px;position:relative;margin:0 0 11px;
+  }
+  .pergunta::before{content:"";position:absolute;left:0;top:5px;width:7px;height:7px;background:var(--amarelo);border:1px solid var(--linha);}
+  textarea{
+    flex:1;min-height:96px;width:100%;resize:vertical;
+    font-family:var(--corpo);font-size:13.5px;line-height:1.5;color:var(--preto);
+    background:var(--bege);border:1px solid var(--linha);padding:9px 10px;
+  }
+  textarea::placeholder{color:#A79E8C;}
+  textarea:focus{outline:none;background:#FFF;box-shadow:inset 4px 0 0 var(--amarelo);border-color:var(--linha);}
+
+  .b1{grid-column:1;grid-row:1 / span 2;}
+  .b2{grid-column:2;grid-row:1;}
+  .b3{grid-column:2;grid-row:2;}
+  .b4{grid-column:3;grid-row:1 / span 2;background:#FFFDF4;}
+  .b4 .num{background:var(--amarelo);color:var(--preto);}
+  .b5{grid-column:4;grid-row:1;}
+  .b6{grid-column:4;grid-row:2;}
+  .b7{grid-column:5;grid-row:1 / span 2;}
+  .rodape{grid-column:1 / -1;grid-row:3;display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--linha);}
+
+  @media (max-width:880px){
+    body{padding:20px 14px 60px;}
+    .canvas{grid-template-columns:1fr;grid-auto-rows:auto;}
+    .bloco{grid-column:1 !important;grid-row:auto !important;}
+    .rodape{grid-template-columns:1fr;}
+    .b4{order:-1;}
+    .topo,.ferramentas{align-items:flex-start;}
+  }
+  @media print{
+    body{background:#fff;padding:0;}
+    .ferramentas{display:none;}
+    .canvas{gap:1px;background:#000;}
+    textarea{background:#fff;box-shadow:none;}
+  }
+</style>
+</head>
+<body>
+
+  <header class="topo">
+    <div>
+      <p class="marca">Catapulta de Ideias · Nath Freitas × JG Studio</p>
+      <h1>Business Model<br>Canvas</h1>
+    </div>
+    <div class="ferramentas">
+      <div class="status"><span class="ponto" id="ponto"></span><span id="statusTxt">carregando…</span></div>
+      <div class="botoes">
+        <button class="destaque" onclick="salvarAgora()">Salvar agora</button>
+        <button onclick="exportar()">Exportar (.json)</button>
+        <button onclick="imprimir()">Imprimir / PDF</button>
+        <button onclick="limpar()">Limpar tudo</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="canvas">
+    <section class="bloco b1">
+      <div class="cab"><span class="num">1</span><h2 class="titulo">Parceiros-chave</h2></div>
+      <p class="pergunta">Quem são nossos principais parceiros?</p>
+      <textarea data-key="parcerias" placeholder="Escreva aqui…"></textarea>
+    </section>
+
+    <section class="bloco b2">
+      <div class="cab"><span class="num">2</span><h2 class="titulo">Atividades-chave</h2></div>
+      <p class="pergunta">Quais atividades-chave nossas propostas de valor exigem?</p>
+      <textarea data-key="atividades" placeholder="Escreva aqui…"></textarea>
+    </section>
+
+    <section class="bloco b3">
+      <div class="cab"><span class="num">3</span><h2 class="titulo">Principais recursos</h2></div>
+      <p class="pergunta">Quais recursos-chave nossas propostas de valor exigem?</p>
+      <textarea data-key="recursos" placeholder="Escreva aqui…"></textarea>
+    </section>
+
+    <section class="bloco b4">
+      <div class="cab"><span class="num">4</span><h2 class="titulo">Propostas de valor</h2></div>
+      <p class="pergunta">Que valor entregamos ao cliente?</p>
+      <textarea data-key="proposta" placeholder="Escreva aqui…"></textarea>
+    </section>
+
+    <section class="bloco b5">
+      <div class="cab"><span class="num">5</span><h2 class="titulo">Relações com o consumidor</h2></div>
+      <p class="pergunta">Que tipo de relacionamento cada um de nossos segmentos de clientes espera que estabeleçamos e mantenhamos com eles?</p>
+      <textarea data-key="relacionamento" placeholder="Escreva aqui…"></textarea>
+    </section>
+
+    <section class="bloco b6">
+      <div class="cab"><span class="num">6</span><h2 class="titulo">Canais</h2></div>
+      <p class="pergunta">Por quais canais nossos segmentos de clientes querem ser alcançados?</p>
+      <textarea data-key="canais" placeholder="Escreva aqui…"></textarea>
+    </section>
+
+    <section class="bloco b7">
+      <div class="cab"><span class="num">7</span><h2 class="titulo">Segmentos de clientes</h2></div>
+      <p class="pergunta">Para quem estamos criando valor?</p>
+      <textarea data-key="segmentos" placeholder="Escreva aqui…"></textarea>
+    </section>
+
+    <div class="rodape">
+      <section class="bloco">
+        <div class="cab"><span class="num">8</span><h2 class="titulo">Estrutura de custos</h2></div>
+        <p class="pergunta">Quais são os custos mais importantes inerentes ao nosso modelo de negócios?</p>
+        <textarea data-key="custos" placeholder="Escreva aqui…"></textarea>
+      </section>
+      <section class="bloco">
+        <div class="cab"><span class="num">9</span><h2 class="titulo">Fluxos de receita</h2></div>
+        <p class="pergunta">Por qual valor nossos clientes estão realmente dispostos a pagar?</p>
+        <textarea data-key="receita" placeholder="Escreva aqui…"></textarea>
+      </section>
+    </div>
+  </main>
+
+<script>
+  var API='save.php';                 // endpoint no servidor (mesma pasta)
+  var KEY='jg_bmc_essencial_v1';       // reserva local, caso o servidor não responda
+  var INTERVALO_MS=5*60*1000;
+  var campos=document.querySelectorAll('textarea[data-key]');
+  var ponto=document.getElementById('ponto');
+  var statusTxt=document.getElementById('statusTxt');
+  var debounce;
+
+  function coletar(){var o={};campos.forEach(function(t){o[t.dataset.key]=t.value;});return o;}
+  function preencher(d){campos.forEach(function(t){if(d&&d[t.dataset.key]!=null)t.value=d[t.dataset.key];});}
+  function hora(ts){var d=new Date(ts);return ('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);}
+
+  // guarda uma cópia local sempre, como rede de segurança
+  function guardarLocal(){
+    try{localStorage.setItem(KEY,JSON.stringify({data:coletar(),savedAt:Date.now()}));}catch(e){}
+  }
+
+  // salva no servidor; se falhar, mantém a cópia local e avisa
+  function salvar(){
+    guardarLocal();
+    return fetch(API,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({data:coletar()})
+    })
+    .then(function(r){return r.json();})
+    .then(function(res){
+      if(res&&res.ok){statusTxt.textContent='Salvo no servidor · '+hora(res.saved_at);}
+      else{throw new Error('resposta inesperada');}
+    })
+    .catch(function(){
+      statusTxt.textContent='Sem conexão · salvo só neste navegador ('+hora(Date.now())+')';
+    });
+  }
+
+  function flashSalvando(){
+    ponto.classList.add('salvando');statusTxt.textContent='Salvando…';
+    setTimeout(function(){salvar().then(function(){ponto.classList.remove('salvando');});},300);
+  }
+
+  // ao abrir: o servidor é a fonte da verdade; cai pro local se não responder
+  function restaurar(){
+    statusTxt.textContent='Carregando…';
+    fetch(API,{method:'GET',cache:'no-store'})
+    .then(function(r){return r.json();})
+    .then(function(obj){
+      if(obj&&obj.data){
+        preencher(obj.data);
+        statusTxt.textContent=obj._saved_at?('Salvo no servidor · '+hora(obj._saved_at)):'Conteúdo carregado';
+      }else{
+        restaurarLocal('Nada salvo ainda · comece a escrever');
+      }
+    })
+    .catch(function(){restaurarLocal('Servidor indisponível · usando cópia local');});
+  }
+  function restaurarLocal(msgVazio){
+    try{
+      var r=JSON.parse(localStorage.getItem(KEY));
+      if(r&&r.data){preencher(r.data);statusTxt.textContent=r.savedAt?('Cópia local · '+hora(r.savedAt)):'Cópia local carregada';}
+      else{statusTxt.textContent=msgVazio;}
+    }catch(e){statusTxt.textContent=msgVazio;}
+  }
+
+  campos.forEach(function(t){
+    t.addEventListener('input',function(){
+      statusTxt.textContent='Editando…';
+      guardarLocal();
+      clearTimeout(debounce);debounce=setTimeout(salvar,1500);
+    });
+  });
+  setInterval(flashSalvando,INTERVALO_MS);
+  window.addEventListener('beforeunload',guardarLocal);
+
+  function salvarAgora(){flashSalvando();}
+  function exportar(){
+    var pacote={data:coletar(),savedAt:Date.now(),projeto:'JG Studio — Canvas essencial'};
+    var blob=new Blob([JSON.stringify(pacote,null,2)],{type:'application/json'});
+    var url=URL.createObjectURL(blob);var a=document.createElement('a');var d=new Date();
+    a.href=url;a.download='canvas-jg-essencial-'+d.getFullYear()+('0'+(d.getMonth()+1)).slice(-2)+('0'+d.getDate()).slice(-2)+'.json';
+    a.click();URL.revokeObjectURL(url);
+  }
+  function imprimir(){
+    campos.forEach(function(t){t.style.height=t.scrollHeight+'px';});
+    window.print();
+    setTimeout(function(){campos.forEach(function(t){t.style.height='';});},500);
+  }
+  function limpar(){
+    if(!confirm('Apagar todas as respostas, no servidor e neste navegador? Não dá para desfazer.'))return;
+    campos.forEach(function(t){t.value='';});
+    localStorage.removeItem(KEY);
+    salvar().then(function(){statusTxt.textContent='Tudo limpo · comece de novo';});
+  }
+  restaurar();
+</script>
+</body>
+</html>
