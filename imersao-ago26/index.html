@@ -52,6 +52,17 @@
       Na barra fixa, "Lote 01" saiu para o horário caber em uma linha
       (o lote continua no card de preço, que é onde a escassez pesa).
 
+  VERSÃO 2.4 — 16/08/2026 · order bump + fim do grupo de alunos
+  23. CHECKOUT trocado para https://pay.hotmart.com/M107130082L?checkoutMode=10
+      (checkout com o order bump do Acesso Estendido). O script de UTM no fim
+      do body já detecta o "?" e concatena com "&" — não quebra o sck.
+  24. FAQ "Fica gravado?" reescrito pela Nath: a gravação agora é o Acesso
+      Estendido de 6 meses, opcional, oferecido no próprio checkout.
+  25. Card de preço: "Acesso ao grupo da turma" saiu. Decisão de 16/08 —
+      não haverá grupo de alunos, toda comunicação é disparo privado.
+      No lugar: "Acompanhamento direto por WhatsApp antes e durante as duas
+      noites", que é o que de fato existe.
+
   PENDÊNCIAS ANTES DE PUBLICAR
   1. Barra de progresso de lote → não incluída (sem dado real de venda ainda).
   2. A VALIDAR com o Jorge: ele escreveu só "25 de agosto" no bloco da imersão,
@@ -615,13 +626,14 @@
         <p class="amount"><sup>R$</sup>297</p>
         <p class="installments">ou 12x de R$30,72</p>
         <p class="lote">Lote 01 — Vagas limitadas</p>
-        <!-- ÚNICO link de checkout da página. As UTMs entram aqui via script no fim do body. -->
-        <a href="https://pay.hotmart.com/M107130082L" class="btn btn-buy" data-cta="checkout">Comprar ingresso</a>
+        <!-- ÚNICO link de checkout da página. As UTMs entram aqui via script no fim do body.
+             ?checkoutMode=10 = checkout com o order bump do Acesso Estendido (6 meses + gravação). -->
+        <a href="https://pay.hotmart.com/M107130082L?checkoutMode=10" class="btn btn-buy" data-cta="checkout">Comprar ingresso</a>
         <ul class="price-list">
           <li>As duas noites de imersão ao vivo com o Jorge, das 19h às 21h, 100% online via Zoom</li>
           <li>Aplicação guiada no seu próprio projeto</li>
           <li>Um conceito cultural autoral, seu, ao final</li>
-          <li>Acesso ao grupo da turma</li>
+          <li>Acompanhamento direto por WhatsApp antes e durante as duas noites</li>
           <li>Garantia de 7 dias</li>
         </ul>
       </div>
@@ -660,7 +672,7 @@
       </details>
       <details class="faq-item">
         <summary class="faq-q">Fica gravado?<span class="plus">+</span></summary>
-        <div class="faq-a">Sim, quem garantir o acesso à gravação recebe o link após o encerramento.</div>
+        <div class="faq-a">Sim, você poderá garantir seu acesso estendido de 6 meses ao conteúdo e receber a gravação na íntegra. Basta fazer essa opção diretamente no checkout de pagamento.</div>
       </details>
       <details class="faq-item">
         <summary class="faq-q">Preciso ter experiência em moda, marca ou pesquisa de tendência?<span class="plus">+</span></summary>
