@@ -66,6 +66,9 @@ if ($acao === 'limpar') {
     foreach (['vendas.jsonl', 'estrutura.json', 'eventos-vistos.json', 'batidas.json'] as $f) {
         if (is_file($dir . '/' . $f) && @unlink($dir . '/' . $f)) $apagados[] = $f;
     }
+    // &orfas=1 zera também o contador de batidas sem slug, que é global.
+    if (($_GET['orfas'] ?? '') === '1' && is_file(BASE_DADOS . '/batidas.json')
+        && @unlink(BASE_DADOS . '/batidas.json')) $apagados[] = '../batidas.json';
     fim(200, ['ok' => true, 'apagados' => $apagados]);
 }
 
