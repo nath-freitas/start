@@ -673,7 +673,11 @@ function render(d){
     <b>Verde e vermelho</b> = comparação com o ritmo do período já transcorrido: no dia
     ${k.dias_decorridos} de ${k.dias_janela} de mídia, a meta proporcional é ${nf(k.esperado_pagas)}
     inscrições pagas. CPA e ROAS são comparados direto com o alvo.<br>
-    Dados de mídia do Meta Ads e vendas da Hotmart, atualizados a cada hora. Painel da Catapulta de Ideias.
+    <b>Atualização</b> = as vendas são lidas a cada hora, direto da base que o webhook alimenta.
+    ${d.midia.fonte==='api'
+      ? 'Os números de mídia vêm da API do Meta Ads na mesma frequência.'
+      : 'Os números de mídia são um snapshot gravado à mão e <b>não</b> se atualizam sozinhos — passam a atualizar quando o token do Meta entrar no config.'}
+    Painel da Catapulta de Ideias.
   </footer>`;
 
   desenha();
