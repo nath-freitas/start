@@ -1,13 +1,29 @@
 Options -Indexes
 
-# O receptor é público por definição (a Hotmart precisa alcançá-lo) e se
-# autentica pelo hottok. Se a pasta-mãe tiver basic auth, libere aqui:
-<IfModule mod_authz_core.c>
+# O receptor precisa ser alcançável pela plataforma de venda, mas as ferramentas
+# de diagnóstico NÃO. Como esta branch é PÚBLICA no GitHub, a chave escrita dentro
+# do setup.php é legível por qualquer pessoa — e sem esta camada ela bastaria para
+# ler, zerar ou reconfigurar a base de vendas. Basic auth por cima, e só o webhook
+# fica aberto (ele se autentica pelo hottok).
+AuthType Basic
+AuthName "Ingestao de vendas — acesso restrito"
+AuthUserFile "/home/u346131448/public_html/cliente/_ingest/.htpasswd"
+
+<Files "hotmart.php">
   Require all granted
-</IfModule>
+</Files>
+<Files "vendas.php">
+  Require valid-user
+</Files>
+<Files "setup.php">
+  Require valid-user
+</Files>
 
 # Cinto de segurança: config e dado nunca deveriam estar nesta pasta —
 # se um dia estiverem, não são servidos.
 <FilesMatch "(config.*\.php|\.jsonl|\.json)$">
+  Require all denied
+</FilesMatch>
+<FilesMatch "^\.ht">
   Require all denied
 </FilesMatch>
