@@ -13,3 +13,13 @@ Options -Indexes
 <IfModule mod_headers.c>
   Header set X-Robots-Tag "noindex, nofollow"
 </IfModule>
+
+# Mesma credencial da central (o hash do jorge é o mesmo arquivo-mãe, copiado), mais
+# um usuário da agência. O basic auth do Apache é a proteção real desta pasta.
+AuthType Basic
+AuthName "Painel da campanha — acesso restrito"
+AuthUserFile "/home/u346131448/public_html/cliente/jg/painel-imersao/.htpasswd"
+Require valid-user
+<FilesMatch "^\.ht">
+  Require all denied
+</FilesMatch>
