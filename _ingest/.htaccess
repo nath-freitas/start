@@ -1,0 +1,13 @@
+Options -Indexes
+
+# O receptor é público por definição (a Hotmart precisa alcançá-lo) e se
+# autentica pelo hottok. Se a pasta-mãe tiver basic auth, libere aqui:
+<IfModule mod_authz_core.c>
+  Require all granted
+</IfModule>
+
+# Cinto de segurança: config e dado nunca deveriam estar nesta pasta —
+# se um dia estiverem, não são servidos.
+<FilesMatch "(config.*\.php|\.jsonl|\.json)$">
+  Require all denied
+</FilesMatch>
