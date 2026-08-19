@@ -10,6 +10,7 @@
  */
 
 const BASE_DADOS = '/home/u346131448/dados/vendas';
+date_default_timezone_set('America/Sao_Paulo');   // senão 'atualizado' sai em UTC
 
 function fim(int $code, string $msg): void {
     http_response_code($code);

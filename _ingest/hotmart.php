@@ -151,7 +151,15 @@ $produto_id   = (string)(cava($p, ['data.product.id', 'data.product.ucode', 'pro
 $produto_nome = (string)(cava($p, ['data.product.name', 'prod_name']) ?? '');
 $produto      = $cfg['produtos'][$produto_id] ?? null;
 if ($produto === null) {
-    $slug = strtolower(trim(preg_replace('/[^a-z0-9]+/i', '-', iconv('UTF-8', 'ASCII//TRANSLIT', $produto_nome) ?: ''), '-'));
+    // iconv//TRANSLIT depende do locale do servidor e devolve "?" para acento na
+    // Hostinger — o mapa abaixo não depende de nada.
+    $sem_acento = strtr($produto_nome, [
+        'á'=>'a','à'=>'a','ã'=>'a','â'=>'a','ä'=>'a','é'=>'e','ê'=>'e','è'=>'e','í'=>'i','ì'=>'i',
+        'ó'=>'o','ô'=>'o','õ'=>'o','ò'=>'o','ö'=>'o','ú'=>'u','ù'=>'u','ü'=>'u','ç'=>'c','ñ'=>'n',
+        'Á'=>'A','À'=>'A','Ã'=>'A','Â'=>'A','É'=>'E','Ê'=>'E','Í'=>'I','Ó'=>'O','Ô'=>'O','Õ'=>'O',
+        'Ú'=>'U','Ü'=>'U','Ç'=>'C','Ñ'=>'N',
+    ]);
+    $slug = strtolower(trim(preg_replace('/[^a-z0-9]+/i', '-', $sem_acento), '-'));
     $produto = $slug !== '' ? $slug : ('produto-' . $produto_id);
 }
 
