@@ -51,6 +51,16 @@ if ($acao === 'status') {
     ]);
 }
 
+// Apaga os dados de teste antes de o webhook real entrar no ar (e antes do
+// backfill). Só o que o receptor gera — o config.php fica.
+if ($acao === 'limpar') {
+    $apagados = [];
+    foreach (['vendas.jsonl', 'estrutura.json', 'eventos-vistos.json'] as $f) {
+        if (is_file($dir . '/' . $f) && @unlink($dir . '/' . $f)) $apagados[] = $f;
+    }
+    fim(200, ['ok' => true, 'apagados' => $apagados]);
+}
+
 if ($acao !== 'criar') fim(400, ['ok' => false, 'msg' => 'acao desconhecida']);
 
 $hottok  = (string)($_GET['hottok'] ?? '');
