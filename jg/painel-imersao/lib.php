@@ -440,7 +440,11 @@ function dash_build($cfg)
         'fat_total'      => round($fTotal, 2),
         'liq_total'      => round($lTotal, 2),
         'liq_pago'       => round($L['pago'], 2),
+        // Sempre os dois: o CPA da mídia (a mídia está eficiente?) e o CPA total,
+        // que divide a verba por TODAS as inscrições (quanto custa uma inscrição
+        // para o negócio, com o orgânico entrando no denominador).
         'cpa'            => dash_div($inv, $inscr['pago']),          // por INSCRIÇÃO paga
+        'cpa_total'      => dash_div($inv, $iTotal),
         'cpa_transacao'  => dash_div($inv, $V['pago']),              // por transação (com bump)
         'roas'           => dash_div($F['pago'], $inv),
         // ROAS de equilíbrio da meta: um CPA no alvo, num ticket cheio, dá este ROAS.

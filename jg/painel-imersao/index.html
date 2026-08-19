@@ -591,8 +591,13 @@ function render(d){
       </tbody>
       <tfoot><tr><td>Total</td><td>${nf(k.vendas_total)}</td><td>100,0%</td>
              <td>${mf(k.fat_total)}</td><td>${mf(k.investido)}</td>
-             <td class="mut">—</td><td>${xf(k.investido?k.fat_total/k.investido:null)}</td></tr></tfoot>
+             <td>${mf(k.cpa_total)}</td><td>${xf(k.investido?k.fat_total/k.investido:null)}</td></tr></tfoot>
     </table></div></div>
+    <p class="nota" style="margin-top:8px">São <b>dois CPAs</b>, e eles respondem perguntas diferentes.
+      O da linha <b>Tráfego pago</b> (${mf(k.cpa)}) divide a verba pelas inscrições que vieram de anúncio —
+      é ele que diz se a mídia está eficiente. O da linha <b>Total</b> (${mf(k.cpa_total)}) divide a mesma
+      verba por <b>todas</b> as inscrições, inclusive as orgânicas: é o custo de uma inscrição para o negócio.
+      Pela mesma lógica, o ROAS do Total inclui a receita orgânica e por isso é muito maior.</p>
   </section>
 
   <section>
@@ -639,14 +644,15 @@ function render(d){
 
   <section>
     <h2>Anúncios</h2>
-    <p class="nota">Clique num cabeçalho para reordenar. "Inscrições" são vendas reais atribuídas pelo
-      <code>utm_content</code> dentro do <code>sck</code> — é esta coluna que decide o que continua no ar.</p>
+    <p class="nota">Clique num cabeçalho para reordenar. O conjunto está no prefixo do nome do anúncio.
+      "Inscrições" são vendas reais atribuídas pelo <code>utm_content</code> dentro do <code>sck</code> —
+      é esta coluna que decide o que continua no ar. O CPA é comparado com o teto da etapa do conjunto.</p>
     <div class="card"><div class="tw"><table id="tads">
       <thead><tr>
-        <th data-c="nome">Anúncio</th><th data-c="conjunto">Conjunto</th><th data-c="investido">Investido</th>
+        <th data-c="nome">Anúncio</th><th data-c="investido">Investido</th>
         <th data-c="cpm">CPM</th><th data-c="ctr">CTR</th><th data-c="cpc">CPC</th>
         <th data-c="lpv">LP View</th><th data-c="checkouts">Checkouts</th>
-        <th data-c="inscricoes">Inscrições</th><th data-c="cpa">CPA</th><th data-c="roas">ROAS</th>
+        <th data-c="inscricoes">Inscrições</th><th data-c="faturamento">Faturamento</th><th data-c="cpa">CPA</th>
       </tr></thead><tbody></tbody>
     </table></div></div>
   </section>`}
@@ -683,11 +689,11 @@ function render(d){
         return (typeof x==='string'?String(x).localeCompare(y,'pt-BR'):x-y)*(ordem.asc?1:-1);
       });
       corpo.innerHTML=linhas.map(a=>`<tr>
-        <td class="forte">${esc(a.nome)}</td><td class="mut">${esc(a.conjunto)}</td><td>${mf(a.investido)}</td>
+        <td class="forte">${esc(a.nome)}</td><td>${mf(a.investido)}</td>
         <td>${mf(a.cpm)}</td><td>${pf(a.ctr,2)}</td><td>${mf(a.cpc)}</td>
         <td>${nf(a.lpv)}</td><td>${nf(a.checkouts)}</td>
-        <td class="forte">${nf(a.inscricoes)}</td><td>${pilula(a.cpa,a.cpa_alvo)}</td>
-        <td>${xf(a.roas)}</td></tr>`).join('');
+        <td class="forte">${nf(a.inscricoes)}</td><td>${mf(a.faturamento)}</td>
+        <td>${pilula(a.cpa,a.cpa_alvo)}</td></tr>`).join('');
     }
     document.querySelectorAll('#tads thead th').forEach(th=>th.addEventListener('click',()=>{
       const cc=th.dataset.c;
