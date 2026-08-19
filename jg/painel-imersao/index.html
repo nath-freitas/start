@@ -480,7 +480,6 @@ function render(d){
           &nbsp;<span class="mut nw">ritmo pede ${nf(k.esperado_pagas)}</span></div>
         <div class="barra" title="Barra: inscrições vindas de anúncio. Marca: onde o ritmo dizia estar hoje.">
           <i style="width:${pctReal}%"></i><u style="left:${pctEsp}%"></u></div>
-        <div class="pe mut mini">${nf(k.vendas_pago)} transações com o extra</div>
       </div>
       <div class="kpi">
         <div class="rot">CPA · tráfego pago</div>
@@ -666,7 +665,9 @@ function render(d){
         <td>${nf(s.lpv)}</td><td>${nf(s.checkouts)}</td><td class="forte">${nf(s.inscricoes)}</td>
         <td>${pilula(s.cpa,s.cpa_alvo)}</td><td>${xf(s.roas)}</td></tr>`).join('')}</tbody>
     </table></div></div>
-    <p class="nota" style="margin-top:8px">O CPA de cada conjunto é comparado com o teto da própria
+    <p class="nota" style="margin-top:8px">Em ordem de <b>CPA crescente</b> — o mais barato em cima,
+      desempate por inscrições. Conjunto sem venda não tem CPA e fecha a tabela, do que mais gastou
+      para o que menos gastou. O CPA de cada conjunto é comparado com o teto da própria
       etapa (Audiência ≤ R$110 · Frio ≤ R$200 · Fechamento ≤ R$120), não com o teto geral.</p>
   </section>
 
@@ -674,7 +675,8 @@ function render(d){
     <h2>Criativos</h2>
     <p class="nota">Uma linha por <b>peça</b>, somando todos os conjuntos em que ela roda — a conta
       duplica o mesmo criativo em cada público, e ler por anúncio reparte a amostra até ninguém ter
-      volume. Clique no nome para abrir o post no Instagram, e num cabeçalho para reordenar.
+      volume. Abre em <b>CPA crescente</b>, desempatando por inscrições — peça sem venda não tem CPA
+      e fecha a lista. Clique no nome para abrir o post no Instagram, e num cabeçalho para reordenar.
       "Inscrições" são vendas reais atribuídas pelo <code>utm_content</code> dentro do <code>sck</code> —
       é esta coluna que decide o que continua no ar.</p>
     <div class="card"><div class="tw"><table id="tads">
@@ -717,13 +719,18 @@ function render(d){
   addEventListener('resize',()=>{clearTimeout(window.__t);window.__t=setTimeout(desenha,180);});
 
   if(!semMidia){
-    let ordem={c:'investido',asc:false};
+    /* Abre em CPA crescente — a peça mais barata em cima — com inscrições
+       decrescentes como desempate. Coluna sem valor (peça que não vendeu não tem
+       CPA) cai para o fim em QUALQUER direção: null não é "o mais barato". */
+    let ordem={c:'cpa',asc:true};
     const corpo=$('#tads tbody');
     function pintaAds(){
       const linhas=DADOS.anuncios.slice().sort((a,b)=>{
         const x=a[ordem.c],y=b[ordem.c];
-        if(x==null&&y==null)return 0; if(x==null)return 1; if(y==null)return -1;
-        return (typeof x==='string'?String(x).localeCompare(y,'pt-BR'):x-y)*(ordem.asc?1:-1);
+        if(x==null&&y==null)return b.investido-a.investido;
+        if(x==null)return 1; if(y==null)return -1;
+        if(x!==y)return (typeof x==='string'?String(x).localeCompare(y,'pt-BR'):x-y)*(ordem.asc?1:-1);
+        return b.inscricoes-a.inscricoes;
       });
       corpo.innerHTML=linhas.map(a=>`<tr>
         <td class="forte">${a.permalink
@@ -739,7 +746,9 @@ function render(d){
     }
     document.querySelectorAll('#tads thead th').forEach(th=>th.addEventListener('click',()=>{
       const cc=th.dataset.c;
-      ordem = ordem.c===cc ? {c:cc,asc:!ordem.asc} : {c:cc,asc:cc==='nome'||cc==='conjunto'};
+      /* Colunas de CUSTO abrem crescente (menor é melhor); as de volume, decrescente. */
+      ordem = ordem.c===cc ? {c:cc,asc:!ordem.asc}
+                           : {c:cc,asc:['nome','cpa','cpc','cpm'].includes(cc)};
       pintaAds();
     }));
     pintaAds();

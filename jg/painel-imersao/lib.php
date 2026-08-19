@@ -268,6 +268,27 @@ function dash_div($a, $b, $casas = 2)
     return $b > 0 ? round($a / $b, $casas) : null;
 }
 
+/**
+ * Ordem das tabelas de conjunto e de criativo: CPA CRESCENTE (o mais barato em
+ * cima), desempate por inscrições DECRESCENTE — entre dois objetos que custam o
+ * mesmo, o que tem mais venda tem mais evidência e merece a linha de cima.
+ *
+ * Quem não vendeu não tem CPA (dash_div devolve null com denominador 0) e vai
+ * para o FIM em qualquer direção — um conjunto sem venda não é "o mais barato",
+ * é o mais caro que existe. Entre esses, gasto decrescente: o desperdício maior
+ * aparece primeiro, que é o que se corta.
+ */
+function dash_ord_cpa($x, $y)
+{
+    $a = $x['cpa'];
+    $b = $y['cpa'];
+    if ($a === null && $b === null) return $y['investido'] <=> $x['investido'];
+    if ($a === null) return 1;
+    if ($b === null) return -1;
+    if ($a != $b) return $a <=> $b;
+    return $y['inscricoes'] <=> $x['inscricoes'];
+}
+
 function dash_dia($iso, $tz)
 {
     if (!$iso) return null;
@@ -710,7 +731,7 @@ function dash_build($cfg)
             'cpa_alvo' => $ie !== null ? $etapas[$ie]['cpa_alvo'] : $cfg['cpa_target'],
         ];
     }
-    usort($t_sets, function ($x, $y) { return $y['investido'] <=> $x['investido']; });
+    usort($t_sets, 'dash_ord_cpa');
 
     // Criativos: a mesma peça roda duplicada em cada conjunto ("CJ01 · AD-F07 · …",
     // "CJ03 · AD-F07 · …"). Ler por anúncio esconde o desempenho da PEÇA e reparte
@@ -765,7 +786,7 @@ function dash_build($cfg)
                 ? (float) array_keys($a['alvos'])[0] : $cfg['cpa_target'],
         ];
     }
-    usort($t_ads, function ($x, $y) { return $y['investido'] <=> $x['investido']; });
+    usort($t_ads, 'dash_ord_cpa');
 
     $t_prod = [];
     foreach ($porProduto as $slug => $p) {
