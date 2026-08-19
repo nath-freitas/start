@@ -72,6 +72,36 @@ if ($acao === 'limpar') {
     fim(200, ['ok' => true, 'apagados' => $apagados]);
 }
 
+// Poda cirúrgica: remove da base as linhas de UMA ou mais transações, sem tocar no
+// resto. Existe porque o webhook de teste da plataforma grava com transação fake
+// (a Hotmart usa sempre a mesma) e 'limpar' apagaria junto o histórico já backfilado.
+//   ?acao=podar&transacao=HP1601...[,HP...]&remapear=1
+// remapear=1 apaga também o estrutura.json, para o próximo webhook REAL regravar o
+// mapa de chaves — o mapa gravado por um payload nosso de backfill não descreve o
+// que a plataforma manda de verdade.
+if ($acao === 'podar') {
+    $alvos = array_filter(array_map('trim', explode(',', (string)($_GET['transacao'] ?? ''))));
+    $jsonl = $dir . '/vendas.jsonl';
+    $removidas = 0; $mantidas = 0;
+    if ($alvos && is_file($jsonl)) {
+        $saida = '';
+        foreach (file($jsonl, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $l) {
+            $r = json_decode($l, true);
+            if (is_array($r) && in_array((string)($r['transacao'] ?? ''), $alvos, true)) { $removidas++; continue; }
+            $saida .= $l . "\n"; $mantidas++;
+        }
+        // grava em temporário e renomeia: nunca deixa a base pela metade se cair no meio
+        $tmp = $jsonl . '.tmp';
+        if (file_put_contents($tmp, $saida, LOCK_EX) === false || !@rename($tmp, $jsonl)) {
+            @unlink($tmp);
+            fim(500, ['ok' => false, 'msg' => 'nao consegui reescrever a base']);
+        }
+    }
+    $remapear = ($_GET['remapear'] ?? '') === '1' && is_file($dir . '/estrutura.json')
+        && @unlink($dir . '/estrutura.json');
+    fim(200, ['ok' => true, 'removidas' => $removidas, 'mantidas' => $mantidas, 'estrutura_apagada' => $remapear]);
+}
+
 if ($acao !== 'criar') fim(400, ['ok' => false, 'msg' => 'acao desconhecida']);
 
 $hottok  = (string)($_GET['hottok'] ?? '');

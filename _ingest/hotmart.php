@@ -35,6 +35,7 @@ const MAPA_EVENTO = [
     'UPDATE_SUBSCRIPTION_CHARGE_DATE' => null,
     'CLUB_FIRST_ACCESS'          => null,
     'CLUB_MODULE_COMPLETED'      => null,
+    'ORDER_FULFILLMENT'          => null,  // entrega/expedição — o censo revelou; não é venda
 ];
 
 function fim(int $code, string $msg): void {
