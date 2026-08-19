@@ -19,6 +19,7 @@
 const PASTA  = '/home/u346131448/dados/painel/jorge-grimberg';
 const CHAVE  = 'wDMv2qYfR7cKp0LsXtEg9AhNjZ4Bu6Tn';
 
+date_default_timezone_set('America/Sao_Paulo');   // senão as datas gravadas saem em UTC
 header('Content-Type: application/json; charset=utf-8');
 
 function fim(int $code, array $corpo): void {

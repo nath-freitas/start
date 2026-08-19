@@ -465,9 +465,14 @@ function dash_build($cfg)
         'compra_pixel'   => (int) $tot['compra_pixel'],
         'estornos'       => $estornos,
         'fat_estornado'  => round($fat_estornado, 2),
+        // Attach rate de verdade = extra comprado NO MESMO pedido. O extra vendido
+        // em compra separada (transação sem o irmão C1/C2) não é attach; contá-lo
+        // junto infla a taxa e some com a distinção que decide o order bump.
         'attach_rate'    => dash_div($ped_com_bump * 100, $ped_principal, 1),
         'pedidos'        => $ped_principal,
         'pedidos_bump'   => $ped_com_bump,
+        'extras_total'   => $vTotal - $iTotal,
+        'extras_avulsos' => ($vTotal - $iTotal) - $ped_com_bump,
         'vendas_sem_etapa' => $vSemEtapa,
         'investido_fora_etapa' => round($fora_etapa * $mult, 2),
 

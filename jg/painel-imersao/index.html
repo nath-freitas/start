@@ -479,10 +479,10 @@ function render(d){
         <div class="pe mut">ao teto de CPA seriam ${m0(k.verba_restante)}</div>
       </div>
       <div class="kpi">
-        <div class="rot">Order bump</div>
+        <div class="rot">Attach rate do bump</div>
         <div class="val">${pf(k.attach_rate)}</div>
-        <div class="pe">${nf(k.pedidos_bump)} de ${nf(k.pedidos)} pedidos levaram o extra</div>
-        <div class="pe mut">é o que separa ticket de R$297 de ticket real</div>
+        <div class="pe">${nf(k.pedidos_bump)} de ${nf(k.pedidos)} pedidos levaram o extra no mesmo checkout</div>
+        <div class="pe mut">${nf(k.extras_total)} extra(s) vendido(s) ao todo — ${nf(k.extras_avulsos)} em compra separada, que não é attach</div>
       </div>
     </div>
   </section>
