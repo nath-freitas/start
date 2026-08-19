@@ -68,6 +68,14 @@ if ($acao === 'meta') {
     if (!isset($json['linhas']) || !is_array($json['linhas'])) {
         fim(400, ['ok' => false, 'msg' => 'esperava {conta, linhas[]}']);
     }
+    // O mapa de permalinks (id do anúncio => post no Instagram) é caro de montar —
+    // uma chamada por criativo — e quase nunca muda. Quem manda só {conta, linhas}
+    // na atualização de hora em hora herda o mapa que já estava gravado.
+    $velho = is_readable(PASTA . '/meta-snapshot.json')
+        ? json_decode((string) file_get_contents(PASTA . '/meta-snapshot.json'), true) : null;
+    if (empty($json['permalinks']) && !empty($velho['permalinks'])) {
+        $json['permalinks'] = $velho['permalinks'];
+    }
     $json['em'] = date('c');
     if (file_put_contents(PASTA . '/meta-snapshot.json', json_encode($json), LOCK_EX) === false) {
         fim(500, ['ok' => false, 'msg' => 'nao consegui gravar o snapshot']);
