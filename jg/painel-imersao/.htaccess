@@ -1,0 +1,15 @@
+Options -Indexes
+
+# Só a página, o endpoint de dados e o bootstrap (com chave própria) são servidos.
+# lib.php e qualquer arquivo de dado que apareça aqui ficam fora do navegador.
+<FilesMatch "^lib\.php$">
+  Require all denied
+</FilesMatch>
+<FilesMatch "\.(json|jsonl|lock|log)$">
+  Require all denied
+</FilesMatch>
+
+# O painel mostra investimento: nunca deve ser indexado.
+<IfModule mod_headers.c>
+  Header set X-Robots-Tag "noindex, nofollow"
+</IfModule>

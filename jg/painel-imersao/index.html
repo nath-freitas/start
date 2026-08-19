@@ -1,0 +1,771 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Imersão Coolhunting · Painel de campanha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:light;
+  --preto:#0e0e11; --amarelo:#faa323; --roxo:#6b35d9; --roxo-esc:#480ec1;
+  --s1:#7040dd; --s2:#c47a00; --s3:#0b8ea3; --neutro:#9a93ad;
+  --bg:#f4f4f7; --card:#fff; --linha:#e7e6ec;
+  --ink:#16151c; --ink2:#55535f; --ink3:#88858f;
+  --bom:#0f7a52; --ruim:#c0271d; --raio:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:Inter,system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--ink);
+     font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px 64px}
+
+header{background:var(--preto);color:#fff;padding:20px 0 24px;border-bottom:3px solid var(--amarelo)}
+header .wrap{padding-bottom:0}
+.hrow{display:flex;flex-wrap:wrap;gap:18px 26px;align-items:center;justify-content:space-between}
+.logo{flex:none;align-self:center;height:30px;width:auto;display:block}
+.ficha{flex:1 1 auto;display:flex;flex-wrap:wrap;justify-content:center;gap:10px 40px;
+       padding-left:26px;border-left:1px solid #2b2b32}
+.ficha div{min-width:0}
+.ficha .r{font-size:10.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:#8d8a96}
+.ficha .v{font-size:15px;font-weight:600;color:#fff;margin-top:1px}
+.stamp{font-size:12px;color:#9c99a5;text-align:right;line-height:1.7}
+.stamp b{color:#fff;font-weight:600}
+.btn{display:inline-block;margin-top:7px;padding:6px 12px;font:inherit;font-size:12px;font-weight:600;
+     color:var(--preto);background:var(--amarelo);border:0;border-radius:7px;cursor:pointer}
+.btn:hover{filter:brightness(1.08)}
+.aviso{margin-top:12px;padding:9px 13px;border-radius:9px;font-size:12.5px;
+       background:#fff4e2;color:#7a4a00;border:1px solid #f0d5a8}
+.aviso.grave{background:#fdecea;color:#8c1d16;border-color:#f3c3bd}
+
+section{margin-top:28px}
+h2{font-size:15px;font-weight:600;margin:0 0 3px;letter-spacing:-.005em}
+.nota{margin:0 0 12px;font-size:12.5px;color:var(--ink3)}
+.card{background:var(--card);border:1px solid var(--linha);border-radius:var(--raio);padding:18px 20px}
+
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(214px,1fr));gap:14px}
+.kpi{background:var(--card);border:1px solid var(--linha);border-radius:var(--raio);padding:16px 18px}
+.kpi .rot{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3)}
+.kpi .val{font-size:31px;font-weight:700;letter-spacing:-.025em;margin:5px 0 1px;font-variant-numeric:tabular-nums}
+.kpi .val small{font-size:15px;font-weight:600;color:var(--ink3);letter-spacing:0}
+.kpi .val.bom{color:var(--bom)} .kpi .val.ruim{color:var(--ruim)}
+.kpi .pe{font-size:12.5px;color:var(--ink2)}
+.kpi.destaque{border-color:#d9d6e2;box-shadow:0 1px 0 #e9e7ef}
+.tag{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600}
+.tag.bom{color:var(--bom)} .tag.ruim{color:var(--ruim)}
+.barra{position:relative;height:7px;border-radius:99px;background:#eceaf2;margin-top:11px}
+.barra i{position:absolute;left:0;top:0;height:100%;border-radius:99px;
+         background:linear-gradient(90deg,var(--roxo-esc),var(--roxo))}
+.barra u{position:absolute;top:-3px;width:2px;height:13px;background:var(--ink2);border-radius:2px}
+
+.funis{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:20px}
+.funis>div{min-width:0}
+.funis>div+div{border-left:1px solid var(--linha);padding-left:20px}
+@media(max-width:900px){
+  .funis{grid-template-columns:1fr;gap:22px}
+  .funis>div+div{border-left:0;padding-left:0;border-top:1px solid var(--linha);padding-top:20px}
+}
+.fhead{font-size:14px;font-weight:600;letter-spacing:-.005em}
+.fsub{margin:3px 0 4px;font-size:12.5px;color:var(--ink2);display:flex;flex-wrap:wrap;
+      align-items:center;gap:3px 9px}
+.frod{margin-top:6px;border-top:1px solid var(--linha);padding-top:9px;
+      font-size:12.5px;color:var(--ink2);display:flex;flex-wrap:wrap;gap:3px 18px}
+.frod b{font-weight:600;color:var(--ink)}
+.efic{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;
+      background:var(--linha);border:1px solid var(--linha);border-radius:11px;overflow:hidden;margin-top:16px}
+.efic div{background:#fbfbfc;padding:12px 14px;display:flex;flex-direction:column}
+.efic .r{font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3)}
+.efic .v{font-size:21px;font-weight:700;letter-spacing:-.02em;padding-top:4px;margin-top:auto;
+         font-variant-numeric:tabular-nums}
+
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:900px){.grid3{grid-template-columns:1fr}}
+@media(max-width:860px){.grid2{grid-template-columns:1fr}}
+.pz{display:flex;flex-direction:column;align-items:center}
+.pzleg{width:100%;margin-top:12px;display:flex;flex-direction:column;gap:7px;font-size:12.5px}
+.pzleg span{display:flex;align-items:center;gap:8px}
+.pzleg .nome{flex:1;color:var(--ink2);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pzleg .qtd{font-weight:600;font-variant-numeric:tabular-nums}
+.pzleg .pc{color:var(--ink3);font-variant-numeric:tabular-nums;min-width:46px;text-align:right}
+.chip{width:11px;height:11px;border-radius:3px;flex:none}
+.chip.tracejado{height:0;border-top:2px dashed #9a93ad;border-radius:0}
+.vazio{padding:40px 0;color:var(--ink3);font-size:12.5px;text-align:center}
+
+.chart{width:100%;display:block;overflow:visible}
+.legenda{display:flex;flex-wrap:wrap;gap:16px;margin:0 0 6px;font-size:12.5px;color:var(--ink2)}
+.legenda span{display:inline-flex;align-items:center;gap:6px}
+
+.tw{overflow-x:auto;margin:0 -20px;padding:0 20px}
+table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+th,td{padding:9px 10px;text-align:right;border-bottom:1px solid #f2f1f5;white-space:nowrap}
+th:first-child,td:first-child{text-align:left;white-space:normal;min-width:180px}
+thead th{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);
+         border-bottom:1px solid var(--linha);cursor:pointer;user-select:none}
+thead th:hover{color:var(--roxo)}
+tbody tr:hover{background:#faf9fc}
+tbody tr:last-child td{border-bottom:0}
+tfoot td{font-weight:700;border-top:1px solid var(--linha);border-bottom:0;padding-top:11px}
+td.forte{font-weight:600}
+.mut{color:var(--ink3)}
+.nw{white-space:nowrap}
+.pilula{display:inline-block;padding:1px 8px;border-radius:99px;font-size:11.5px;font-weight:600}
+.pilula.bom{background:#e4f4ec;color:var(--bom)}
+.pilula.ruim{background:#fdecea;color:var(--ruim)}
+.selo{display:inline-block;padding:1px 7px;border-radius:5px;font-size:10.5px;font-weight:600;
+      letter-spacing:.03em;background:#f0eefa;color:#5b3fa8}
+
+#tip{position:fixed;z-index:50;pointer-events:none;opacity:0;transition:opacity .1s;
+     background:#1b1b21;color:#fff;font-size:12px;line-height:1.55;padding:8px 11px;border-radius:8px;
+     box-shadow:0 8px 24px rgba(10,8,20,.32);white-space:nowrap}
+#tip b{font-weight:600}
+#tip .k{color:#b8b4c6}
+
+@media(max-width:760px){
+  .ficha{justify-content:flex-start;padding-left:0;border-left:0;flex-basis:100%}
+  .stamp{text-align:left;flex-basis:100%}
+}
+@media(max-width:640px){
+  .kpi .val{font-size:27px}
+  th:first-child,td:first-child{min-width:150px}
+}
+footer{margin-top:34px;font-size:12px;color:var(--ink3);line-height:1.75}
+footer b{color:var(--ink2);font-weight:600}
+.carregando{padding:60px 0;text-align:center;color:var(--ink3)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="hrow">
+      <img class="logo" src="img/catapulta-amarelo.png" alt="Catapulta de Ideias">
+      <div class="ficha">
+        <div><div class="r">Cliente</div><div class="v" id="fCliente">—</div></div>
+        <div><div class="r">Campanha</div><div class="v" id="fCampanha">—</div></div>
+        <div><div class="r">Objetivo</div><div class="v" id="fObjetivo">—</div></div>
+      </div>
+      <div class="stamp">
+        <span id="periodo">—</span><br>
+        Atualizado às <b id="upd">—</b> · próxima às <b id="prox">—</b>
+        <br><button class="btn" id="forcar">Atualizar agora</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div id="aviso"></div>
+  <div id="app" class="carregando">Carregando os dados…</div>
+</div>
+
+<div id="tip"></div>
+
+<script>
+/* ============================== utilidades ============================== */
+const NS='http://www.w3.org/2000/svg';
+const S1='#7040dd', S2='#c47a00', S3='#0b8ea3', NEU='#9a93ad', REF='#9a93ad';
+const PIE=[S1,S2,S3,'#c2417a','#2f8f4e','#4a6bd8','#a1642c'];
+const el=(t,a)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);return e;};
+const $=s=>document.querySelector(s);
+const nf=n=>n==null?'—':Number(n).toLocaleString('pt-BR');
+const n2=n=>n==null?'—':Number(n).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const mf=n=>n==null?'—':'R$ '+Number(n).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const m0=n=>n==null?'—':'R$ '+Number(n).toLocaleString('pt-BR',{maximumFractionDigits:0});
+const pf=(n,d=1)=>n==null?'—':Number(n).toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d})+'%';
+const xf=n=>n==null?'—':Number(n).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+'×';
+const dm=s=>{const p=String(s).split('-');return p[2]+'/'+p[1];};
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const compacto=n=>n==null?'—':(n>=10000?(n/1000).toLocaleString('pt-BR',{maximumFractionDigits:1})+' mil':nf(n));
+
+const tip=$('#tip');
+function mostraTip(ev,html){tip.innerHTML=html;tip.style.opacity=1;movaTip(ev);}
+function movaTip(ev){
+  const r=tip.getBoundingClientRect();
+  let x=ev.clientX+14, y=ev.clientY-r.height-12;
+  if(x+r.width>innerWidth-8) x=ev.clientX-r.width-14;
+  if(y<8) y=ev.clientY+18;
+  tip.style.left=x+'px';tip.style.top=y+'px';
+}
+function escondeTip(){tip.style.opacity=0;}
+function liga(node,html){
+  node.addEventListener('mouseenter',e=>mostraTip(e,html));
+  node.addEventListener('mousemove',movaTip);
+  node.addEventListener('mouseleave',escondeTip);
+}
+function escalaBonita(v){
+  if(!(v>0))return 1;
+  const p=Math.pow(10,Math.floor(Math.log10(v))), n=v/p;
+  return (n<=1?1:n<=2?2:n<=2.5?2.5:n<=5?5:10)*p;
+}
+
+/* ============================== funil ============================== */
+/* Forma afunilada fixa. A magnitude está nos números e na % de passagem — a
+   largura é ilustrativa, senão a última etapa some (7 mil impressões x 15 vendas). */
+function grafFunil(host,etapas){
+  host.innerHTML='';
+  const W=host.clientWidth||680;
+  const estreito=W<620;
+  const fW=Math.min(estreito?W*0.52:W*0.54,430);
+  const colX=fW+(estreito?18:40);
+  const bandaH=estreito?64:70, gap=3, topo=26;
+  const n=etapas.length, H=topo+n*bandaH+10, cx=fW/2;
+  const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,width:W,height:H,class:'chart'});
+
+  const defs=el('defs'); const lg=el('linearGradient',{id:'gfun-'+host.id,x1:0,y1:0,x2:0,y2:1});
+  lg.appendChild(el('stop',{offset:'0%','stop-color':'#5a25c9'}));
+  lg.appendChild(el('stop',{offset:'100%','stop-color':'#8a5ce8'}));
+  defs.appendChild(lg); svg.appendChild(defs);
+
+  const f=i=>1-(i/n)*0.62;
+  const meia=i=>f(i)*fW/2;
+
+  svg.appendChild(el('ellipse',{cx,cy:topo,rx:meia(0),ry:11,fill:'#4a1cb0'}));
+  svg.appendChild(el('ellipse',{cx,cy:topo,rx:meia(0)-9,ry:7,fill:'#37138a'}));
+
+  etapas.forEach((e,i)=>{
+    const y=topo+i*bandaH, y2=y+bandaH-gap;
+    const a=meia(i), b=meia(i+1);
+    const g=el('g');
+    g.appendChild(el('path',{d:`M${cx-a} ${y} L${cx+a} ${y} L${cx+b} ${y2} L${cx-b} ${y2} Z`,
+                             fill:`url(#gfun-${host.id})`}));
+    const t1=el('text',{x:cx,y:y+22,'text-anchor':'middle','font-size':estreito?11:12,
+                        'font-weight':500,fill:'rgba(255,255,255,.82)'});
+    t1.textContent=(estreito && e.curto) ? e.curto : e.nome; g.appendChild(t1);
+    const t2=el('text',{x:cx,y:y+(estreito?48:51),'text-anchor':'middle','font-size':estreito?21:25,
+                        'font-weight':800,fill:'#fff','letter-spacing':'-0.02em'});
+    t2.textContent=compacto(e.valor); g.appendChild(t2);
+    liga(g,`<b>${esc(e.nome)}</b><br><span class="k">Total</span> ${nf(e.valor)}`+
+           (e.pct!=null?`<br><span class="k">Da etapa anterior</span> ${pf(e.pct)}`:''));
+    svg.appendChild(g);
+
+    const ym=y+(bandaH-gap)/2;
+    const bordaX=cx+(a+b)/2;
+    svg.appendChild(el('line',{x1:bordaX+6,x2:colX-10,y1:ym,y2:ym,stroke:'#e2e0e8','stroke-width':1}));
+    const r1=el('text',{x:colX,y:ym-13,'font-size':10.5,'font-weight':600,fill:'#88858f','letter-spacing':'.05em'});
+    r1.textContent=e.m1[0].toUpperCase(); svg.appendChild(r1);
+    const v1=el('text',{x:colX,y:ym+6,'font-size':estreito?15:17,'font-weight':700,fill:'#16151c'});
+    v1.textContent=e.m1[1]; svg.appendChild(v1);
+    const v2=el('text',{x:colX,y:ym+23,'font-size':11.5,'font-weight':500,fill:'#55535f'});
+    v2.textContent=e.m2[0]+' '+e.m2[1]; svg.appendChild(v2);
+  });
+  host.appendChild(svg);
+}
+
+/* ============================== rosca ============================== */
+function grafPizza(host,itens,rotulo){
+  host.innerHTML='';
+  const total=itens.reduce((s,d)=>s+(d.valor||0),0);
+  if(!total){host.innerHTML='<div class="vazio">Sem venda nesta quebra ainda.</div>';return;}
+  const D=176, r=78, ri=48, c=D/2;
+  const svg=el('svg',{viewBox:`0 0 ${D} ${D}`,width:D,height:D,style:'display:block'});
+  let ang=-Math.PI/2;
+  itens.filter(d=>d.valor>0).forEach(d=>{
+    const frac=d.valor/total, da=frac*Math.PI*2, a2=ang+da;
+    const p=(rr,a)=>[c+rr*Math.cos(a),c+rr*Math.sin(a)];
+    let path;
+    if(frac>0.9999){
+      path=`M${c-r} ${c} A${r} ${r} 0 1 1 ${c+r} ${c} A${r} ${r} 0 1 1 ${c-r} ${c} Z
+            M${c-ri} ${c} A${ri} ${ri} 0 1 0 ${c+ri} ${c} A${ri} ${ri} 0 1 0 ${c-ri} ${c} Z`;
+    }else{
+      const grande=da>Math.PI?1:0;
+      const [x1,y1]=p(r,ang), [x2,y2]=p(r,a2), [x3,y3]=p(ri,a2), [x4,y4]=p(ri,ang);
+      path=`M${x1} ${y1} A${r} ${r} 0 ${grande} 1 ${x2} ${y2} L${x3} ${y3} A${ri} ${ri} 0 ${grande} 0 ${x4} ${y4} Z`;
+    }
+    const no=el('path',{d:path,fill:d.cor,stroke:'#fff','stroke-width':2,'fill-rule':'evenodd'});
+    liga(no,`<b>${esc(d.rot)}</b><br><span class="k">Vendas</span> ${nf(d.valor)} · ${pf(frac*100)}`);
+    svg.appendChild(no);
+    ang=a2;
+  });
+  const t=el('text',{x:c,y:c-2,'text-anchor':'middle','font-size':25,'font-weight':800,fill:'#16151c'});
+  t.textContent=nf(total); svg.appendChild(t);
+  const t2=el('text',{x:c,y:c+16,'text-anchor':'middle','font-size':11,'font-weight':600,
+                      fill:'#88858f','letter-spacing':'.05em'});
+  t2.textContent=rotulo||'VENDAS'; svg.appendChild(t2);
+  host.appendChild(svg);
+
+  const leg=document.createElement('div'); leg.className='pzleg';
+  leg.innerHTML=itens.map(d=>`<span><i class="chip" style="background:${d.cor}"></i>
+    <span class="nome">${esc(d.rot)}</span><span class="qtd">${nf(d.valor)}</span>
+    <span class="pc">${pf(d.valor/total*100)}</span></span>`).join('');
+  host.appendChild(leg);
+}
+
+/* ============================== barras e linhas ============================== */
+function eixos(svg,W,H,P,max,ticks,fmtY){
+  for(let i=0;i<=ticks;i++){
+    const v=max*i/ticks, y=H-P.b-(H-P.t-P.b)*(i/ticks);
+    svg.appendChild(el('line',{x1:P.l,x2:W-P.r,y1:y,y2:y,stroke:i?'#f1f0f4':'#e4e2ea','stroke-width':1}));
+    const t=el('text',{x:P.l-8,y:y+4,'text-anchor':'end','font-size':11,fill:'#88858f'});
+    t.textContent=fmtY(v);svg.appendChild(t);
+  }
+}
+function rotulosX(svg,rows,W,H,P,passo){
+  const n=rows.length, larg=(W-P.l-P.r)/n;
+  rows.forEach((r,i)=>{
+    if(i%passo && i!==n-1)return;
+    const t=el('text',{x:P.l+larg*(i+.5),y:H-P.b+17,'text-anchor':'middle','font-size':11,fill:'#88858f'});
+    t.textContent=dm(r.data);svg.appendChild(t);
+  });
+}
+/* Barras empilhadas: orgânico embaixo, pago em cima — a leitura que a Nath faz
+   todo dia é "quanto do dia veio de mídia". */
+function grafBarras(host,rows,op){
+  host.innerHTML='';
+  const W=host.clientWidth||640, H=op.altura||240, P={t:14,r:12,b:26,l:48};
+  const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,width:W,height:H,class:'chart'});
+  const max=escalaBonita(Math.max(1,...rows.map(r=>op.series.reduce((s,c)=>s+(r[c.chave]||0),0))));
+  eixos(svg,W,H,P,max,4,op.fmtY||nf);
+  const n=rows.length, larg=(W-P.l-P.r)/n, bw=Math.max(3,Math.min(46,larg-4));
+  rows.forEach((r,i)=>{
+    let base=0;
+    op.series.forEach(c=>{
+      const v=r[c.chave]||0; if(!v) return;
+      const alt=(H-P.t-P.b)*(v/max);
+      const y=H-P.b-(H-P.t-P.b)*(base/max)-alt;
+      svg.appendChild(el('rect',{x:P.l+larg*i+(larg-bw)/2,y,width:bw,height:Math.max(2,alt),rx:3,fill:c.cor}));
+      base+=v;
+    });
+    const hit=el('rect',{x:P.l+larg*i,y:P.t,width:larg,height:H-P.t-P.b,fill:'transparent'});
+    liga(hit,op.tip(r)); svg.appendChild(hit);
+  });
+  rotulosX(svg,rows,W,H,P,Math.ceil(n/8));
+  host.appendChild(svg);
+}
+function grafLinhas(host,rows,op){
+  host.innerHTML='';
+  const W=host.clientWidth||640, H=op.altura||240, P={t:14,r:12,b:26,l:48};
+  const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,width:W,height:H,class:'chart'});
+  let bruto=0;
+  op.series.forEach(s=>rows.forEach(r=>{const v=r[s.chave];if(v!=null&&v>bruto)bruto=v;}));
+  if(op.ref!=null) bruto=Math.max(bruto,op.ref);
+  const max=escalaBonita(Math.max(bruto*1.05,1));
+  eixos(svg,W,H,P,max,4,op.fmtY||nf);
+  const n=rows.length, larg=(W-P.l-P.r)/Math.max(1,n), X=i=>P.l+larg*(i+.5), Y=v=>H-P.b-(H-P.t-P.b)*(v/max);
+  if(op.ref!=null){
+    const y=Y(op.ref);
+    svg.appendChild(el('line',{x1:P.l,x2:W-P.r,y1:y,y2:y,stroke:REF,'stroke-width':2,'stroke-dasharray':'5 4'}));
+    const t=el('text',{x:W-P.r,y:y-7,'text-anchor':'end','font-size':11,'font-weight':600,fill:'#66636f'});
+    t.textContent=op.refRotulo;svg.appendChild(t);
+  }
+  op.series.forEach(s=>{
+    const pts=rows.map((r,i)=>[i,r[s.chave]]).filter(p=>p[1]!=null);
+    if(!pts.length)return;
+    const d=pts.map((p,k)=>(k?'L':'M')+X(p[0])+' '+Y(p[1])).join(' ');
+    svg.appendChild(el('path',{d,fill:'none',stroke:s.cor,'stroke-width':2,'stroke-linejoin':'round',
+      'stroke-linecap':'round','stroke-dasharray':s.tracejado?'5 4':''}));
+    if(pts.length<=40) pts.forEach(p=>svg.appendChild(
+      el('circle',{cx:X(p[0]),cy:Y(p[1]),r:4,fill:s.cor,stroke:'#fff','stroke-width':2})));
+  });
+  rows.forEach((r,i)=>{
+    const hit=el('rect',{x:P.l+larg*i,y:P.t,width:larg,height:H-P.t-P.b,fill:'transparent'});
+    liga(hit,op.tip(r)); svg.appendChild(hit);
+  });
+  rotulosX(svg,rows,W,H,P,Math.ceil(n/8));
+  host.appendChild(svg);
+}
+
+/* ============================== render ============================== */
+let DADOS=null;
+
+function cor(valor,alvo,menorMelhor){
+  if(valor==null||alvo==null)return '';
+  return (menorMelhor ? valor<=alvo : valor>=alvo) ? 'bom' : 'ruim';
+}
+function selo(valor,alvo,menorMelhor,txtBom,txtRuim){
+  const c=cor(valor,alvo,menorMelhor);
+  if(!c)return '<span class="mut">—</span>';
+  return c==='bom' ? `<span class="tag bom">&#9679; ${txtBom}</span>`
+                   : `<span class="tag ruim">&#9650; ${txtRuim}</span>`;
+}
+function pilula(valor,alvo,menorMelhor=true,fmt=mf){
+  if(valor==null)return '<span class="mut">—</span>';
+  const bom = menorMelhor ? valor<=alvo : valor>=alvo;
+  return `<span class="pilula ${bom?'bom':'ruim'}">${fmt(valor)}</span>`;
+}
+const CORES={'Tráfego pago':S1,'Orgânico':S3,'Sem origem':NEU};
+function pinta(itens){
+  let i=0;
+  return itens.map(d=>Object.assign({},d,{cor:CORES[d.rot]||(d.neutro?NEU:PIE[i++%PIE.length])}));
+}
+
+function render(d){
+  DADOS=d;
+  const k=d.kpi, c=d.cfg, alvo=c.cpa_target;
+  const semMidia = d.midia.fonte==='ausente';
+
+  $('#fCliente').textContent=c.cliente;
+  $('#fCampanha').textContent=c.campanha;
+  $('#fObjetivo').textContent=c.objetivo;
+  $('#periodo').textContent='Venda '+dm(c.campanha_start)+' a '+dm(c.capture_end)
+    +' · mídia dia '+k.dias_decorridos+' de '+k.dias_janela;
+
+  const g=new Date(d.gerado_em);
+  const hm=t=>t.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  $('#upd').textContent=hm(g);
+  $('#prox').textContent=hm(new Date(g.getTime()+(c.ttl||3600)*1000));
+
+  let avisos='';
+  if(d.cache && d.cache.erro)
+    avisos+=`<div class="aviso grave"><b>Mostrando os últimos dados bons.</b> A atualização mais recente falhou: ${esc(d.cache.erro)}</div>`;
+  if(semMidia)
+    avisos+=`<div class="aviso grave"><b>Sem dado de mídia.</b> Não há token do Meta configurado nem snapshot gravado — os blocos de investimento, funil, CPA e ROAS estão em branco. As vendas abaixo são reais.</div>`;
+  else if(d.midia.fonte==='snapshot'){
+    const q=d.midia.em?new Date(d.midia.em):null;
+    const horas=q?Math.round((Date.now()-q.getTime())/3600000):null;
+    avisos+=`<div class="aviso${horas!=null&&horas>12?' grave':''}"><b>Mídia por snapshot, não ao vivo.</b>
+      Os números do Meta são de ${q?q.toLocaleString('pt-BR'):'data desconhecida'}${horas!=null?` (${horas}h atrás)`:''}.
+      As vendas são ao vivo. Assim que o token de usuário de sistema do Meta entrar no config, este bloco passa a atualizar sozinho de hora em hora.</div>`;
+  }
+  $('#aviso').innerHTML=avisos;
+
+  const pctReal=Math.min(100,k.inscricoes_pago/k.meta_pagas*100);
+  const pctEsp =Math.min(100,k.esperado_pagas/k.meta_pagas*100);
+  const pctTot =Math.min(100,k.inscricoes_total/k.meta_total*100);
+  const pctTotE=Math.min(100,k.esperado_total/k.meta_total*100);
+
+  const app=$('#app'); app.className='';
+  app.innerHTML=`
+  <section>
+    <div class="kpis">
+      <div class="kpi destaque">
+        <div class="rot">Inscrições pagas (mídia)</div>
+        <div class="val ${cor(k.inscricoes_pago,k.esperado_pagas,false)}">${nf(k.inscricoes_pago)} <small>/ ${nf(k.meta_pagas)}</small></div>
+        <div class="pe">${selo(k.inscricoes_pago,k.esperado_pagas,false,'no ritmo da meta','abaixo do ritmo')}
+          &nbsp;<span class="mut nw">esperado hoje ${nf(k.esperado_pagas)}</span></div>
+        <div class="barra" title="Barra: inscrições vindas de anúncio. Marca: onde deveríamos estar hoje.">
+          <i style="width:${pctReal}%"></i><u style="left:${pctEsp}%"></u></div>
+      </div>
+      <div class="kpi destaque">
+        <div class="rot">Inscrições da campanha</div>
+        <div class="val ${cor(k.inscricoes_total,k.esperado_total,false)}">${nf(k.inscricoes_total)} <small>/ ${nf(k.meta_total)}</small></div>
+        <div class="pe">${nf(k.inscricoes_organico)} orgânicas + ${nf(k.inscricoes_pago)} de mídia</div>
+        <div class="barra" title="Barra: inscrições totais. Marca: onde deveríamos estar hoje.">
+          <i style="width:${pctTot}%"></i><u style="left:${pctTotE}%"></u></div>
+      </div>
+      <div class="kpi">
+        <div class="rot">CPA real</div>
+        <div class="val ${cor(k.cpa,alvo,true)}">${mf(k.cpa)}</div>
+        <div class="pe">${nf(k.inscricoes_pago)} inscrições com ${c.produto_principal_rot.toLowerCase()} pelo <code>sck</code></div>
+        <div class="pe">${selo(k.cpa,alvo,true,'dentro do teto','acima do teto')}
+          &nbsp;<span class="mut nw">teto ${mf(alvo)}</span></div>
+      </div>
+      <div class="kpi">
+        <div class="rot">ROAS da mídia</div>
+        <div class="val ${cor(k.roas,k.roas_alvo,false)}">${xf(k.roas)}</div>
+        <div class="pe">${mf(k.fat_pago)} de venda paga ÷ ${mf(k.investido)} de custo</div>
+        <div class="pe">${selo(k.roas,k.roas_alvo,false,'acima do necessário','abaixo do necessário')}
+          &nbsp;<span class="mut nw">alvo ${xf(k.roas_alvo)} · líquido ${xf(k.roas_liquido)}</span></div>
+      </div>
+      <div class="kpi">
+        <div class="rot">Faturamento bruto</div>
+        <div class="val">${m0(k.fat_total)}</div>
+        <div class="pe">${nf(k.vendas_total)} transações · ticket médio ${mf(k.ticket_medio)}</div>
+        <div class="pe mut">${mf(k.liq_total)} líquidos da plataforma${k.estornos?` · ${nf(k.estornos)} estorno(s) fora da conta`:''}</div>
+      </div>
+      <div class="kpi">
+        <div class="rot">Investido com imposto</div>
+        <div class="val">${mf(k.investido)}</div>
+        <div class="pe">${mf(k.investido_liq)} no Gerenciador + ${pf(c.tax*100)} de imposto</div>
+        <div class="pe mut">previsto até hoje ${m0(k.verba_esperada)} de ${m0(k.verba_total)}</div>
+      </div>
+      <div class="kpi">
+        <div class="rot">Ritmo necessário</div>
+        <div class="val">${k.ritmo_necessario==null?'—':nf(k.ritmo_necessario)}<small> pagas/dia</small></div>
+        <div class="pe">${k.dias_restantes} dia(s) até ${dm(c.capture_end)}</div>
+        <div class="pe mut">ao teto de CPA seriam ${m0(k.verba_restante)}</div>
+      </div>
+      <div class="kpi">
+        <div class="rot">Order bump</div>
+        <div class="val">${pf(k.attach_rate)}</div>
+        <div class="pe">${nf(k.pedidos_bump)} de ${nf(k.pedidos)} pedidos levaram o extra</div>
+        <div class="pe mut">é o que separa ticket de R$297 de ticket real</div>
+      </div>
+    </div>
+  </section>
+
+  ${semMidia?'':`
+  <section>
+    <h2>Funil de Tráfego por etapa</h2>
+    <p class="nota">Só o que veio de anúncio. Cada etapa é uma campanha própria no Meta.
+      Impressions, Clicks, LP View e Checkout vêm do Meta; <b>Inscrições vêm da plataforma de
+      venda</b>, atribuídas pelo <code>sck</code> — venda de verdade, não compra estimada pelo pixel.</p>
+    <div class="card">
+      <div class="funis">
+        ${(d.funis||[]).filter(f=>f.impressoes>0).map(f=>`<div>
+          <div class="fhead">${esc(f.rot)}</div>
+          <div class="fsub"><span>${mf(f.investido)}</span><span class="mut">·</span>
+            <span><b>${nf(f.inscricoes)}</b> inscrições</span><span class="mut">·</span>
+            <span>CPA ${pilula(f.cpa,f.cpa_alvo)}</span></div>
+          <div id="funil-${f.chave}"></div>
+          <div class="frod">
+            <span>Faturamento <b>${m0(f.faturamento)}</b></span>
+            <span>ROAS <b>${xf(f.roas)}</b></span>
+            <span class="mut">pixel ${nf(f.compra_pixel)}</span>
+          </div>
+        </div>`).join('') || '<div class="vazio">Nenhuma etapa entregou impressão no período.</div>'}
+      </div>
+      ${(d.funis||[]).filter(f=>f.impressoes===0).length?`<p class="nota" style="margin:14px 0 0">
+        Sem entrega no período: ${(d.funis||[]).filter(f=>f.impressoes===0).map(f=>esc(f.rot)).join(', ')}.</p>`:''}
+      <h2 style="font-size:13px;margin:22px 0 8px;color:var(--ink2)">As etapas somadas</h2>
+      <div class="efic" style="margin-top:0">
+        <div><div class="r">Alcance</div><div class="v">${nf(k.alcance)}</div></div>
+        <div><div class="r">Frequência</div><div class="v">${n2(k.frequencia)}</div></div>
+        <div><div class="r">CTR</div><div class="v">${pf(k.ctr,2)}</div></div>
+        <div><div class="r">Connect Rate</div><div class="v">${pf(k.connect_rate)}</div></div>
+        <div><div class="r">LP View → Checkout</div><div class="v">${pf(k.lpv_checkout)}</div></div>
+        <div><div class="r">Checkout → Venda</div><div class="v">${pf(k.checkout_venda)}</div></div>
+      </div>
+      <p class="nota" style="margin:12px 0 0">
+        <b>Connect Rate</b> = LP View ÷ Clicks (quanto do clique chega a carregar a página).
+        <b>Checkout → Venda</b> usa a venda real no numerador e o checkout do pixel no denominador:
+        serve de tendência, não de taxa exata. Para conferência, o pixel do Meta registrou
+        ${nf(k.compra_pixel)} compras no período contra ${nf(k.vendas_pago)} transações pagas apuradas —
+        o pixel conta compra por visualização e não enxerga o order bump.
+        <b>Alcance</b> e <b>Frequência</b> só aparecem no somado porque vêm deduplicados da conta.
+        ${k.investido_fora_etapa>0?`<b>Atenção:</b> ${mf(k.investido_fora_etapa)} do investimento veio de
+        campanha que não casou com nenhuma etapa.`:''}
+        ${k.vendas_sem_etapa>0?`<b>Atenção:</b> ${nf(k.vendas_sem_etapa)} venda(s) paga(s) vieram de um
+        conjunto sem gasto na janela e ficaram fora dos funis.`:''}
+      </p>
+    </div>
+  </section>`}
+
+  <section>
+    <h2>De onde vêm as vendas</h2>
+    <p class="nota">Contagem da plataforma de venda pelo <code>sck</code> gravado no checkout. Transações, não pedidos.</p>
+    <div class="grid3">
+      <div class="card"><h2 style="font-size:13.5px">Origem</h2>
+        <p class="nota">Pago × orgânico × sem rastreio.</p><div class="pz" id="pz1"></div></div>
+      <div class="card"><h2 style="font-size:13.5px">Orgânico por posição</h2>
+        <p class="nota">Os links traqueados que o Jorge divulga.</p><div class="pz" id="pz2"></div></div>
+      <div class="card"><h2 style="font-size:13.5px">Produto</h2>
+        <p class="nota">Imersão × order bump.</p><div class="pz" id="pz3"></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Evolução diária</h2>
+    <p class="nota">Vendas pela data da compra; custos de mídia com imposto aplicado. A mídia começa em ${dm(c.start)}.</p>
+    <div class="grid2">
+      <div class="card">
+        <h2 style="font-size:13.5px">Vendas por dia</h2>
+        <div class="legenda">
+          <span><i class="chip" style="background:${S3}"></i>Orgânico</span>
+          <span><i class="chip" style="background:${S1}"></i>Tráfego pago</span>
+        </div>
+        <div id="c1"></div>
+      </div>
+      <div class="card">
+        <h2 style="font-size:13.5px">CPA real por dia</h2>
+        <p class="nota">Dias sem venda paga não aparecem na linha.</p><div id="c2"></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h2 style="font-size:13.5px">Inscrições acumuladas até a meta da campanha</h2>
+      <div class="legenda">
+        <span><i class="chip" style="background:${S1}"></i>Acumulado (todas as origens)</span>
+        <span><i class="chip tracejado"></i>Ritmo necessário para ${nf(k.meta_total)}</span>
+      </div>
+      <div id="c3"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Resultado por origem</h2>
+    <div class="card"><div class="tw"><table>
+      <thead><tr><th>Origem</th><th>Transações</th><th>% do total</th><th>Faturamento</th>
+                 <th>Investido</th><th>CPA</th><th>ROAS</th></tr></thead>
+      <tbody>
+        <tr><td class="forte">Tráfego pago</td><td>${nf(k.vendas_pago)}</td>
+            <td>${pf(k.vendas_total?k.vendas_pago/k.vendas_total*100:0)}</td>
+            <td>${mf(k.fat_pago)}</td><td>${mf(k.investido)}</td>
+            <td>${pilula(k.cpa,alvo)}</td><td>${xf(k.roas)}</td></tr>
+        <tr><td class="forte">Orgânico</td><td>${nf(k.vendas_organico)}</td>
+            <td>${pf(k.vendas_total?k.vendas_organico/k.vendas_total*100:0)}</td>
+            <td>${mf(k.fat_organico)}</td><td class="mut">sem custo de mídia</td>
+            <td class="mut">—</td><td class="mut">—</td></tr>
+      </tbody>
+      <tfoot><tr><td>Total</td><td>${nf(k.vendas_total)}</td><td>100,0%</td>
+             <td>${mf(k.fat_total)}</td><td>${mf(k.investido)}</td>
+             <td class="mut">—</td><td>${xf(k.investido?k.fat_total/k.investido:null)}</td></tr></tfoot>
+    </table></div></div>
+  </section>
+
+  <section>
+    <h2>Produtos</h2>
+    <div class="card"><div class="tw"><table>
+      <thead><tr><th>Produto</th><th>Ticket</th><th>Transações</th><th>Pago</th><th>Orgânico</th>
+                 <th>Faturamento</th><th>Valor médio pago</th></tr></thead>
+      <tbody>${d.produtos.map(p=>`<tr>
+        <td class="forte">${esc(p.rot)}</td><td class="mut">${p.ticket?mf(p.ticket):'—'}</td>
+        <td>${nf(p.vendas)}</td><td>${nf(p.pago)}</td><td>${nf(p.organico)}</td>
+        <td class="forte">${mf(p.faturamento)}</td><td>${mf(p.ticket_real)}</td></tr>`).join('')}</tbody>
+    </table></div></div>
+    <p class="nota" style="margin-top:8px">O <b>valor médio pago</b> difere do ticket quando houve
+      cortesia, cupom ou negociação. É por isso que o faturamento soma o valor de cada venda e nunca
+      quantidade × ticket.</p>
+  </section>
+
+  ${d.organico.length?`<section>
+    <h2>Orgânico por link</h2>
+    <p class="nota">Os links curtos traqueados. Sem custo de mídia.</p>
+    <div class="card"><div class="tw"><table>
+      <thead><tr><th>Mídia (source)</th><th>Posição (medium)</th><th>Inscrições</th>
+                 <th>Transações</th><th>Faturamento</th></tr></thead>
+      <tbody>${d.organico.map(o=>`<tr><td class="forte">${esc(o.source)}</td><td>${esc(o.medium)}</td>
+        <td>${nf(o.inscricoes)}</td><td>${nf(o.vendas)}</td><td>${mf(o.faturamento)}</td></tr>`).join('')}</tbody>
+    </table></div></div>
+  </section>`:''}
+
+  ${semMidia?'':`
+  <section>
+    <h2>Conjuntos</h2>
+    <div class="card"><div class="tw"><table>
+      <thead><tr><th>Conjunto</th><th>Investido</th><th>CPM</th><th>CTR</th><th>CPC</th>
+                 <th>LP View</th><th>Checkouts</th><th>Inscrições</th><th>CPA</th><th>ROAS</th></tr></thead>
+      <tbody>${d.conjuntos.map(s=>`<tr>
+        <td class="forte">${esc(s.nome)} <span class="selo">${esc(s.etapa)}</span></td>
+        <td>${mf(s.investido)}</td><td>${mf(s.cpm)}</td><td>${pf(s.ctr,2)}</td><td>${mf(s.cpc)}</td>
+        <td>${nf(s.lpv)}</td><td>${nf(s.checkouts)}</td><td class="forte">${nf(s.inscricoes)}</td>
+        <td>${pilula(s.cpa,s.cpa_alvo)}</td><td>${xf(s.roas)}</td></tr>`).join('')}</tbody>
+    </table></div></div>
+    <p class="nota" style="margin-top:8px">O CPA de cada conjunto é comparado com o teto da própria
+      etapa (Audiência ≤ R$110 · Frio ≤ R$200 · Fechamento ≤ R$120), não com o teto geral.</p>
+  </section>
+
+  <section>
+    <h2>Anúncios</h2>
+    <p class="nota">Clique num cabeçalho para reordenar. "Inscrições" são vendas reais atribuídas pelo
+      <code>utm_content</code> dentro do <code>sck</code> — é esta coluna que decide o que continua no ar.</p>
+    <div class="card"><div class="tw"><table id="tads">
+      <thead><tr>
+        <th data-c="nome">Anúncio</th><th data-c="conjunto">Conjunto</th><th data-c="investido">Investido</th>
+        <th data-c="cpm">CPM</th><th data-c="ctr">CTR</th><th data-c="cpc">CPC</th>
+        <th data-c="lpv">LP View</th><th data-c="checkouts">Checkouts</th>
+        <th data-c="inscricoes">Inscrições</th><th data-c="cpa">CPA</th><th data-c="roas">ROAS</th>
+      </tr></thead><tbody></tbody>
+    </table></div></div>
+  </section>`}
+
+  <footer>
+    <b>Como cada número é apurado.</b><br>
+    <b>Venda</b> = transação aprovada na plataforma, lida por webhook. Reembolso, chargeback e
+    cancelamento saem do total assim que chegam${k.estornos?` (${nf(k.estornos)} até agora, ${mf(k.fat_estornado)})`:''}.
+    O painel guarda só o esqueleto da transação: nenhum nome, e-mail, telefone ou documento de comprador.<br>
+    <b>Faturamento</b> = soma do valor BRUTO do produtor de cada venda — nunca quantidade × ticket, e
+    nunca o total pago pelo comprador (que traz juros de parcelamento e não chega ao produtor).<br>
+    <b>Pago × orgânico</b> = pelo <code>sck</code> do checkout: <code>utm_medium</code> numérico é o id do
+    conjunto e marca tráfego pago; palavra (bio, stories, direct) é orgânico; sem <code>sck</code> legível
+    conta como orgânico por decisão da campanha.<br>
+    <b>Imposto</b> = todo valor de mídia (investimento, CPM, CPC, CPA) sai multiplicado por
+    ${(1+c.tax).toLocaleString('pt-BR',{minimumFractionDigits:3})}, ou seja ${pf(c.tax*100)} sobre o valor do
+    Gerenciador. O teto de ${mf(alvo)} por inscrição já é um valor com imposto.<br>
+    <b>Verde e vermelho</b> = comparação com o ritmo do período já transcorrido: no dia
+    ${k.dias_decorridos} de ${k.dias_janela} de mídia, a meta proporcional é ${nf(k.esperado_pagas)}
+    inscrições pagas. CPA e ROAS são comparados direto com o alvo.<br>
+    Dados de mídia do Meta Ads e vendas da Hotmart, atualizados a cada hora. Painel da Catapulta de Ideias.
+  </footer>`;
+
+  desenha();
+  addEventListener('resize',()=>{clearTimeout(window.__t);window.__t=setTimeout(desenha,180);});
+
+  if(!semMidia){
+    let ordem={c:'investido',asc:false};
+    const corpo=$('#tads tbody');
+    function pintaAds(){
+      const linhas=DADOS.anuncios.slice().sort((a,b)=>{
+        const x=a[ordem.c],y=b[ordem.c];
+        if(x==null&&y==null)return 0; if(x==null)return 1; if(y==null)return -1;
+        return (typeof x==='string'?String(x).localeCompare(y,'pt-BR'):x-y)*(ordem.asc?1:-1);
+      });
+      corpo.innerHTML=linhas.map(a=>`<tr>
+        <td class="forte">${esc(a.nome)}</td><td class="mut">${esc(a.conjunto)}</td><td>${mf(a.investido)}</td>
+        <td>${mf(a.cpm)}</td><td>${pf(a.ctr,2)}</td><td>${mf(a.cpc)}</td>
+        <td>${nf(a.lpv)}</td><td>${nf(a.checkouts)}</td>
+        <td class="forte">${nf(a.inscricoes)}</td><td>${pilula(a.cpa,a.cpa_alvo)}</td>
+        <td>${xf(a.roas)}</td></tr>`).join('');
+    }
+    document.querySelectorAll('#tads thead th').forEach(th=>th.addEventListener('click',()=>{
+      const cc=th.dataset.c;
+      ordem = ordem.c===cc ? {c:cc,asc:!ordem.asc} : {c:cc,asc:cc==='nome'||cc==='conjunto'};
+      pintaAds();
+    }));
+    pintaAds();
+  }
+}
+
+function desenha(){
+  const d=DADOS, k=d.kpi, c=d.cfg;
+  const s=d.serie;                                    // série inteira: a venda orgânica começa antes da mídia
+  const sm=d.serie.filter(r=>r.data>=c.start);        // só o período com mídia
+
+  (d.funis||[]).filter(f=>f.impressoes>0).forEach(f=>{
+    const host=$('#funil-'+f.chave);
+    if(!host)return;
+    const fatia=k.investido>0?f.investido/k.investido*100:null;
+    grafFunil(host,[
+      {nome:'Impressions', valor:f.impressoes, pct:null,
+       m1:['CPM',mf(f.cpm)],                      m2:['Da verba',pf(fatia)]},
+      {nome:'Clicks',      valor:f.cliques,   pct:f.ctr,
+       m1:['CPC',mf(f.cpc)],                      m2:['CTR',pf(f.ctr,2)]},
+      {nome:'LP View',     valor:f.lpv,       pct:f.connect_rate,
+       m1:['Custo por LP View',mf(f.custo_lpv)],  m2:['Connect Rate',pf(f.connect_rate)]},
+      {nome:'Checkout iniciado', curto:'Checkout', valor:f.checkouts, pct:f.lpv_checkout,
+       m1:['Custo por checkout',mf(f.custo_checkout)], m2:['LPV → checkout',pf(f.lpv_checkout)]},
+      {nome:'Inscrições pagas',  curto:'Inscrições', valor:f.inscricoes, pct:f.checkout_venda,
+       m1:['CPA',mf(f.cpa)],                      m2:['Checkout → venda',pf(f.checkout_venda)]},
+    ]);
+  });
+
+  grafPizza($('#pz1'),pinta(d.roscas.origem),'VENDAS');
+  grafPizza($('#pz2'),pinta(d.roscas.organico),'ORGÂNICAS');
+  grafPizza($('#pz3'),pinta(d.roscas.produto),'VENDAS');
+
+  grafBarras($('#c1'),s,{series:[{chave:'vendas_org',cor:S3},{chave:'vendas_pago',cor:S1}],fmtY:nf,
+    tip:r=>`<b>${dm(r.data)}</b><br><span class="k">Vendas</span> ${nf(r.vendas)}
+            <br><span class="k">Pago</span> ${nf(r.vendas_pago)}
+            <br><span class="k">Orgânico</span> ${nf(r.vendas_org)}
+            <br><span class="k">Faturamento</span> ${mf(r.faturamento)}
+            <br><span class="k">Investido</span> ${mf(r.investido)}`});
+
+  grafLinhas($('#c2'),sm,{series:[{chave:'cpa',cor:S1}],
+    fmtY:v=>'R$ '+v.toLocaleString('pt-BR',{maximumFractionDigits:0}),
+    ref:c.cpa_target,refRotulo:'teto '+m0(c.cpa_target),
+    tip:r=>`<b>${dm(r.data)}</b><br><span class="k">CPA do dia</span> ${mf(r.cpa)}
+            <br><span class="k">CPA acumulado</span> ${mf(r.cpa_acum)}
+            <br><span class="k">Investido</span> ${mf(r.investido)}
+            <br><span class="k">Vendas pagas</span> ${nf(r.vendas_pago)}`});
+
+  const dias=Math.max(1,Math.round((new Date(c.capture_end+'T00:00:00')-new Date(c.campanha_start+'T00:00:00'))/86400000)+1);
+  const alvoDia=k.meta_total/dias;
+  const base=new Date(c.campanha_start+'T00:00:00');
+  const s3=s.map(r=>{
+    const n=Math.round((new Date(r.data+'T00:00:00')-base)/86400000)+1;
+    return Object.assign({},r,{ritmo:n>0?Math.round(alvoDia*Math.min(n,dias)):null});
+  });
+  grafLinhas($('#c3'),s3,{altura:260,
+    series:[{chave:'acumulado',cor:S1},{chave:'ritmo',cor:REF,tracejado:true}],fmtY:nf,
+    tip:r=>`<b>${dm(r.data)}</b><br><span class="k">Acumulado</span> ${nf(r.acumulado)}
+            <br><span class="k">Ritmo necessário</span> ${nf(r.ritmo)}
+            <br><span class="k">Pagas acumuladas</span> ${nf(r.acumulado_pago)}`});
+}
+
+/* ============================== carga ============================== */
+function carrega(forcar){
+  $('#app').className='carregando';
+  $('#app').textContent=forcar?'Buscando os dados no Meta e na plataforma de venda…':'Carregando os dados…';
+  fetch('data.php'+(forcar?'?forcar=1':''),{credentials:'same-origin'})
+    .then(r=>r.ok?r.json():r.json().then(j=>Promise.reject(j.erro||('HTTP '+r.status))))
+    .then(render)
+    .catch(e=>{$('#app').className='carregando';
+      $('#app').innerHTML=`<div class="aviso grave">Não foi possível carregar: ${esc(e)}</div>`;});
+}
+$('#forcar').addEventListener('click',()=>carrega(true));
+carrega(false);
+</script>
+</body>
+</html>
