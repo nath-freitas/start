@@ -226,11 +226,24 @@ if ($origem === '') {
     $trafego = preg_match($regra, $medium) ? 'pago' : 'organico';
 }
 
-$valor = cava($p, [
-    'data.purchase.price.value',          // o que foi PAGO — nunca o preço de tabela
-    'data.purchase.full_price.value',
-    'data.purchase.original_offer_price.value',
-]);
+// Há PELO MENOS TRÊS números de dinheiro por venda e eles divergem muito. No
+// extrato de 19/08 (92 vendas): produto R$25.919, total pago com juros de
+// parcelamento R$27.027,74, líquido repassado R$23.810,88. Uma cadeia de
+// fallback escolheria um deles em silêncio — por isso os três viram campo.
+//   valor         = faturamento BRUTO do produtor  (é o que o relatório soma)
+//   valor_total   = o que o COMPRADOR pagou, com juros — não chega ao produtor
+//   valor_liquido = o que a plataforma repassa, depois da taxa
+$valor       = cava($p, ['data.purchase.price.value', 'data.purchase.original_offer_price.value']);
+$valor_total = cava($p, ['data.purchase.full_price.value']);
+
+// Líquido: na 2.0 vem na lista de comissões, a do PRODUCER (cava não anda em
+// lista, então a varredura é explícita).
+$valor_liquido = null;
+foreach ((array)(cava($p, ['data.commissions']) ?? []) as $com) {
+    if (is_array($com) && strtoupper((string)($com['source'] ?? '')) === 'PRODUCER') {
+        $valor_liquido = $com['value'] ?? $valor_liquido;
+    }
+}
 
 $linha = [
     'evento_id'  => (string)(cava($p, ['id', 'data.purchase.order_id']) ?? ($transacao . ':' . $evento)),
@@ -244,8 +257,10 @@ $linha = [
     'data_hora'  => quando(cava($p, [
         'data.purchase.approved_date', 'data.purchase.order_date', 'creation_date',
     ])),
-    'valor'      => $valor === null ? null : round((float)$valor, 2),
-    'moeda'      => (string)(cava($p, ['data.purchase.price.currency_value', 'data.purchase.price.currency_code']) ?? 'BRL'),
+    'valor'         => $valor === null ? null : round((float)$valor, 2),
+    'valor_total'   => $valor_total === null ? null : round((float)$valor_total, 2),
+    'valor_liquido' => $valor_liquido === null ? null : round((float)$valor_liquido, 2),
+    'moeda'      =>(string)(cava($p, ['data.purchase.price.currency_value', 'data.purchase.price.currency_code']) ?? 'BRL'),
     'origem'     => $origem,
     'src'        => $src,
     'trafego'    => $trafego,

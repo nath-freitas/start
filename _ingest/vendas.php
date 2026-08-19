@@ -65,10 +65,10 @@ $por = function (string $campo) use ($validas): array {
 if (($_GET['formato'] ?? '') === 'csv') {
     header('Content-Type: text/csv; charset=utf-8');
     $out = fopen('php://output', 'w');
-    fputcsv($out, ['data_hora', 'transacao', 'pedido', 'produto', 'valor', 'origem', 'trafego', 'status']);
+    fputcsv($out, ['data_hora', 'transacao', 'pedido', 'produto', 'valor', 'valor_liquido', 'origem', 'trafego', 'status']);
     foreach ($transacoes as $r) {
         fputcsv($out, [$r['data_hora'], $r['transacao'], $r['pedido'], $r['produto'],
-                       $r['valor'], $r['origem'], $r['trafego'], $r['status'] ?? '']);
+                       $r['valor'], $r['valor_liquido'] ?? '', $r['origem'], $r['trafego'], $r['status'] ?? '']);
     }
     exit;
 }
@@ -79,7 +79,10 @@ echo json_encode([
     'atualizado'  => date('c'),
     'totais'      => [
         'transacoes' => count($validas),
+        // 'valor' é o BRUTO do produtor. 'liquido' é o repasse da plataforma.
+        // Nunca somar valor_total (traz juros de parcelamento do comprador).
         'valor'      => round(array_sum(array_map(fn($r) => (float)$r['valor'], $validas)), 2),
+        'liquido'    => round(array_sum(array_map(fn($r) => (float)($r['valor_liquido'] ?? 0), $validas)), 2),
         'estornos'   => count($transacoes) - count($validas),
     ],
     'por_produto' => $por('produto'),

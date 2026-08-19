@@ -85,10 +85,16 @@ if (!is_dir($dir) && !@mkdir($dir, 0750, true) && !is_dir($dir)) {
     fim(500, ['ok' => false, 'msg' => 'nao consegui criar ' . $dir]);
 }
 
+// &produtos={"8299365":"imersao"} — id da Hotmart => slug curto. Opcional: sem
+// isso o receptor deriva o slug do NOME do produto, que muda se o produtor
+// renomear o produto na plataforma.
+$produtos = json_decode((string)($_GET['produtos'] ?? '{}'), true);
+if (!is_array($produtos)) fim(400, ['ok' => false, 'msg' => 'produtos nao e json valido']);
+
 $php = "<?php\n// Gerado pelo setup em " . date('c') . ". NAO versionar.\nreturn " . var_export([
     'hottok'           => $hottok,
     'token_leitura'    => $leitura,
-    'produtos'         => [],          // id da Hotmart => slug curto (opcional)
+    'produtos'         => $produtos,   // id da Hotmart => slug curto (opcional)
     'regra_pago'       => '/^\d+$/',   // 2o campo do sck numerico = id do conjunto = pago
     'mapear_estrutura' => true,        // grava estrutura.json no 1o webhook (so nomes e tipos)
 ], true) . ";\n";
