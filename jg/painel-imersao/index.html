@@ -34,9 +34,8 @@ header .wrap{padding-bottom:0}
 .ficha .v{font-size:15px;font-weight:600;color:#fff;margin-top:1px}
 .stamp{font-size:12px;color:#9c99a5;text-align:right;line-height:1.7}
 .stamp b{color:#fff;font-weight:600}
-.btn{display:inline-block;margin-top:7px;padding:6px 12px;font:inherit;font-size:12px;font-weight:600;
-     color:var(--preto);background:var(--amarelo);border:0;border-radius:7px;cursor:pointer}
-.btn:hover{filter:brightness(1.08)}
+td a{color:var(--roxo);text-decoration:none;border-bottom:1px solid #d8d1f2}
+td a:hover{border-bottom-color:var(--roxo)}
 .aviso{margin-top:12px;padding:9px 13px;border-radius:9px;font-size:12.5px;
        background:#fff4e2;color:#7a4a00;border:1px solid #f0d5a8}
 .aviso.grave{background:#fdecea;color:#8c1d16;border-color:#f3c3bd}
@@ -46,11 +45,18 @@ h2{font-size:15px;font-weight:600;margin:0 0 3px;letter-spacing:-.005em}
 .nota{margin:0 0 12px;font-size:12.5px;color:var(--ink3)}
 .card{background:var(--card);border:1px solid var(--linha);border-radius:var(--raio);padding:18px 20px}
 
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(214px,1fr));gap:14px}
-.kpi{background:var(--card);border:1px solid var(--linha);border-radius:var(--raio);padding:16px 18px}
-.kpi .rot{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3)}
-.kpi .val{font-size:31px;font-weight:700;letter-spacing:-.025em;margin:5px 0 1px;font-variant-numeric:tabular-nums}
-.kpi .val small{font-size:15px;font-weight:600;color:var(--ink3);letter-spacing:0}
+/* Cinco por linha, na ordem que a leitura gerencial pede: a linha de cima é o
+   resultado da campanha inteira, a de baixo é a mídia. */
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:13px}
+.kpis+.kpis{margin-top:13px}
+@media(max-width:1040px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:720px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:430px){.kpis{grid-template-columns:1fr}}
+.kpi{background:var(--card);border:1px solid var(--linha);border-radius:var(--raio);padding:15px 16px;min-width:0}
+.kpi .rot{font-size:10.5px;font-weight:600;letter-spacing:.055em;text-transform:uppercase;color:var(--ink3)}
+.kpi .val{font-size:27px;font-weight:700;letter-spacing:-.025em;margin:5px 0 1px;font-variant-numeric:tabular-nums}
+.kpi .val small{font-size:14px;font-weight:600;color:var(--ink3);letter-spacing:0}
+.kpi .pe.mini{font-size:11.5px}
 .kpi .val.bom{color:var(--bom)} .kpi .val.ruim{color:var(--ruim)}
 .kpi .pe{font-size:12.5px;color:var(--ink2)}
 .kpi.destaque{border-color:#d9d6e2;box-shadow:0 1px 0 #e9e7ef}
@@ -150,8 +156,8 @@ footer b{color:var(--ink2);font-weight:600}
       </div>
       <div class="stamp">
         <span id="periodo">—</span><br>
-        Atualizado às <b id="upd">—</b> · próxima às <b id="prox">—</b>
-        <br><button class="btn" id="forcar">Atualizar agora</button>
+        Dados de <b id="upd">—</b><br>
+        <span style="opacity:.72">mídia e vendas na mesma leitura · atualiza de hora em hora</span>
       </div>
     </div>
   </div>
@@ -403,23 +409,17 @@ function render(d){
   $('#periodo').textContent='Venda '+dm(c.campanha_start)+' a '+dm(c.capture_end)
     +' · mídia dia '+k.dias_decorridos+' de '+k.dias_janela;
 
-  const g=new Date(d.gerado_em);
-  const hm=t=>t.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-  $('#upd').textContent=hm(g);
-  $('#prox').textContent=hm(new Date(g.getTime()+(c.ttl||3600)*1000));
+  /* O carimbo é a hora REAL da leitura do Meta — as vendas foram represadas nesse
+     mesmo instante, então as duas metades da página descrevem o mesmo momento. */
+  const g=new Date(d.dados_em||d.gerado_em);
+  $('#upd').textContent=g.toLocaleString('pt-BR',
+    {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}).replace(', ',' às ');
 
   let avisos='';
   if(d.cache && d.cache.erro)
     avisos+=`<div class="aviso grave"><b>Mostrando os últimos dados bons.</b> A atualização mais recente falhou: ${esc(d.cache.erro)}</div>`;
   if(semMidia)
     avisos+=`<div class="aviso grave"><b>Sem dado de mídia.</b> Não há token do Meta configurado nem snapshot gravado — os blocos de investimento, funil, CPA e ROAS estão em branco. As vendas abaixo são reais.</div>`;
-  else if(d.midia.fonte==='snapshot'){
-    const q=d.midia.em?new Date(d.midia.em):null;
-    const horas=q?Math.round((Date.now()-q.getTime())/3600000):null;
-    avisos+=`<div class="aviso${horas!=null&&horas>12?' grave':''}"><b>Mídia por snapshot, não ao vivo.</b>
-      Os números do Meta são de ${q?q.toLocaleString('pt-BR'):'data desconhecida'}${horas!=null?` (${horas}h atrás)`:''}.
-      As vendas são ao vivo. Assim que o token de usuário de sistema do Meta entrar no config, este bloco passa a atualizar sozinho de hora em hora.</div>`;
-  }
   $('#aviso').innerHTML=avisos;
 
   const pctReal=Math.min(100,k.inscricoes_pago/k.meta_pagas*100);
@@ -432,57 +432,75 @@ function render(d){
   <section>
     <div class="kpis">
       <div class="kpi destaque">
-        <div class="rot">Inscrições pagas (mídia)</div>
-        <div class="val ${cor(k.inscricoes_pago,k.esperado_pagas,false)}">${nf(k.inscricoes_pago)} <small>/ ${nf(k.meta_pagas)}</small></div>
-        <div class="pe">${selo(k.inscricoes_pago,k.esperado_pagas,false,'no ritmo da meta','abaixo do ritmo')}
-          &nbsp;<span class="mut nw">esperado hoje ${nf(k.esperado_pagas)}</span></div>
-        <div class="barra" title="Barra: inscrições vindas de anúncio. Marca: onde deveríamos estar hoje.">
-          <i style="width:${pctReal}%"></i><u style="left:${pctEsp}%"></u></div>
+        <div class="rot">Inscrições totais</div>
+        <div class="val ${cor(k.inscricoes_total,k.esperado_total,false)}">${nf(k.inscricoes_total)} <small>/ ${nf(k.meta_total)}</small></div>
+        <div class="pe">${selo(k.inscricoes_total,k.esperado_total,false,'no ritmo da meta','abaixo do ritmo')}
+          &nbsp;<span class="mut nw">ritmo pede ${nf(k.esperado_total)}</span></div>
+        <div class="barra" title="Barra: inscrições de todas as origens. Marca: onde o ritmo dizia estar hoje.">
+          <i style="width:${pctTot}%"></i><u style="left:${pctTotE}%"></u></div>
+        <div class="pe mut mini">só ${c.produto_principal_rot.toLowerCase()} — o extra não conta</div>
       </div>
       <div class="kpi destaque">
-        <div class="rot">Inscrições da campanha</div>
-        <div class="val ${cor(k.inscricoes_total,k.esperado_total,false)}">${nf(k.inscricoes_total)} <small>/ ${nf(k.meta_total)}</small></div>
-        <div class="pe">${nf(k.inscricoes_organico)} orgânicas + ${nf(k.inscricoes_pago)} de mídia</div>
-        <div class="barra" title="Barra: inscrições totais. Marca: onde deveríamos estar hoje.">
-          <i style="width:${pctTot}%"></i><u style="left:${pctTotE}%"></u></div>
+        <div class="rot">CPA total</div>
+        <div class="val ${cor(k.cpa_total,alvo,true)}">${mf(k.cpa_total)}</div>
+        <div class="pe">a verba inteira ÷ <b>todas</b> as ${nf(k.inscricoes_total)} inscrições</div>
+        <div class="pe mut">o custo de uma inscrição para o negócio, com o orgânico no denominador</div>
       </div>
       <div class="kpi">
-        <div class="rot">CPA real</div>
-        <div class="val ${cor(k.cpa,alvo,true)}">${mf(k.cpa)}</div>
-        <div class="pe">${nf(k.inscricoes_pago)} inscrições com ${c.produto_principal_rot.toLowerCase()} pelo <code>sck</code></div>
-        <div class="pe">${selo(k.cpa,alvo,true,'dentro do teto','acima do teto')}
-          &nbsp;<span class="mut nw">teto ${mf(alvo)}</span></div>
-      </div>
-      <div class="kpi">
-        <div class="rot">ROAS da mídia</div>
-        <div class="val ${cor(k.roas,k.roas_alvo,false)}">${xf(k.roas)}</div>
-        <div class="pe">${mf(k.fat_pago)} de venda paga ÷ ${mf(k.investido)} de custo</div>
-        <div class="pe">${selo(k.roas,k.roas_alvo,false,'acima do necessário','abaixo do necessário')}
-          &nbsp;<span class="mut nw">alvo ${xf(k.roas_alvo)} · líquido ${xf(k.roas_liquido)}</span></div>
-      </div>
-      <div class="kpi">
-        <div class="rot">Faturamento bruto</div>
+        <div class="rot">Faturamento total</div>
         <div class="val">${m0(k.fat_total)}</div>
-        <div class="pe">${nf(k.vendas_total)} transações · ticket médio ${mf(k.ticket_medio)}</div>
+        <div class="pe">${nf(k.vendas_total)} transações — inscrições + ${nf(k.extras_total)} ${c.produto_extra_rot.toLowerCase()}</div>
         <div class="pe mut">${mf(k.liq_total)} líquidos da plataforma${k.estornos?` · ${nf(k.estornos)} estorno(s) fora da conta`:''}</div>
       </div>
       <div class="kpi">
-        <div class="rot">Investido com imposto</div>
+        <div class="rot">Conversão do order bump</div>
+        <div class="val">${pf(k.attach_rate)}</div>
+        <div class="pe">${nf(k.pedidos_bump)} de ${nf(k.pedidos)} inscrições levaram o extra no mesmo checkout</div>
+        <div class="pe mut">+${m0(k.fat_bump)} de receita — ${nf(k.extras_avulsos)} extra(s) vendido(s) fora da janela de ${nf(k.bump_janela_min)} min</div>
+      </div>
+      <div class="kpi">
+        <div class="rot">Ritmo necessário</div>
+        <div class="val">${k.ritmo_necessario_total==null?'—':nf(k.ritmo_necessario_total)}<small> inscrições/dia</small></div>
+        <div class="pe">${k.dias_restantes_total} dia(s) até ${dm(c.capture_end)} para fechar ${nf(k.meta_total)}</div>
+        <div class="pe mut">só da mídia seriam ${k.ritmo_necessario==null?'—':nf(k.ritmo_necessario)}/dia até ${nf(k.meta_pagas)}</div>
+      </div>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi">
+        <div class="rot">Investimento</div>
         <div class="val">${mf(k.investido)}</div>
         <div class="pe">${mf(k.investido_liq)} no Gerenciador + ${pf(c.tax*100)} de imposto</div>
         <div class="pe mut">previsto até hoje ${m0(k.verba_esperada)} de ${m0(k.verba_total)}</div>
       </div>
       <div class="kpi">
-        <div class="rot">Ritmo necessário</div>
-        <div class="val">${k.ritmo_necessario==null?'—':nf(k.ritmo_necessario)}<small> pagas/dia</small></div>
-        <div class="pe">${k.dias_restantes} dia(s) até ${dm(c.capture_end)}</div>
-        <div class="pe mut">ao teto de CPA seriam ${m0(k.verba_restante)}</div>
+        <div class="rot">Vendas · tráfego pago</div>
+        <div class="val ${cor(k.inscricoes_pago,k.esperado_pagas,false)}">${nf(k.inscricoes_pago)} <small>/ ${nf(k.meta_pagas)}</small></div>
+        <div class="pe">${selo(k.inscricoes_pago,k.esperado_pagas,false,'no ritmo','abaixo do ritmo')}
+          &nbsp;<span class="mut nw">ritmo pede ${nf(k.esperado_pagas)}</span></div>
+        <div class="barra" title="Barra: inscrições vindas de anúncio. Marca: onde o ritmo dizia estar hoje.">
+          <i style="width:${pctReal}%"></i><u style="left:${pctEsp}%"></u></div>
+        <div class="pe mut mini">${nf(k.vendas_pago)} transações com o extra</div>
       </div>
       <div class="kpi">
-        <div class="rot">Attach rate do bump</div>
-        <div class="val">${pf(k.attach_rate)}</div>
-        <div class="pe">${nf(k.pedidos_bump)} de ${nf(k.pedidos)} pedidos levaram o extra no mesmo checkout</div>
-        <div class="pe mut">${nf(k.extras_total)} extra(s) vendido(s) ao todo — ${nf(k.extras_avulsos)} em compra separada, que não é attach</div>
+        <div class="rot">CPA · tráfego pago</div>
+        <div class="val ${cor(k.cpa,alvo,true)}">${mf(k.cpa)}</div>
+        <div class="pe">${selo(k.cpa,alvo,true,'dentro do teto','acima do teto')}
+          &nbsp;<span class="mut nw">teto ${mf(alvo)}</span></div>
+        <div class="pe mut">a verba ÷ as ${nf(k.inscricoes_pago)} inscrições atribuídas pelo <code>sck</code></div>
+      </div>
+      <div class="kpi">
+        <div class="rot">Vendas · orgânico</div>
+        <div class="val">${nf(k.inscricoes_organico)}<small> inscrições</small></div>
+        <div class="pe">${pf(k.inscricoes_total?k.inscricoes_organico/k.inscricoes_total*100:0)} de tudo que entrou</div>
+        <div class="pe mut">${mf(k.fat_organico)} de faturamento, sem custo de mídia</div>
+      </div>
+      <div class="kpi">
+        <div class="rot">ROAS total da campanha</div>
+        <div class="val">${xf(k.roas_campanha)}</div>
+        <div class="pe">${m0(k.fat_total)} de receita ÷ ${m0(k.investido)} de mídia</div>
+        <div class="pe">${selo(k.roas,k.roas_alvo,false,'mídia acima do necessário','mídia abaixo do necessário')}
+          &nbsp;<span class="mut nw">ROAS do pago ${xf(k.roas)} · alvo ${xf(k.roas_alvo)}</span></div>
       </div>
     </div>
   </section>
@@ -502,6 +520,7 @@ function render(d){
             <span>CPA ${pilula(f.cpa,f.cpa_alvo)}</span></div>
           <div id="funil-${f.chave}"></div>
           <div class="frod">
+            <span>Conversão vs LP View <b>${pf(f.conv_lpv,2)}</b></span>
             <span>Faturamento <b>${m0(f.faturamento)}</b></span>
             <span>ROAS <b>${xf(f.roas)}</b></span>
             <span class="mut">pixel ${nf(f.compra_pixel)}</span>
@@ -518,8 +537,12 @@ function render(d){
         <div><div class="r">Connect Rate</div><div class="v">${pf(k.connect_rate)}</div></div>
         <div><div class="r">LP View → Checkout</div><div class="v">${pf(k.lpv_checkout)}</div></div>
         <div><div class="r">Checkout → Venda</div><div class="v">${pf(k.checkout_venda)}</div></div>
+        <div><div class="r">Conversão vs LP View</div><div class="v">${pf(k.conv_lpv,2)}</div></div>
       </div>
       <p class="nota" style="margin:12px 0 0">
+        <b>Conversão vs LP View</b> = inscrições pagas ÷ LP View: de cada 100 pessoas que
+        <i>carregaram</i> a página, quantas compraram. É a taxa que fecha o funil sem passar
+        pelo checkout do pixel — a etapa menos confiável da cadeia.
         <b>Connect Rate</b> = LP View ÷ Clicks (quanto do clique chega a carregar a página).
         <b>Checkout → Venda</b> usa a venda real no numerador e o checkout do pixel no denominador:
         serve de tendência, não de taxa exata. Para conferência, o pixel do Meta registrou
@@ -552,7 +575,8 @@ function render(d){
     <p class="nota">Vendas pela data da compra; custos de mídia com imposto aplicado. A mídia começa em ${dm(c.start)}.</p>
     <div class="grid2">
       <div class="card">
-        <h2 style="font-size:13.5px">Vendas por dia</h2>
+        <h2 style="font-size:13.5px">Inscrições por dia</h2>
+        <p class="nota">Só ${esc(c.produto_principal_rot.toLowerCase())} — o extra não conta para a meta.</p>
         <div class="legenda">
           <span><i class="chip" style="background:${S3}"></i>Orgânico</span>
           <span><i class="chip" style="background:${S1}"></i>Tráfego pago</span>
@@ -604,15 +628,19 @@ function render(d){
     <h2>Produtos</h2>
     <div class="card"><div class="tw"><table>
       <thead><tr><th>Produto</th><th>Ticket</th><th>Transações</th><th>Pago</th><th>Orgânico</th>
-                 <th>Faturamento</th><th>Valor médio pago</th></tr></thead>
+                 <th>Faturamento</th><th>% order bump</th></tr></thead>
       <tbody>${d.produtos.map(p=>`<tr>
         <td class="forte">${esc(p.rot)}</td><td class="mut">${p.ticket?mf(p.ticket):'—'}</td>
         <td>${nf(p.vendas)}</td><td>${nf(p.pago)}</td><td>${nf(p.organico)}</td>
-        <td class="forte">${mf(p.faturamento)}</td><td>${mf(p.ticket_real)}</td></tr>`).join('')}</tbody>
+        <td class="forte">${mf(p.faturamento)}</td>
+        <td>${pf(p.bump_pct)} <span class="mut">${nf(p.bump)}</span></td></tr>`).join('')}</tbody>
     </table></div></div>
-    <p class="nota" style="margin-top:8px">O <b>valor médio pago</b> difere do ticket quando houve
-      cortesia, cupom ou negociação. É por isso que o faturamento soma o valor de cada venda e nunca
-      quantidade × ticket.</p>
+    <p class="nota" style="margin-top:8px">A coluna <b>% order bump</b> lê os dois lados do mesmo
+      checkout: na linha da ${esc(c.produto_principal_rot.toLowerCase())} é a fatia das inscrições que
+      levou o extra junto; na linha do extra é quanto dele foi vendido <b>como bump</b> e não em
+      compra avulsa. O critério é o mesmo pedido ou até ${nf(k.bump_janela_min)} minutos de distância.
+      O faturamento soma o valor de cada venda e nunca quantidade × ticket — houve compra fora da
+      tabela de preço.</p>
   </section>
 
   ${d.organico.length?`<section>
@@ -643,16 +671,19 @@ function render(d){
   </section>
 
   <section>
-    <h2>Anúncios</h2>
-    <p class="nota">Clique num cabeçalho para reordenar. O conjunto está no prefixo do nome do anúncio.
+    <h2>Criativos</h2>
+    <p class="nota">Uma linha por <b>peça</b>, somando todos os conjuntos em que ela roda — a conta
+      duplica o mesmo criativo em cada público, e ler por anúncio reparte a amostra até ninguém ter
+      volume. Clique no nome para abrir o post no Instagram, e num cabeçalho para reordenar.
       "Inscrições" são vendas reais atribuídas pelo <code>utm_content</code> dentro do <code>sck</code> —
-      é esta coluna que decide o que continua no ar. O CPA é comparado com o teto da etapa do conjunto.</p>
+      é esta coluna que decide o que continua no ar.</p>
     <div class="card"><div class="tw"><table id="tads">
       <thead><tr>
-        <th data-c="nome">Anúncio</th><th data-c="investido">Investido</th>
+        <th data-c="nome">Criativo</th><th data-c="investido">Investido</th>
         <th data-c="cpm">CPM</th><th data-c="ctr">CTR</th><th data-c="cpc">CPC</th>
         <th data-c="lpv">LP View</th><th data-c="checkouts">Checkouts</th>
-        <th data-c="inscricoes">Inscrições</th><th data-c="faturamento">Faturamento</th><th data-c="cpa">CPA</th>
+        <th data-c="inscricoes">Inscrições</th><th data-c="conv_lpv">Conv. vs LP View</th>
+        <th data-c="faturamento">Faturamento</th><th data-c="cpa">CPA</th>
       </tr></thead><tbody></tbody>
     </table></div></div>
   </section>`}
@@ -673,10 +704,12 @@ function render(d){
     <b>Verde e vermelho</b> = comparação com o ritmo do período já transcorrido: no dia
     ${k.dias_decorridos} de ${k.dias_janela} de mídia, a meta proporcional é ${nf(k.esperado_pagas)}
     inscrições pagas. CPA e ROAS são comparados direto com o alvo.<br>
-    <b>Atualização</b> = as vendas são lidas a cada hora, direto da base que o webhook alimenta.
-    ${d.midia.fonte==='api'
-      ? 'Os números de mídia vêm da API do Meta Ads na mesma frequência.'
-      : 'Os números de mídia são um snapshot gravado à mão e <b>não</b> se atualizam sozinhos — passam a atualizar quando o token do Meta entrar no config.'}
+    <b>Order bump</b> = extra levado no mesmo checkout da inscrição: mesmo pedido, ou até
+    ${nf(k.bump_janela_min)} minutos de distância (a plataforma nem sempre irmãiza as duas transações).
+    Extra comprado depois disso é venda avulsa e não conta como conversão de bump.<br>
+    <b>Atualização</b> = mídia e venda são lidas juntas, de hora em hora, e a página mostra a hora
+    dessa leitura. A venda que entra entre uma leitura e a próxima fica represada até a leitura
+    seguinte — de propósito: CPA e ROAS só fecham se as duas metades descreverem o mesmo instante.
     Painel da Catapulta de Ideias.
   </footer>`;
 
@@ -693,10 +726,15 @@ function render(d){
         return (typeof x==='string'?String(x).localeCompare(y,'pt-BR'):x-y)*(ordem.asc?1:-1);
       });
       corpo.innerHTML=linhas.map(a=>`<tr>
-        <td class="forte">${esc(a.nome)}</td><td>${mf(a.investido)}</td>
+        <td class="forte">${a.permalink
+            ? `<a href="${esc(a.permalink)}" target="_blank" rel="noopener">${esc(a.nome)}</a>`
+            : esc(a.nome)}
+          ${a.conjuntos>1?`<span class="selo">${nf(a.conjuntos)} conjuntos</span>`:''}</td>
+        <td>${mf(a.investido)}</td>
         <td>${mf(a.cpm)}</td><td>${pf(a.ctr,2)}</td><td>${mf(a.cpc)}</td>
         <td>${nf(a.lpv)}</td><td>${nf(a.checkouts)}</td>
-        <td class="forte">${nf(a.inscricoes)}</td><td>${mf(a.faturamento)}</td>
+        <td class="forte">${nf(a.inscricoes)}</td><td>${pf(a.conv_lpv,2)}</td>
+        <td>${mf(a.faturamento)}</td>
         <td>${pilula(a.cpa,a.cpa_alvo)}</td></tr>`).join('');
     }
     document.querySelectorAll('#tads thead th').forEach(th=>th.addEventListener('click',()=>{
@@ -735,10 +773,11 @@ function desenha(){
   grafPizza($('#pz2'),pinta(d.roscas.organico),'ORGÂNICAS');
   grafPizza($('#pz3'),pinta(d.roscas.produto),'VENDAS');
 
-  grafBarras($('#c1'),s,{series:[{chave:'vendas_org',cor:S3},{chave:'vendas_pago',cor:S1}],fmtY:nf,
-    tip:r=>`<b>${dm(r.data)}</b><br><span class="k">Vendas</span> ${nf(r.vendas)}
-            <br><span class="k">Pago</span> ${nf(r.vendas_pago)}
-            <br><span class="k">Orgânico</span> ${nf(r.vendas_org)}
+  grafBarras($('#c1'),s,{series:[{chave:'inscr_org',cor:S3},{chave:'inscr_pago',cor:S1}],fmtY:nf,
+    tip:r=>`<b>${dm(r.data)}</b><br><span class="k">Inscrições</span> ${nf(r.inscricoes)}
+            <br><span class="k">Pago</span> ${nf(r.inscr_pago)}
+            <br><span class="k">Orgânico</span> ${nf(r.inscr_org)}
+            <br><span class="k">Transações no dia</span> ${nf(r.vendas)}
             <br><span class="k">Faturamento</span> ${mf(r.faturamento)}
             <br><span class="k">Investido</span> ${mf(r.investido)}`});
 
@@ -748,7 +787,7 @@ function desenha(){
     tip:r=>`<b>${dm(r.data)}</b><br><span class="k">CPA do dia</span> ${mf(r.cpa)}
             <br><span class="k">CPA acumulado</span> ${mf(r.cpa_acum)}
             <br><span class="k">Investido</span> ${mf(r.investido)}
-            <br><span class="k">Vendas pagas</span> ${nf(r.vendas_pago)}`});
+            <br><span class="k">Inscrições pagas</span> ${nf(r.inscr_pago)}`});
 
   const dias=Math.max(1,Math.round((new Date(c.capture_end+'T00:00:00')-new Date(c.campanha_start+'T00:00:00'))/86400000)+1);
   const alvoDia=k.meta_total/dias;
@@ -759,23 +798,26 @@ function desenha(){
   });
   grafLinhas($('#c3'),s3,{altura:260,
     series:[{chave:'acumulado',cor:S1},{chave:'ritmo',cor:REF,tracejado:true}],fmtY:nf,
-    tip:r=>`<b>${dm(r.data)}</b><br><span class="k">Acumulado</span> ${nf(r.acumulado)}
+    tip:r=>`<b>${dm(r.data)}</b><br><span class="k">Inscrições acumuladas</span> ${nf(r.acumulado)}
             <br><span class="k">Ritmo necessário</span> ${nf(r.ritmo)}
             <br><span class="k">Pagas acumuladas</span> ${nf(r.acumulado_pago)}`});
 }
 
-/* ============================== carga ============================== */
-function carrega(forcar){
+/* ============================== carga ==============================
+   Sem botão de "atualizar agora": ele prometia o que a página não pode
+   entregar. O dado novo depende da leitura do Meta, que acontece de hora em
+   hora fora do navegador — um clique aqui só devolveria o mesmo número com
+   ares de recém-chegado. O carimbo do topo diz a verdade. */
+function carrega(){
   $('#app').className='carregando';
-  $('#app').textContent=forcar?'Buscando os dados no Meta e na plataforma de venda…':'Carregando os dados…';
-  fetch('data.php'+(forcar?'?forcar=1':''),{credentials:'same-origin'})
+  $('#app').textContent='Carregando os dados…';
+  fetch('data.php',{credentials:'same-origin'})
     .then(r=>r.ok?r.json():r.json().then(j=>Promise.reject(j.erro||('HTTP '+r.status))))
     .then(render)
     .catch(e=>{$('#app').className='carregando';
       $('#app').innerHTML=`<div class="aviso grave">Não foi possível carregar: ${esc(e)}</div>`;});
 }
-$('#forcar').addEventListener('click',()=>carrega(true));
-carrega(false);
+carrega();
 </script>
 </body>
 </html>

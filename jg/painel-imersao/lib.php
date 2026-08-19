@@ -113,7 +113,8 @@ function dash_midia($cfg, $hoje)
             'linhas' => dash_meta_insights($cfg, $hoje),
             'conta'  => dash_meta_conta($cfg, $hoje),
             'fonte'  => 'api',
-            'em'     => null,
+            'em'     => date('c'),          // a mídia acabou de ser lida: este É o horário do dado
+            'permalinks' => [],
             'erro'   => null,
         ];
     }
@@ -121,7 +122,7 @@ function dash_midia($cfg, $hoje)
     $arq = $cfg['snapshot'] ?? '';
     if ($arq === '' || !is_readable($arq)) {
         return ['linhas' => [], 'conta' => [], 'fonte' => 'ausente', 'em' => null,
-                'erro' => 'sem token do Meta e sem snapshot'];
+                'permalinks' => [], 'erro' => 'sem token do Meta e sem snapshot'];
     }
     $s = json_decode((string) file_get_contents($arq), true);
     $linhas = [];
@@ -142,7 +143,7 @@ function dash_midia($cfg, $hoje)
         ];
     }
     return ['linhas' => $linhas, 'conta' => $s['conta'] ?? [], 'fonte' => 'snapshot',
-            'em' => $s['em'] ?? null, 'erro' => null];
+            'em' => $s['em'] ?? null, 'permalinks' => $s['permalinks'] ?? [], 'erro' => null];
 }
 
 // ---------------------------------------------------------------- vendas
@@ -202,6 +203,64 @@ function dash_sck($origem)
     ];
 }
 
+/**
+ * Casa cada venda do produto EXTRA com a inscrição que ela acompanhou — o que
+ * define order bump de verdade.
+ *
+ * Duas regras, nesta ordem:
+ *   1. mesmo `pedido` (a plataforma sufixa C1/C2 quando o bump vira transação irmã);
+ *   2. compra do extra dentro da JANELA (padrão 15 min) da inscrição — porque a
+ *      Hotmart nem sempre irmãiza: parte dos bumps chega como pedido separado,
+ *      no mesmo segundo, com o mesmo sck.
+ *
+ * O casamento é UM-PARA-UM, do par mais próximo para o mais distante: uma
+ * inscrição não pode absorver dois bumps, e dois compradores simultâneos não
+ * viram um bump fantasma.
+ *
+ * @return array [extras casados => índice da inscrição, inscrições casadas => índice do extra]
+ */
+function dash_casa_bump($aprovadas, $principal, $bumpJanela)
+{
+    $pri = []; $ext = [];
+    foreach ($aprovadas as $i => $r) {
+        $t = strtotime((string) ($r['data_hora'] ?? ''));
+        if ($t === false) continue;
+        if ((string) ($r['produto'] ?? '') === $principal) $pri[$i] = $t; else $ext[$i] = $t;
+    }
+    $pares = [];
+    foreach ($ext as $ie => $te) {
+        $pe = (string) ($aprovadas[$ie]['pedido'] ?? '');
+        foreach ($pri as $ip => $tp) {
+            $d = abs($te - $tp);
+            $pp = (string) ($aprovadas[$ip]['pedido'] ?? '');
+            if ($pe !== '' && $pe === $pp) $d = -1;      // mesmo pedido ganha de qualquer distância
+            if ($d <= $bumpJanela) $pares[] = [$d, $ie, $ip];
+        }
+    }
+    usort($pares, function ($a, $b) { return $a[0] <=> $b[0]; });
+    $cE = []; $cP = [];
+    foreach ($pares as $par) {
+        list($d, $ie, $ip) = $par;
+        if (isset($cE[$ie]) || isset($cP[$ip])) continue;
+        $cE[$ie] = $ip; $cP[$ip] = $ie;
+    }
+    return [$cE, $cP];
+}
+
+/**
+ * Nome do CRIATIVO: o nome do anúncio sem o prefixo do conjunto.
+ * A conta duplica o mesmo criativo em cada conjunto ("CJ01 · AD-F07 · ...",
+ * "CJ03 · AD-F07 · ..."), e ler criativo por conjunto esconde o desempenho da
+ * peça. O sufixo do nome (· urgencia, formato) é preservado — ele distingue
+ * criativos de verdade.
+ */
+function dash_criativo($nome, $regex)
+{
+    $n = trim((string) $nome);
+    $lim = @preg_replace($regex, '', $n);
+    return ($lim === null || $lim === '') ? $n : trim($lim);
+}
+
 // ---------------------------------------------------------------- helpers
 
 function dash_div($a, $b, $casas = 2)
@@ -236,6 +295,13 @@ function dash_vazio()
     return ['spend' => 0, 'impressions' => 0, 'clicks' => 0, 'lpv' => 0, 'ic' => 0, 'compra_pixel' => 0];
 }
 
+/** Um dia da série: mídia + venda. `v_` = transações, `i_` = inscrições (só o principal). */
+function dash_dia_vazio()
+{
+    return dash_vazio() + ['v_total' => 0, 'v_pago' => 0, 'v_org' => 0,
+                           'i_total' => 0, 'i_pago' => 0, 'i_org' => 0, 'fat' => 0];
+}
+
 // ---------------------------------------------------------------- consolidação
 
 function dash_build($cfg)
@@ -248,8 +314,29 @@ function dash_build($cfg)
     $midia = dash_midia($cfg, $hoje);
     $tx    = dash_vendas($cfg);
 
-    $etapas = $cfg['etapas'];
-    $nE     = count($etapas);
+    // REPRESA: as duas metades do painel têm de descrever o MESMO instante. A venda
+    // é ao vivo (webhook) e a mídia é do momento da última leitura do Meta; mostrar
+    // venda mais nova que a mídia produz CPA e ROAS que não fecham com nada. Então o
+    // corte da venda é a hora do dado de mídia. Com token ao vivo, o corte é agora e
+    // a represa não tira nada.
+    $corte = $midia['em'] ?? null;
+    $corteTs = $corte ? strtotime($corte) : null;
+    $represadas = 0;
+    if ($corteTs) {
+        $antes = count($tx);
+        $tx = array_values(array_filter($tx, function ($r) use ($corteTs) {
+            $t = strtotime((string) ($r['data_hora'] ?? ''));
+            return $t === false || $t <= $corteTs;
+        }));
+        $represadas = $antes - count($tx);
+    }
+    $dadosEm = $corte ?: $agora->format('c');
+
+    $etapas   = $cfg['etapas'];
+    $nE       = count($etapas);
+    $bumpJanela = (int) ($cfg['bump_janela_seg'] ?? 900);     // 15 min
+    $reCriat  = (string) ($cfg['criativo_regex'] ?? '/^\s*[A-Z]{1,4}\d{1,3}\s*(·|-|\|)\s*/u');
+    $plinks   = ($cfg['permalinks'] ?? []) + ($midia['permalinks'] ?? []);
 
     // ---------- mídia: por anúncio, conjunto, dia e etapa ----------
     $ads = []; $sets = []; $dias = [];
@@ -284,9 +371,7 @@ function dash_build($cfg)
         $sets[$sid]['clicks'] += $cl; $sets[$sid]['lpv'] += $lpv;
         $sets[$sid]['ic'] += $ic;     $sets[$sid]['compra_pixel'] += $pu;
 
-        if (!isset($dias[$d])) $dias[$d] = ['spend' => 0, 'impressions' => 0, 'clicks' => 0, 'lpv' => 0,
-                                            'ic' => 0, 'compra_pixel' => 0,
-                                            'v_total' => 0, 'v_pago' => 0, 'v_org' => 0, 'fat' => 0];
+        if (!isset($dias[$d])) $dias[$d] = dash_dia_vazio();
         $dias[$d]['spend'] += $sp; $dias[$d]['impressions'] += $im; $dias[$d]['clicks'] += $cl;
         $dias[$d]['lpv'] += $lpv;  $dias[$d]['ic'] += $ic;          $dias[$d]['compra_pixel'] += $pu;
 
@@ -305,6 +390,13 @@ function dash_build($cfg)
 
     // ---------- vendas ----------
     $principal = $cfg['produto_principal'];
+
+    $aprovadas = []; $estornos = 0; $fat_estornado = 0.0;
+    foreach ($tx as $r) {
+        if (($r['status'] ?? '') === 'aprovada') { $aprovadas[] = $r; continue; }
+        $estornos++; $fat_estornado += (float) ($r['valor'] ?? 0);
+    }
+    list($bumpExtra, $bumpPrincipal) = dash_casa_bump($aprovadas, $principal, $bumpJanela);
     $V = ['pago' => 0, 'organico' => 0, 'sem_origem' => 0];         // transações
     $F = ['pago' => 0.0, 'organico' => 0.0, 'sem_origem' => 0.0];   // faturamento bruto
     $L = ['pago' => 0.0, 'organico' => 0.0, 'sem_origem' => 0.0];   // líquido
@@ -314,29 +406,30 @@ function dash_build($cfg)
     $tEtapa = array_fill(0, $nE, 0);        // transações pagas por etapa
     $fEtapa = array_fill(0, $nE, 0.0);      // faturamento por etapa
     $vSemEtapa = 0;
-    $estornos = 0; $fat_estornado = 0.0;
-    $pedidos = [];                          // pedido => produtos, para o attach rate
+    $fat_bump  = 0.0;                       // receita que o order bump trouxe
 
-    foreach ($tx as $r) {
+    foreach ($aprovadas as $ix => $r) {
         $valor = (float) ($r['valor'] ?? 0);
         $liq   = (float) ($r['valor_liquido'] ?? 0);
         $prod  = (string) ($r['produto'] ?? '');
         $dia   = substr((string) $r['data_hora'], 0, 10);
-
-        if (($r['status'] ?? '') !== 'aprovada') { $estornos++; $fat_estornado += $valor; continue; }
+        $ehPrincipal = $prod === $principal;
 
         $bal = (string) ($r['trafego'] ?? 'sem_origem');
         if (!isset($V[$bal])) $bal = 'sem_origem';
 
         $V[$bal]++; $F[$bal] += $valor; $L[$bal] += $liq;
-        if ($prod === $principal) $inscr[$bal]++;
+        if ($ehPrincipal) $inscr[$bal]++;
 
-        if (!isset($porProduto[$prod])) $porProduto[$prod] = ['vendas' => 0, 'valor' => 0.0, 'pago' => 0];
+        if (!isset($porProduto[$prod])) {
+            $porProduto[$prod] = ['vendas' => 0, 'valor' => 0.0, 'pago' => 0, 'bump' => 0];
+        }
         $porProduto[$prod]['vendas']++; $porProduto[$prod]['valor'] += $valor;
         if ($bal === 'pago') $porProduto[$prod]['pago']++;
-
-        $ped = (string) ($r['pedido'] ?? $r['transacao']);
-        $pedidos[$ped][$prod] = ($pedidos[$ped][$prod] ?? 0) + 1;
+        // "vendas ligadas a um order bump": no principal é a inscrição que levou o
+        // extra; no extra é ele próprio ter vindo junto de uma inscrição.
+        if ($ehPrincipal ? isset($bumpPrincipal[$ix]) : isset($bumpExtra[$ix])) $porProduto[$prod]['bump']++;
+        if (!$ehPrincipal && isset($bumpExtra[$ix])) $fat_bump += $valor;
 
         $s = dash_sck($r['origem'] ?? '');
 
@@ -362,41 +455,45 @@ function dash_build($cfg)
             if ($prod === $principal) $porOrganico[$k]['i']++;
         }
 
-        if (!isset($dias[$dia])) $dias[$dia] = ['spend' => 0, 'impressions' => 0, 'clicks' => 0, 'lpv' => 0,
-                                                'ic' => 0, 'compra_pixel' => 0,
-                                                'v_total' => 0, 'v_pago' => 0, 'v_org' => 0, 'fat' => 0];
+        if (!isset($dias[$dia])) $dias[$dia] = dash_dia_vazio();
         $dias[$dia]['v_total']++;
         $dias[$dia]['fat'] += $valor;
         if ($bal === 'pago') $dias[$dia]['v_pago']++; else $dias[$dia]['v_org']++;
+        // A meta é de INSCRIÇÕES (200 imersões). O bump é extra e não entra na
+        // contagem que o gráfico e o ritmo perseguem.
+        if ($ehPrincipal) {
+            $dias[$dia]['i_total']++;
+            if ($bal === 'pago') $dias[$dia]['i_pago']++; else $dias[$dia]['i_org']++;
+        }
     }
 
-    // attach rate do order bump: pedidos com o principal que também levaram um extra
-    $ped_principal = 0; $ped_com_bump = 0;
-    foreach ($pedidos as $itens) {
-        if (!isset($itens[$principal])) continue;
-        $ped_principal++;
-        if (count($itens) > 1) $ped_com_bump++;
-    }
+    $ped_principal = $porProduto[$principal]['vendas'] ?? 0;   // inscrições = pedidos
+    $ped_com_bump  = count($bumpPrincipal);                    // as que levaram o extra junto
 
     // ---------- série diária ----------
     ksort($dias);
     $serie = []; $cum = 0; $cum_pago = 0; $cum_spend = 0.0; $cum_fat = 0.0;
+    $cumI = 0; $cumI_pago = 0;
     $ini = new DateTime($cfg['campanha_start'], new DateTimeZone($tz));
     $fim = new DateTime($hoje, new DateTimeZone($tz));
     for ($d = clone $ini; $d <= $fim; $d->modify('+1 day')) {
         $k = $d->format('Y-m-d');
-        $v = $dias[$k] ?? ['spend' => 0, 'impressions' => 0, 'clicks' => 0, 'lpv' => 0, 'ic' => 0,
-                           'compra_pixel' => 0, 'v_total' => 0, 'v_pago' => 0, 'v_org' => 0, 'fat' => 0];
+        $v = $dias[$k] ?? dash_dia_vazio();
         $g = $v['spend'] * $mult;
-        $cum += $v['v_total']; $cum_pago += $v['v_pago'];
+        $cum  += $v['v_total']; $cum_pago  += $v['v_pago'];
+        $cumI += $v['i_total']; $cumI_pago += $v['i_pago'];
         $cum_spend += $g;      $cum_fat += $v['fat'];
         $serie[] = [
             'data' => $k, 'investido' => round($g, 2),
             'vendas' => $v['v_total'], 'vendas_pago' => $v['v_pago'], 'vendas_org' => $v['v_org'],
+            'inscricoes' => $v['i_total'], 'inscr_pago' => $v['i_pago'], 'inscr_org' => $v['i_org'],
             'faturamento' => round($v['fat'], 2),
-            'cpa'        => dash_div($g, $v['v_pago']),
-            'acumulado'  => $cum, 'acumulado_pago' => $cum_pago,
-            'cpa_acum'   => dash_div($cum_spend, $cum_pago),
+            // CPA do dia = verba do dia ÷ INSCRIÇÕES pagas do dia (mesma definição
+            // do CPA do topo; o bump não é uma inscrição a mais).
+            'cpa'        => dash_div($g, $v['i_pago']),
+            'acumulado'  => $cumI, 'acumulado_pago' => $cumI_pago,
+            'acum_transacoes' => $cum, 'acum_transacoes_pago' => $cum_pago,
+            'cpa_acum'   => dash_div($cum_spend, $cumI_pago),
             'roas'       => dash_div($cum_fat, $cum_spend),
             'impressoes' => $v['impressions'], 'cliques' => $v['clicks'],
             'lpv' => (int) $v['lpv'], 'checkouts' => (int) $v['ic'],
@@ -447,6 +544,11 @@ function dash_build($cfg)
         'cpa_total'      => dash_div($inv, $iTotal),
         'cpa_transacao'  => dash_div($inv, $V['pago']),              // por transação (com bump)
         'roas'           => dash_div($F['pago'], $inv),
+        // ROAS da campanha inteira: TODA a receita (orgânica inclusive, bump
+        // inclusive) sobre a única verba que existe. É o retorno do negócio, não
+        // o da mídia — e por isso vem sempre acompanhado do ROAS do pago.
+        'roas_campanha'  => dash_div($fTotal, $inv),
+        'roas_campanha_liq' => dash_div($lTotal, $inv),
         // ROAS de equilíbrio da meta: um CPA no alvo, num ticket cheio, dá este ROAS.
         'roas_alvo'      => dash_div($cfg['produtos'][$principal]['ticket'] ?? 0, $cfg['cpa_target']),
         'roas_liquido'   => dash_div($L['pago'], $inv),
@@ -459,6 +561,9 @@ function dash_build($cfg)
         'connect_rate'   => dash_div($tot['lpv'] * 100, $tot['clicks']),
         'lpv_checkout'   => dash_div($tot['ic'] * 100, $tot['lpv']),
         'checkout_venda' => dash_div($V['pago'] * 100, $tot['ic']),
+        // Conversão da página: inscrição paga ÷ LP View. Fecha o funil de ponta a
+        // ponta sem depender do checkout do pixel, que é a etapa menos confiável.
+        'conv_lpv'       => dash_div($inscr['pago'] * 100, $tot['lpv'], 2),
         'conv_pagina'    => dash_div($V['pago'] * 100, $tot['lpv']),
         'frequencia'     => $freq,
         'alcance'        => $alcance,
@@ -469,10 +574,14 @@ function dash_build($cfg)
         'compra_pixel'   => (int) $tot['compra_pixel'],
         'estornos'       => $estornos,
         'fat_estornado'  => round($fat_estornado, 2),
-        // Attach rate de verdade = extra comprado NO MESMO pedido. O extra vendido
-        // em compra separada (transação sem o irmão C1/C2) não é attach; contá-lo
-        // junto infla a taxa e some com a distinção que decide o order bump.
+        // Conversão do order bump = inscrições que levaram o extra JUNTO da compra
+        // (mesmo pedido, ou até 15 min de distância — a plataforma às vezes abre
+        // pedidos separados para o mesmo checkout). Extra comprado dias depois é
+        // venda avulsa e não entra: contá-lo junto infla a taxa e apaga a distinção
+        // que decide se o bump fica.
         'attach_rate'    => dash_div($ped_com_bump * 100, $ped_principal, 1),
+        'bump_janela_min' => (int) round($bumpJanela / 60),
+        'fat_bump'       => round($fat_bump, 2),
         'pedidos'        => $ped_principal,
         'pedidos_bump'   => $ped_com_bump,
         'extras_total'   => $vTotal - $iTotal,
@@ -493,8 +602,13 @@ function dash_build($cfg)
         'esperado_total'  => $rt['esperado'],
         'dias_janela_total'     => $rt['janela'],
         'dias_decorridos_total' => $rt['decorridos'],
+        'dias_restantes_total' => $rt['restantes'],
         'ritmo_necessario' => $rp['restantes'] > 0
             ? (int) ceil(max(0, $cfg['meta_vendas_pagas'] - $inscr['pago']) / $rp['restantes']) : null,
+        // Ritmo da campanha inteira: quantas inscrições por dia (de qualquer origem)
+        // faltam para fechar a meta total no prazo.
+        'ritmo_necessario_total' => $rt['restantes'] > 0
+            ? (int) ceil(max(0, $cfg['meta_vendas_total'] - $iTotal) / $rt['restantes']) : null,
         'verba_restante' => round(max(0, $cfg['meta_vendas_pagas'] - $inscr['pago']) * $cfg['cpa_target'], 2),
         'verba_esperada' => round($cfg['verba_total'] * $rp['decorridos'] / max(1, $rp['janela']), 2),
         'verba_total'    => $cfg['verba_total'],
@@ -527,6 +641,9 @@ function dash_build($cfg)
             'connect_rate'   => dash_div($t['lpv'] * 100, $t['clicks'], 1),
             'lpv_checkout'   => dash_div($t['ic'] * 100, $t['lpv'], 1),
             'checkout_venda' => dash_div($tEtapa[$i] * 100, $t['ic'], 1),
+            // Fecha o funil: de cada 100 pessoas que a página carregou, quantas
+            // compraram. É a taxa que não passa pelo checkout do pixel.
+            'conv_lpv'       => dash_div($vEtapa[$i] * 100, $t['lpv'], 2),
             'compra_pixel'   => (int) $t['compra_pixel'],
         ];
     }
@@ -538,6 +655,15 @@ function dash_build($cfg)
     }
     foreach ($porProduto as $slug => $p) {
         if (!isset($cfg['produtos'][$slug])) $prodItens[] = ['rot' => $slug, 'valor' => $p['vendas']];
+    }
+
+    // Rótulo do extra para os textos da página (o produto não-principal que mais vendeu).
+    $extraRot = 'order bump';
+    $melhorExtra = 0;
+    foreach ($porProduto as $slug => $p) {
+        if ($slug === $principal || $p['vendas'] <= $melhorExtra) continue;
+        $melhorExtra = $p['vendas'];
+        $extraRot = $cfg['produtos'][$slug]['rot'] ?? $slug;
     }
 
     uasort($porOrganico, function ($a, $b) { return $b['v'] <=> $a['v']; });
@@ -586,26 +712,57 @@ function dash_build($cfg)
     }
     usort($t_sets, function ($x, $y) { return $y['investido'] <=> $x['investido']; });
 
-    $t_ads = [];
+    // Criativos: a mesma peça roda duplicada em cada conjunto ("CJ01 · AD-F07 · …",
+    // "CJ03 · AD-F07 · …"). Ler por anúncio esconde o desempenho da PEÇA e reparte
+    // a amostra até ninguém ter volume. Aqui a linha é o criativo; o conjunto vira
+    // contagem, e o teto de CPA só é o da etapa quando todos os conjuntos daquele
+    // criativo estão na mesma etapa (senão, o teto geral — comparar com o teto
+    // errado pinta de verde o que é vermelho).
+    $grupos = [];
     foreach ($ads as $id => $a) {
-        $g   = $a['spend'] * $mult;
-        $sid = $adSet[$id] ?? '';
-        $ie  = $setEtapa[$sid] ?? null;
+        $chave = dash_criativo($a['nome'], $reCriat);
+        if (!isset($grupos[$chave])) {
+            $grupos[$chave] = dash_vazio() + ['nome' => $chave, 'ids' => [], 'conjuntos' => [],
+                                              'alvos' => [], 'i' => 0, 'v' => 0, 'f' => 0.0,
+                                              'permalink' => null, 'top_spend' => -1];
+        }
+        $G = &$grupos[$chave];
+        foreach (['spend', 'impressions', 'clicks', 'lpv', 'ic', 'compra_pixel'] as $c) $G[$c] += $a[$c];
+        $G['ids'][] = (string) $id;
+        if ($a['conjunto'] !== '') $G['conjuntos'][$a['conjunto']] = true;
+        $ie = $setEtapa[$adSet[$id] ?? ''] ?? null;
+        $G['alvos'][(string) ($ie !== null ? $etapas[$ie]['cpa_alvo'] : $cfg['cpa_target'])] = true;
+        $G['i'] += $porAd[$id]['i'] ?? 0;
+        $G['v'] += $porAd[$id]['v'] ?? 0;
+        $G['f'] += $porAd[$id]['f'] ?? 0;
+        // O permalink é do post do anúncio que mais gastou: é o que representa a peça.
+        if (isset($plinks[$id]) && $a['spend'] > $G['top_spend']) {
+            $G['permalink'] = $plinks[$id]; $G['top_spend'] = $a['spend'];
+        }
+        unset($G);
+    }
+
+    $t_ads = [];
+    foreach ($grupos as $a) {
+        $g = $a['spend'] * $mult;
         $t_ads[] = [
-            'id' => (string) $id, 'nome' => $a['nome'], 'conjunto' => $a['conjunto'],
+            'nome' => $a['nome'], 'ids' => $a['ids'],
+            'conjuntos' => count($a['conjuntos']),
+            'permalink' => $a['permalink'],
             'investido' => round($g, 2), 'impressoes' => $a['impressions'], 'cliques' => $a['clicks'],
             'ctr' => dash_div($a['clicks'] * 100, $a['impressions']),
             'cpm' => dash_div($g * 1000, $a['impressions']),
             'cpc' => dash_div($g, $a['clicks']),
             'lpv' => (int) $a['lpv'], 'checkouts' => (int) $a['ic'],
             'connect' => dash_div($a['lpv'] * 100, $a['clicks'], 1),
-            'inscricoes' => $porAd[$id]['i'] ?? 0,
-            'vendas' => $porAd[$id]['v'] ?? 0,
-            'faturamento' => round($porAd[$id]['f'] ?? 0, 2),
+            'inscricoes' => $a['i'], 'vendas' => $a['v'],
+            'faturamento' => round($a['f'], 2),
             'compra_pixel' => (int) $a['compra_pixel'],
-            'cpa'  => dash_div($g, $porAd[$id]['i'] ?? 0),
-            'roas' => dash_div($porAd[$id]['f'] ?? 0, $g),
-            'cpa_alvo' => $ie !== null ? $etapas[$ie]['cpa_alvo'] : $cfg['cpa_target'],
+            'cpa'  => dash_div($g, $a['i']),
+            'roas' => dash_div($a['f'], $g),
+            'conv_lpv' => dash_div($a['i'] * 100, $a['lpv'], 2),
+            'cpa_alvo' => count($a['alvos']) === 1
+                ? (float) array_keys($a['alvos'])[0] : $cfg['cpa_target'],
         ];
     }
     usort($t_ads, function ($x, $y) { return $y['investido'] <=> $x['investido']; });
@@ -620,13 +777,24 @@ function dash_build($cfg)
             'organico' => $p['vendas'] - $p['pago'],
             'faturamento' => round($p['valor'], 2),
             'ticket_real' => dash_div($p['valor'], $p['vendas']),
+            // % de order bump — a mesma coluna lê os dois lados do checkout:
+            // no principal, quantas inscrições levaram o extra junto;
+            // no extra, quanto dele foi vendido como bump e não em compra avulsa.
+            'principal'  => $slug === $principal,
+            'bump'       => $p['bump'],
+            'bump_pct'   => dash_div($p['bump'] * 100, $p['vendas'], 1),
         ];
     }
     usort($t_prod, function ($x, $y) { return $y['faturamento'] <=> $x['faturamento']; });
 
     return [
         'gerado_em' => $agora->format('c'),
-        'midia'     => ['fonte' => $midia['fonte'], 'em' => $midia['em'], 'erro' => $midia['erro']],
+        // dados_em é o que a página mostra como "atualizado": a hora da LEITURA DO
+        // META, não a hora em que o cache foi montado. As duas metades do painel
+        // foram represadas neste instante.
+        'dados_em'  => $dadosEm,
+        'midia'     => ['fonte' => $midia['fonte'], 'em' => $midia['em'], 'erro' => $midia['erro'],
+                        'represadas' => $represadas],
         'kpi'       => $kpi,
         'funis'     => $funis,
         'roscas'    => $roscas,
@@ -642,6 +810,7 @@ function dash_build($cfg)
             'campanha_start' => $cfg['campanha_start'], 'start' => $cfg['start'],
             'capture_start' => $cfg['capture_start'], 'capture_end' => $cfg['capture_end'],
             'ttl' => $cfg['cache_ttl'], 'produto_principal_rot' => $cfg['produtos'][$principal]['rot'] ?? $principal,
+            'produto_extra_rot' => $extraRot,
             'verba_total' => $cfg['verba_total'],
         ],
     ];
