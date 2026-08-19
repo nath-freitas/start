@@ -44,6 +44,24 @@ function fim(int $code, string $msg): void {
     exit;
 }
 
+/**
+ * Contador de batidas — quantas requisições chegaram e como terminaram.
+ * Só nome do desfecho, contagem e horário: ZERO payload, zero header de conteúdo.
+ * Existe porque um 401 não deixava rastro nenhum: sem isto, "a Hotmart não
+ * chamou" e "a Hotmart chamou e o token não bateu" são indistinguíveis.
+ */
+function batida(string $dir, string $desfecho, array $extra = []): void {
+    $arq = $dir . '/batidas.json';
+    $b   = is_file($arq) ? (json_decode(file_get_contents($arq), true) ?: []) : [];
+    $ts  = (new DateTimeImmutable('now', new DateTimeZone(TZ)))->format('c');
+    $b[$desfecho] = [
+        'vezes'    => (int)($b[$desfecho]['vezes'] ?? 0) + 1,
+        'primeiro' => $b[$desfecho]['primeiro'] ?? $ts,
+        'ultimo'   => $ts,
+    ] + $extra;
+    file_put_contents($arq, json_encode($b, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES), LOCK_EX);
+}
+
 /** Primeiro caminho não-vazio. Caminho = 'data.purchase.price.value'. */
 function cava(array $p, array $caminhos) {
     foreach ($caminhos as $caminho) {
@@ -89,19 +107,39 @@ function quando($v): string {
 
 // ---------------------------------------------------------------- cliente
 $c = $_GET['c'] ?? '';
-if (!preg_match('/^[a-z0-9-]{2,40}$/', $c)) fim(400, 'cliente invalido');
+if (!preg_match('/^[a-z0-9-]{2,40}$/', $c)) {
+    batida(BASE_DADOS, 'sem_slug_valido');   // URL cadastrada sem o ?c= ou com slug torto
+    fim(400, 'cliente invalido');
+}
 $dir = BASE_DADOS . '/' . $c;
-if (!is_dir($dir) || !is_file($dir . '/config.php')) fim(404, 'cliente nao configurado');
+if (!is_dir($dir) || !is_file($dir . '/config.php')) {
+    batida(BASE_DADOS, 'cliente_nao_configurado:' . $c);
+    fim(404, 'cliente nao configurado');
+}
 $cfg = require $dir . '/config.php';
+
+batida($dir, 'chegou');
 
 // ---------------------------------------------------------------- autenticação
 $raw = file_get_contents('php://input');
 $p   = json_decode($raw, true);
-if (!is_array($p)) fim(400, 'json invalido');
+if (!is_array($p)) { batida($dir, 'json_invalido'); fim(400, 'json invalido'); }
 
-$tok = $_SERVER['HTTP_X_HOTMART_HOTTOK'] ?? '';
-if ($tok === '') $tok = (string)($p['hottok'] ?? '');           // webhook v1
-if (!is_string($tok) || !hash_equals((string)$cfg['hottok'], $tok)) fim(401, 'token invalido');
+$tok  = $_SERVER['HTTP_X_HOTMART_HOTTOK'] ?? '';
+$onde = $tok === '' ? '' : 'header';
+if ($tok === '') { $tok = (string)($p['hottok'] ?? ''); $onde = $tok === '' ? 'nenhum' : 'corpo'; }  // webhook v1
+if (!is_string($tok) || !hash_equals((string)$cfg['hottok'], $tok)) {
+    // Impressão digital do token recebido: onde veio, tamanho e 8 chars do hash.
+    // Não é dado pessoal e não revela o segredo — é o que permite dizer "veio um
+    // token de verdade, diferente do placeholder" sem guardar o token.
+    batida($dir, 'token_invalido', [
+        'token_veio_em'  => $onde,
+        'token_tamanho'  => strlen((string)$tok),
+        'token_hash8'    => $tok === '' ? '' : substr(hash('sha256', (string)$tok), 0, 8),
+        'config_hash8'   => substr(hash('sha256', (string)$cfg['hottok']), 0, 8),
+    ]);
+    fim(401, 'token invalido');
+}
 
 // ------------------------------------------- mapa da estrutura (uma vez, sem valores)
 if (!empty($cfg['mapear_estrutura']) && !is_file($dir . '/estrutura.json')) {
@@ -129,16 +167,16 @@ $censo[$k] = [
 ];
 file_put_contents($censo_arq, json_encode($censo, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES), LOCK_EX);
 
-if (!array_key_exists($evento_bruto, MAPA_EVENTO)) fim(200, 'evento desconhecido, ignorado');
+if (!array_key_exists($evento_bruto, MAPA_EVENTO)) { batida($dir, 'evento_desconhecido'); fim(200, 'evento desconhecido, ignorado'); }
 $evento = MAPA_EVENTO[$evento_bruto];
-if ($evento === null) fim(200, 'evento ignorado por regra');
+if ($evento === null) { batida($dir, 'evento_ignorado'); fim(200, 'evento ignorado por regra'); }
 
 $transacao = (string)(cava($p, [
     'data.purchase.transaction',
     'data.transaction',
     'transaction',
 ]) ?? '');
-if ($transacao === '') fim(422, 'transacao ausente');
+if ($transacao === '') { batida($dir, 'transacao_ausente'); fim(422, 'transacao ausente'); }
 
 // Order bump vem como transação IRMÃ: HP0395056608C1 e ...C2, mesmo checkout.
 // O código-base é o que permite casar bump com pedido e calcular attach rate.
@@ -226,4 +264,5 @@ fclose($fh);
 
 // A deduplicação acontece na LEITURA (por evento_id): o receptor fica burro e
 // rápido, e o retry da Hotmart nunca vira venda a mais.
+batida($dir, 'gravado');
 fim(200, 'ok');

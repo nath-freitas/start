@@ -47,6 +47,14 @@ if ($acao === 'status') {
             ? json_decode(file_get_contents($dir . '/eventos-vistos.json'), true) : null,
         'estrutura'      => is_file($dir . '/estrutura.json')
             ? json_decode(file_get_contents($dir . '/estrutura.json'), true) : null,
+        // Contadores de requisição (sem payload) — separam "a Hotmart não chamou"
+        // de "chamou e o token não bateu". As órfãs pegam URL sem ?c= ou slug torto.
+        'batidas'        => is_file($dir . '/batidas.json')
+            ? json_decode(file_get_contents($dir . '/batidas.json'), true) : null,
+        'batidas_orfas'  => is_file(BASE_DADOS . '/batidas.json')
+            ? json_decode(file_get_contents(BASE_DADOS . '/batidas.json'), true) : null,
+        'config_hash8'   => is_file($dir . '/config.php')
+            ? substr(hash('sha256', (string)((require $dir . '/config.php')['hottok'] ?? '')), 0, 8) : null,
         'php'            => PHP_VERSION,
     ]);
 }
@@ -55,7 +63,7 @@ if ($acao === 'status') {
 // backfill). Só o que o receptor gera — o config.php fica.
 if ($acao === 'limpar') {
     $apagados = [];
-    foreach (['vendas.jsonl', 'estrutura.json', 'eventos-vistos.json'] as $f) {
+    foreach (['vendas.jsonl', 'estrutura.json', 'eventos-vistos.json', 'batidas.json'] as $f) {
         if (is_file($dir . '/' . $f) && @unlink($dir . '/' . $f)) $apagados[] = $f;
     }
     fim(200, ['ok' => true, 'apagados' => $apagados]);
