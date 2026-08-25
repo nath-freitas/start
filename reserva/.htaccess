@@ -1,0 +1,15 @@
+# jorgegrimberg.com.br/reserva
+#
+# Link curto da TAXA DE RESERVA da Mentoria JG (R$1.000), usado no pitch do
+# dia 2 da imersão, no WhatsApp e no e-mail de abertura das inscrições.
+#
+# 25/08/2026: o link de pagamento da Hotmart ainda não existe. Enquanto isso,
+# este redirecionamento aponta para a HOME do domínio, para o endereço já poder
+# circular nas peças. TROCAR O DESTINO ABAIXO PELO CHECKOUT DA HOTMART ANTES DO
+# DISPARO DE 26/08 À NOITE.
+#
+# Destino definitivo (quando o link existir):
+# RewriteRule ^$ https://pay.hotmart.com/XXXXXXXXX [R=302,L,QSA]
+
+RewriteEngine On
+RewriteRule ^$ https://jorgegrimberg.com.br/ [R=302,L,QSA]
