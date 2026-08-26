@@ -1,0 +1,13 @@
+# jorgegrimberg.com.br/meu-projeto
+#
+# Endereço estável do FORMULÁRIO DE RESERVA da Mentoria JG, impresso no PDF
+# "Mentoria JG — O Programa.pdf" (entregue pela Hotmart a quem paga a taxa de
+# reserva) e usado como página de obrigado do produto.
+#
+# Por que um redirect e não o link direto: PDF já entregue não se corrige.
+# Se o formulário mudar de caminho ou de ferramenta, muda só esta linha.
+#
+# 26/08/2026: destino = a página do formulário na própria branch.
+
+RewriteEngine On
+RewriteRule ^$ https://jorgegrimberg.com.br/mentoria/formulario/ [R=302,L,QSA]
