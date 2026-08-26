@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Mentoria JG — Sobre o seu projeto</title>
+<meta name="description" content="Formulário de quem confirmou a reserva na Mentoria JG. Conte sobre o seu projeto antes da conversa.">
+
+<!--
+  ======================================================================
+  FORMULÁRIO DE RESERVA — MENTORIA JG · v1 · 26/08/2026
+  ----------------------------------------------------------------------
+  Passo 4 do fluxo da taxa de reserva: Hotmart R$1.000 → /reserva →
+  fluxo no Unichat → ESTE FORMULÁRIO → link dos R$7.000 na entrevista.
+
+  Identidade: fundo preto, tipografia branca, vermelho #B31F1E,
+  logo (JORGE GRIMBERG), fontes próprias self-hosted (KMR Waldenburg +
+  Helvetica Now Display). Nada de bege/amarelo da Catapulta.
+
+  DESTINO DOS DADOS
+  O POST vai para o receptor da Catapulta (fora do domínio do cliente,
+  por decisão de 19/08: serviço da agência mora no servidor da agência):
+      https://cliente.catapultadeideias.com.br/_form/enviar.php?c=jg-reserva
+  O receptor grava em disco (fonte de verdade, fora do docroot) e, quando
+  as credenciais existirem no config, repassa para Mailchimp e Unnichat.
+  Content-Type urlencoded de propósito: evita preflight CORS.
+
+  A VALIDAR
+  1. Credencial do Mailchimp e endpoint/token do Unnichat (Nath).
+  2. <meta robots noindex,nofollow> ativo — é página de fluxo, não de busca.
+  ======================================================================
+-->
+
+<style>
+  @font-face{
+    font-family:'Waldenburg Display';
+    src:url('fonts/waldenburg-schwer-schmal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:swap;
+  }
+  @font-face{
+    font-family:'Waldenburg';
+    src:url('fonts/waldenburg-buch.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:swap;
+  }
+  @font-face{
+    font-family:'Helvetica Now Display';
+    src:url('fonts/helveticanow-bold.woff2') format('woff2');
+    font-weight:700; font-style:normal; font-display:swap;
+  }
+  @font-face{
+    font-family:'Helvetica Now Display';
+    src:url('fonts/helveticanow-extrabold.woff2') format('woff2');
+    font-weight:800; font-style:normal; font-display:swap;
+  }
+</style>
+
+<style>
+  :root{
+    --ink:#000000;
+    --ink-2:#0B0B0B;
+    --paper:#FFFFFF;
+    --soft:#B9B9B9;
+    --mute:#7C7C7C;
+    --line:#242424;
+    --line-2:#3A3A3A;
+    --red:#B31F1E;
+    --red-bright:#E23A2E;
+    --font-display:'Waldenburg Display','Helvetica Now Display',Impact,sans-serif;
+    --font-body:'Waldenburg','Helvetica Now Display',Helvetica,Arial,sans-serif;
+    --font-ui:'Helvetica Now Display',Helvetica,Arial,sans-serif;
+    --maxw:720px;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    font-family:var(--font-body);
+    background:var(--ink);
+    color:var(--paper);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  img{max-width:100%; display:block;}
+  a{color:var(--red-bright); text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  :focus-visible{outline:3px solid var(--red-bright); outline-offset:3px;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.01ms !important; transition-duration:.01ms !important;}
+  }
+
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 24px;}
+
+  /* ---------------- topo ---------------- */
+  .topbar{
+    border-bottom:1px solid var(--line);
+    padding:22px 0 20px;
+  }
+  .logo-jg{width:168px; height:auto;}
+
+  /* ---------------- cabeçalho ---------------- */
+  header.intro{padding:44px 0 8px;}
+  .eyebrow{
+    font-family:var(--font-ui); font-weight:700;
+    font-size:11.5px; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--red-bright);
+    margin-bottom:14px;
+  }
+  h1{
+    font-family:var(--font-display); font-weight:400;
+    text-transform:uppercase;
+    font-size:clamp(38px, 9vw, 66px);
+    line-height:.94; letter-spacing:.01em;
+  }
+  .lead{
+    margin-top:20px;
+    font-size:17px; color:var(--soft); max-width:56ch;
+  }
+  .lead strong{color:var(--paper); font-weight:400;}
+  .rule{height:1px; background:var(--line); margin:34px 0 0;}
+
+  /* ---------------- formulário ---------------- */
+  form{padding:34px 0 0;}
+  .field{padding:0 0 30px;}
+  .field + .field{border-top:1px solid var(--line); padding-top:30px;}
+
+  label.q, legend.q{
+    display:block;
+    font-family:var(--font-ui); font-weight:700;
+    font-size:15px; line-height:1.35;
+    text-transform:uppercase; letter-spacing:.02em;
+    color:var(--paper);
+  }
+  .req{color:var(--red-bright);}
+  .help{
+    margin-top:7px;
+    font-size:14px; color:var(--mute);
+  }
+
+  input[type=text], input[type=tel], input[type=email], textarea{
+    display:block; width:100%;
+    margin-top:14px;
+    background:var(--ink-2);
+    border:1px solid var(--line-2);
+    border-radius:0;
+    color:var(--paper);
+    font-family:var(--font-body);
+    font-size:16px;               /* 16px evita o zoom automático do iOS */
+    line-height:1.5;
+    padding:14px 15px;
+    transition:border-color .15s ease, background .15s ease;
+    -webkit-appearance:none; appearance:none;
+  }
+  textarea{min-height:132px; resize:vertical;}
+  input::placeholder, textarea::placeholder{color:#5A5A5A;}
+  input:focus, textarea:focus{
+    border-color:var(--red-bright);
+    background:#111;
+    outline:none;
+  }
+  input.erro, textarea.erro, .opcoes.erro{border-color:var(--red-bright);}
+
+  /* escolha única */
+  fieldset{border:0;}
+  .opcoes{margin-top:14px; border:1px solid var(--line-2);}
+  .opt{
+    display:flex; align-items:flex-start; gap:12px;
+    padding:13px 15px;
+    cursor:pointer;
+    transition:background .15s ease;
+  }
+  .opt + .opt{border-top:1px solid var(--line);}
+  .opt:hover{background:var(--ink-2);}
+  .opt input{
+    -webkit-appearance:none; appearance:none;
+    flex:0 0 auto;
+    width:17px; height:17px; margin-top:4px;
+    border:1px solid #6A6A6A; border-radius:50%;
+    background:transparent; cursor:pointer;
+    transition:border-color .15s ease;
+  }
+  .opt input:checked{border-color:var(--red-bright); border-width:5px;}
+  .opt span{font-size:16px; line-height:1.45;}
+  .opt:has(input:checked){background:#141414;}
+  .opt:has(input:checked) span{color:var(--paper);}
+
+  /* mensagem de erro por campo */
+  .msg{
+    display:none;
+    margin-top:9px;
+    font-family:var(--font-ui); font-weight:700;
+    font-size:12px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--red-bright);
+  }
+  .field.invalido .msg{display:block;}
+
+  /* honeypot — some para gente, visível para robô */
+  .hp{position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden;}
+
+  /* ---------------- envio ---------------- */
+  .envio{
+    border-top:1px solid var(--line);
+    padding:30px 0 64px;
+  }
+  button.cta{
+    display:block; width:100%;
+    background:var(--red);
+    color:var(--paper);
+    border:0; border-radius:0;
+    font-family:var(--font-ui); font-weight:800;
+    font-size:15px; letter-spacing:.1em; text-transform:uppercase;
+    padding:20px 22px;
+    cursor:pointer;
+    transition:background .15s ease;
+  }
+  button.cta:hover:not(:disabled){background:var(--red-bright);}
+  button.cta:disabled{background:#3A3A3A; color:var(--mute); cursor:default;}
+  .envio .nota{
+    margin-top:14px; font-size:13.5px; color:var(--mute); text-align:center;
+  }
+  .falha{
+    display:none;
+    margin-top:16px; padding:14px 16px;
+    border:1px solid var(--red-bright);
+    font-size:14.5px; color:var(--paper);
+  }
+  .falha.on{display:block;}
+
+  /* ---------------- tela final ---------------- */
+  .obrigado{display:none; padding:80px 0 100px;}
+  .obrigado.on{display:block;}
+  .obrigado .marca{
+    width:44px; height:4px; background:var(--red); margin-bottom:26px;
+  }
+  .obrigado h2{
+    font-family:var(--font-display); font-weight:400;
+    text-transform:uppercase;
+    font-size:clamp(34px, 8vw, 56px); line-height:.96;
+  }
+  .obrigado p{margin-top:20px; font-size:17px; color:var(--soft); max-width:48ch;}
+
+  /* ---------------- rodapé ---------------- */
+  footer{
+    border-top:1px solid var(--line);
+    padding:26px 0 40px;
+    display:flex; align-items:center; justify-content:space-between; gap:18px;
+    flex-wrap:wrap;
+  }
+  footer img{width:132px;}
+  footer .nome{
+    font-family:var(--font-display); font-weight:400;
+    text-transform:uppercase; font-size:19px; letter-spacing:.01em;
+    color:var(--soft);
+  }
+
+  @media (max-width:600px){
+    .wrap{padding:0 20px;}
+    header.intro{padding:34px 0 6px;}
+    .logo-jg{width:142px;}
+    footer{padding:24px 0 34px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <img class="logo-jg" src="images/logo-jg.png" alt="Jorge Grimberg">
+  </div>
+</div>
+
+<main class="wrap" id="conteudo">
+
+  <header class="intro" id="cabecalho">
+    <div class="eyebrow">Mentoria JG</div>
+    <h1>Sobre o<br>seu projeto</h1>
+    <p class="lead"><strong>Sua reserva está confirmada.</strong> Antes da nossa conversa, conta pra gente em que você está trabalhando.</p>
+    <div class="rule"></div>
+  </header>
+
+  <form id="form" novalidate>
+
+    <!-- 1 -->
+    <div class="field" data-campo="nome">
+      <label class="q" for="nome">1. Como você quer ser chamada(o)? <span class="req">*</span></label>
+      <input type="text" id="nome" name="nome" autocomplete="name" maxlength="80" required>
+      <div class="msg">Preencha este campo</div>
+    </div>
+
+    <!-- 2 -->
+    <div class="field" data-campo="whatsapp">
+      <label class="q" for="whatsapp">2. Seu WhatsApp <span class="req">*</span></label>
+      <div class="help">Com DDD. É por aqui que a gente combina o horário da sua conversa.</div>
+      <input type="tel" id="whatsapp" name="whatsapp" inputmode="tel" autocomplete="tel"
+             placeholder="(11) 99999-9999" maxlength="20" required>
+      <div class="msg">Informe um WhatsApp com DDD</div>
+    </div>
+
+    <!-- 3 -->
+    <div class="field" data-campo="email">
+      <label class="q" for="email">3. Seu e-mail <span class="req">*</span></label>
+      <div class="help">O mesmo que você utilizou para o pagamento da reserva.</div>
+      <input type="email" id="email" name="email" autocomplete="email" maxlength="120" required>
+      <div class="msg">Informe um e-mail válido</div>
+    </div>
+
+    <!-- 4 -->
+    <div class="field" data-campo="link">
+      <label class="q" for="link">4. Seu Instagram, site ou portfólio <span class="req">*</span></label>
+      <div class="help">Onde a gente vê o seu trabalho.</div>
+      <input type="text" id="link" name="link" maxlength="200" placeholder="@seuinstagram" required>
+      <div class="msg">Preencha este campo</div>
+    </div>
+
+    <!-- 5 -->
+    <div class="field" data-campo="profissao">
+      <label class="q" for="profissao">5. O que você faz hoje? <span class="req">*</span></label>
+      <div class="help">Sua profissão, seu mercado, o que você toca no dia a dia.</div>
+      <input type="text" id="profissao" name="profissao" maxlength="160" required>
+      <div class="msg">Preencha este campo</div>
+    </div>
+
+    <!-- 6 -->
+    <div class="field" data-campo="estagio">
+      <fieldset>
+        <legend class="q">6. O projeto que você quer trabalhar na mentoria hoje está: <span class="req">*</span></legend>
+        <div class="opcoes">
+          <label class="opt"><input type="radio" name="estagio" value="Só na minha cabeça" required><span>Só na minha cabeça</span></label>
+          <label class="opt"><input type="radio" name="estagio" value="Começando — primeiras peças, primeiros clientes"><span>Começando — tenho as primeiras peças, os primeiros clientes</span></label>
+          <label class="opt"><input type="radio" name="estagio" value="Existe e funciona, mas está estagnado"><span>Existe e funciona, mas está estagnado</span></label>
+          <label class="opt"><input type="radio" name="estagio" value="Existe e vai bem, quero outro patamar"><span>Existe e vai bem, quero levar para outro patamar</span></label>
+          <label class="opt"><input type="radio" name="estagio" value="Existe, mas quero mudar completamente"><span>Existe, mas eu quero mudar completamente</span></label>
+        </div>
+      </fieldset>
+      <div class="msg">Escolha uma opção</div>
+    </div>
+
+    <!-- 7 -->
+    <div class="field" data-campo="projeto">
+      <label class="q" for="projeto">7. Me conta desse projeto em até cinco linhas <span class="req">*</span></label>
+      <div class="help">Do jeito que você explicaria num café.</div>
+      <textarea id="projeto" name="projeto" maxlength="1500" required></textarea>
+      <div class="msg">Preencha este campo</div>
+    </div>
+
+    <!-- 8 -->
+    <div class="field" data-campo="seis_meses">
+      <label class="q" for="seis_meses">8. Se daqui a seis meses esse projeto tiver avançado, o que exatamente vai estar diferente? <span class="req">*</span></label>
+      <div class="help">Seja concreto: uma coleção definida, um lançamento no ar, uma carteira de clientes, um preço, um cargo.</div>
+      <textarea id="seis_meses" name="seis_meses" maxlength="1500" required></textarea>
+      <div class="msg">Preencha este campo</div>
+    </div>
+
+    <!-- armadilha de robô: humano não vê, não preenche -->
+    <div class="hp" aria-hidden="true">
+      <label for="empresa">Não preencha este campo</label>
+      <input type="text" id="empresa" name="empresa" tabindex="-1" autocomplete="off">
+    </div>
+
+    <div class="envio">
+      <button type="submit" class="cta" id="enviar">Enviar respostas</button>
+      <div class="nota">Suas respostas vão só para a equipe do Jorge.</div>
+      <div class="falha" id="falha"></div>
+    </div>
+  </form>
+
+  <section class="obrigado" id="obrigado" tabindex="-1">
+    <div class="marca"></div>
+    <h2>Recebido.</h2>
+    <p>A gente entra em contato pelo WhatsApp para combinar o horário da sua conversa. Até já.</p>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  <img src="images/logo-jg.png" alt="Jorge Grimberg">
+  <div class="nome">Mentoria JG</div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  var ENDPOINT = 'https://cliente.catapultadeideias.com.br/_form/enviar.php?c=jg-reserva';
+
+  var form     = document.getElementById('form');
+  var botao    = document.getElementById('enviar');
+  var falha    = document.getElementById('falha');
+  var obrigado = document.getElementById('obrigado');
+
+  /* ---------- máscara de telefone ---------- */
+  var tel = document.getElementById('whatsapp');
+  tel.addEventListener('input', function(){
+    var d = tel.value.replace(/\D/g, '').slice(0, 11);
+    var v = d;
+    if (d.length > 2)  v = '(' + d.slice(0,2) + ') ' + d.slice(2);
+    if (d.length > 6)  v = '(' + d.slice(0,2) + ') ' + d.slice(2, d.length > 10 ? 7 : 6)
+                          + '-' + d.slice(d.length > 10 ? 7 : 6);
+    tel.value = v;
+  });
+
+  /* ---------- validação ---------- */
+  function valorDe(nome){
+    if (nome === 'estagio'){
+      var m = form.querySelector('input[name="estagio"]:checked');
+      return m ? m.value : '';
+    }
+    var el = form.elements[nome];
+    return el ? String(el.value || '').trim() : '';
+  }
+
+  function valido(nome){
+    var v = valorDe(nome);
+    if (v === '') return false;
+    if (nome === 'whatsapp') return v.replace(/\D/g,'').length >= 10;
+    if (nome === 'email')    return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+    return true;
+  }
+
+  var CAMPOS = ['nome','whatsapp','email','link','profissao','estagio','projeto','seis_meses'];
+
+  function marca(nome, ok){
+    var bloco = form.querySelector('[data-campo="' + nome + '"]');
+    if (!bloco) return;
+    bloco.classList.toggle('invalido', !ok);
+    var alvo = bloco.querySelector('input[type=text],input[type=tel],input[type=email],textarea')
+            || bloco.querySelector('.opcoes');
+    if (alvo) alvo.classList.toggle('erro', !ok);
+  }
+
+  CAMPOS.forEach(function(nome){
+    var bloco = form.querySelector('[data-campo="' + nome + '"]');
+    if (!bloco) return;
+    bloco.addEventListener('change', function(){ if (bloco.classList.contains('invalido')) marca(nome, valido(nome)); });
+    bloco.addEventListener('blur', function(){ if (valorDe(nome) !== '') marca(nome, valido(nome)); }, true);
+  });
+
+  /* ---------- envio ---------- */
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    falha.classList.remove('on');
+
+    var primeiroErro = null;
+    CAMPOS.forEach(function(nome){
+      var ok = valido(nome);
+      marca(nome, ok);
+      if (!ok && !primeiroErro) primeiroErro = form.querySelector('[data-campo="' + nome + '"]');
+    });
+    if (primeiroErro){
+      primeiroErro.scrollIntoView({behavior:'smooth', block:'center'});
+      var foco = primeiroErro.querySelector('input,textarea');
+      if (foco) foco.focus({preventScroll:true});
+      return;
+    }
+
+    var dados = new URLSearchParams();
+    CAMPOS.forEach(function(nome){ dados.append(nome, valorDe(nome)); });
+    dados.append('empresa', valorDe('empresa'));            // honeypot
+    dados.append('pagina', location.href);
+    dados.append('query', location.search.replace(/^\?/, ''));
+
+    botao.disabled = true;
+    botao.textContent = 'Enviando…';
+
+    fetch(ENDPOINT, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'},
+      body: dados.toString()
+    })
+    .then(function(r){ return r.json().catch(function(){ return {ok:false}; }); })
+    .then(function(j){
+      if (!j || j.ok !== true) throw new Error((j && j.msg) || 'falha');
+      form.style.display = 'none';
+      document.getElementById('cabecalho').style.display = 'none';
+      obrigado.classList.add('on');
+      obrigado.focus();
+      window.scrollTo({top:0, behavior:'smooth'});
+    })
+    .catch(function(){
+      botao.disabled = false;
+      botao.textContent = 'Enviar respostas';
+      falha.innerHTML = 'Não consegui enviar agora. Tente de novo em alguns segundos — '
+        + 'se continuar, chame a gente no WhatsApp <a href="https://wa.me/5511996220808">11 99622-0808</a> '
+        + 'que a gente registra por lá.';
+      falha.classList.add('on');
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
