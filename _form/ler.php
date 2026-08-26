@@ -56,6 +56,16 @@ if (($_GET['formato'] ?? '') === 'csv') {
     exit;
 }
 
+/* Alertas — o que o receptor não resolve sozinho (e-mail que não casa com a base,
+   comprador sem a tag de pagamento). É a única saída daqui que alguém precisa LER. */
+$alertas = [];
+if (is_file($dir . '/alertas.jsonl')) {
+    foreach (file($dir . '/alertas.jsonl', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [] as $l) {
+        $a = json_decode($l, true);
+        if (is_array($a)) $alertas[] = $a;
+    }
+}
+
 header('Content-Type: application/json; charset=utf-8');
 echo json_encode([
     'ok'          => true,
@@ -64,6 +74,7 @@ echo json_encode([
     'colunas'     => $COLUNAS,
     'total'       => count($unicas),
     'reenvios'    => count($brutas) - count($unicas),
+    'alertas'     => $alertas,
     'respostas'   => $unicas,
     'historico'   => $brutas,
 ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);

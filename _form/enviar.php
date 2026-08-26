@@ -182,7 +182,10 @@ function responder(array $corpo): void {
 responder(['ok' => true, 'id' => $registro['id']]);
 @set_time_limit(45);
 
-function http_json(string $url, array $headers, $corpo, string $metodo = 'POST'): array {
+/* $max_corpo trunca o que vai para o log — 400 basta para diagnosticar um erro.
+   Quem precisa LER a resposta (e não só registrar) tem que pedir mais: JSON cortado
+   no meio não decodifica, e aí a leitura falha em silêncio. */
+function http_json(string $url, array $headers, $corpo, string $metodo = 'POST', int $max_corpo = 400): array {
     $ch = curl_init($url);
     curl_setopt_array($ch, [
         CURLOPT_CUSTOMREQUEST  => $metodo,
@@ -195,41 +198,86 @@ function http_json(string $url, array $headers, $corpo, string $metodo = 'POST')
     $body = curl_exec($ch);
     $code = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $erro = curl_error($ch);
-    return ['http' => $code, 'erro' => $erro, 'corpo' => substr((string)$body, 0, 400)];
+    return ['http' => $code, 'erro' => $erro, 'corpo' => substr((string)$body, 0, $max_corpo)];
+}
+
+/* Fila de coisas que só humano resolve (e-mail que não casa com a base, comprador
+   sem a tag de pagamento). Fica em arquivo próprio, separado do log de entregas,
+   porque é a única saída do receptor que alguém precisa LER — o resto é histórico. */
+function alerta(string $dir, string $tipo, array $registro, array $extra): void {
+    @file_put_contents($dir . '/alertas.jsonl', json_encode([
+        'em'       => date('c'),
+        'tipo'     => $tipo,
+        'id'       => $registro['id'],
+        'nome'     => $registro['nome']  ?? '',
+        'email'    => $registro['email'] ?? '',
+        'whatsapp' => $registro['whatsapp_e164'] ?? '',
+    ] + $extra, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n", FILE_APPEND | LOCK_EX);
 }
 
 $entregas = [];
 
-/* Mailchimp — upsert do contato + tag + NOTA com as respostas.
-   A nota existe porque merge field que não está criado na audiência devolve 400:
-   nota é campo livre, sempre aceita, e é onde a Andressa quer ler mesmo. */
+/* Mailchimp — ATUALIZA o contato, nunca cria.
+   Quem cria o contato é a Hotmart (ListBoss, na compra aprovada da taxa de reserva).
+   Se o formulário criasse, um e-mail de formulário diferente do e-mail da compra
+   viraria uma SEGUNDA pessoa na base — cobrada duas vezes e com a segmentação
+   quebrada. Por isso: GET primeiro, 404 não vira POST.
+
+   Isto rodava numa task agendada do agente. Voltou para cá porque toda rodada de
+   task escreve uma linha no canal do cliente, inclusive quando não tem nada a
+   dizer — e aqui, além de silencioso, o dado entra no ato do envio em vez de
+   esperar até 15 minutos. */
 if (!empty($cfg['mailchimp_key']) && !empty($cfg['mailchimp_list'])) {
     $dc   = substr(strrchr($cfg['mailchimp_key'], '-') ?: '-us1', 1);
     $base = "https://{$dc}.api.mailchimp.com/3.0/lists/{$cfg['mailchimp_list']}/members/";
     $hash = md5(strtolower($campos['email']));
     $auth = ['Authorization: Basic ' . base64_encode('anystring:' . $cfg['mailchimp_key'])];
 
-    $entregas['mailchimp_membro'] = http_json($base . $hash, $auth, [
-        'email_address' => $campos['email'],
-        'status_if_new' => 'subscribed',
-        'merge_fields'  => ['FNAME' => $campos['nome']],
-    ], 'PUT');
+    $busca = http_json($base . $hash . '?fields=id,tags', $auth, '', 'GET', 20000);
+    $entregas['mailchimp_busca'] = ['http' => $busca['http'], 'erro' => $busca['erro']];
 
-    if (!empty($cfg['mailchimp_tag'])) {
-        $entregas['mailchimp_tag'] = http_json($base . $hash . '/tags', $auth, [
-            'tags' => [['name' => $cfg['mailchimp_tag'], 'status' => 'active']],
-        ]);
+    if ($busca['http'] === 200) {
+        /* skip_merge_validation: campo obrigatório da audiência que o formulário
+           não pergunta não pode derrubar o enriquecimento inteiro.
+           E não mandamos `status`: mexer no status de quem já é contato
+           reinscreve ou desinscreve sem querer. */
+        $entregas['mailchimp_campos'] = http_json(
+            $base . $hash . '?skip_merge_validation=true', $auth,
+            ['merge_fields' => [
+                'FNAME'     => $campos['nome'],
+                'WHATS'     => $registro['whatsapp_e164'],
+                'LINK'      => $campos['link'],
+                'PROFISSAO' => $campos['profissao'],
+                'ESTAGIO'   => $campos['estagio'],
+                'PROJETO'   => $campos['projeto'],
+                'SEISMESES' => $campos['seis_meses'],
+            ]], 'PATCH');
+
+        if (!empty($cfg['mailchimp_tag'])) {
+            $entregas['mailchimp_tag'] = http_json($base . $hash . '/tags', $auth, [
+                'tags' => [['name' => $cfg['mailchimp_tag'], 'status' => 'active']],
+            ]);
+        }
+
+        /* Vigia do ListBoss. A falha dele é silenciosa: 199 dos 201 contatos da
+           audiência vieram da imersão, então um comprador que a Hotmart deixar de
+           etiquetar continua existindo aqui e o enriquecimento passa por ele sem
+           estranhar nada — só que ele nunca recebeu o e-mail com o link. */
+        $tag_pgto = (string)($cfg['mailchimp_tag_pagamento'] ?? '');
+        if ($tag_pgto !== '') {
+            $tags = array_column((array)(json_decode($busca['corpo'], true)['tags'] ?? []), 'name');
+            if (!in_array($tag_pgto, $tags, true)) {
+                alerta($dir, 'sem-tag-de-pagamento', $registro, [
+                    'tags_no_contato' => $tags,
+                    'esperada'        => $tag_pgto,
+                ]);
+            }
+        }
+    } elseif ($busca['http'] === 404) {
+        /* Pagou com um e-mail e preencheu com outro — ou o ListBoss ainda não
+           processou a compra. Casar os dois é decisão humana. */
+        alerta($dir, 'sem-match-no-mailchimp', $registro, []);
     }
-
-    $nota = "RESERVA MENTORIA JG — " . date('d/m/Y H:i') . "\n"
-          . "WhatsApp: {$campos['whatsapp']}\n"
-          . "Link: {$campos['link']}\n"
-          . "Faz hoje: {$campos['profissao']}\n"
-          . "Estagio do projeto: {$campos['estagio']}\n"
-          . "Projeto: {$campos['projeto']}\n"
-          . "Em 6 meses: {$campos['seis_meses']}";
-    $entregas['mailchimp_nota'] = http_json($base . $hash . '/notes', $auth,
-        ['note' => substr($nota, 0, 1000)]);
 }
 
 /* Webhooks genéricos — Unnichat, Apps Script da planilha, o que vier.

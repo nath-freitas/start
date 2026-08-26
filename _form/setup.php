@@ -56,6 +56,9 @@ if ($acao === 'status') {
         // só diz SE existe credencial, nunca o valor
         'tem_mailchimp' => !empty($cfg['mailchimp_key']) && !empty($cfg['mailchimp_list']),
         'mailchimp_tag' => $cfg['mailchimp_tag'] ?? null,
+        'mailchimp_tag_pagamento' => $cfg['mailchimp_tag_pagamento'] ?? null,
+        'alertas'       => is_file($dir . '/alertas.jsonl')
+            ? count(file($dir . '/alertas.jsonl', FILE_SKIP_EMPTY_LINES)) : 0,
         'webhooks'      => array_map(
             fn($w) => ['nome' => $w['nome'] ?? '?', 'host' => parse_url($w['url'] ?? '', PHP_URL_HOST)],
             (array)($cfg['webhooks'] ?? [])
@@ -70,28 +73,10 @@ if ($acao === 'status') {
 // Apaga só o dado de teste. O config.php fica.
 if ($acao === 'limpar') {
     $apagados = [];
-    foreach (['respostas.jsonl', 'entregas.jsonl'] as $f) {
+    foreach (['respostas.jsonl', 'entregas.jsonl', 'alertas.jsonl'] as $f) {
         if (is_file($dir . '/' . $f) && @unlink($dir . '/' . $f)) $apagados[] = $f;
     }
     fim(200, ['ok' => true, 'apagados' => $apagados]);
-}
-
-/* Últimos repasses, com o código HTTP e o corpo que o destino devolveu.
-   Sem isto, webhook mal configurado só aparece como "o CRM não recebeu" e não há
-   como saber se foi rede, token ou payload — o entregas.jsonl mora fora do docroot
-   e não tem outra porta de leitura. */
-if ($acao === 'entregas') {
-    $n = max(1, min(50, (int)($_POST['n'] ?? $_GET['n'] ?? 5)));
-    $arq = $dir . '/entregas.jsonl';
-    $linhas = is_file($arq) ? (file($arq, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: []) : [];
-    fim(200, [
-        'ok'      => true,
-        'total'   => count($linhas),
-        'ultimas' => array_values(array_map(
-            fn($l) => json_decode($l, true) ?: $l,
-            array_slice($linhas, -$n)
-        )),
-    ]);
 }
 
 // Remove UMA resposta pelo id, sem tocar no resto (poda de teste depois que a
@@ -142,6 +127,9 @@ $novo = [
     'mailchimp_key'  => (string)($_POST['mailchimp_key']  ?? $atual['mailchimp_key']  ?? ''),
     'mailchimp_list' => (string)($_POST['mailchimp_list'] ?? $atual['mailchimp_list'] ?? ''),
     'mailchimp_tag'  => (string)($_POST['mailchimp_tag']  ?? $atual['mailchimp_tag']  ?? ''),
+    // tag que a plataforma de pagamento aplica na compra aprovada. O receptor não
+    // aplica esta: só confere se ela está no contato e, se não estiver, abre alerta.
+    'mailchimp_tag_pagamento' => (string)($_POST['mailchimp_tag_pagamento'] ?? $atual['mailchimp_tag_pagamento'] ?? ''),
     'webhooks'       => $webhooks,
 ];
 
