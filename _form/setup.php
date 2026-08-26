@@ -76,6 +76,24 @@ if ($acao === 'limpar') {
     fim(200, ['ok' => true, 'apagados' => $apagados]);
 }
 
+/* Últimos repasses, com o código HTTP e o corpo que o destino devolveu.
+   Sem isto, webhook mal configurado só aparece como "o CRM não recebeu" e não há
+   como saber se foi rede, token ou payload — o entregas.jsonl mora fora do docroot
+   e não tem outra porta de leitura. */
+if ($acao === 'entregas') {
+    $n = max(1, min(50, (int)($_POST['n'] ?? $_GET['n'] ?? 5)));
+    $arq = $dir . '/entregas.jsonl';
+    $linhas = is_file($arq) ? (file($arq, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: []) : [];
+    fim(200, [
+        'ok'      => true,
+        'total'   => count($linhas),
+        'ultimas' => array_values(array_map(
+            fn($l) => json_decode($l, true) ?: $l,
+            array_slice($linhas, -$n)
+        )),
+    ]);
+}
+
 // Remove UMA resposta pelo id, sem tocar no resto (poda de teste depois que a
 // base já tem resposta real dentro).
 if ($acao === 'podar') {
