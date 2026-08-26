@@ -1,0 +1,14 @@
+Options -Indexes
+
+# O receptor precisa ser alcançável pelo navegador de quem preenche o formulário,
+# num domínio diferente deste. Ele não é anônimo: só aceita POST de uma lista de
+# origens e só grava em slug já configurado.
+<IfModule mod_authz_core.c>
+  Require all granted
+</IfModule>
+
+# Cinto de segurança: config e dado nunca deveriam estar nesta pasta (moram em
+# /home/<user>/dados/) — se um dia estiverem, não são servidos.
+<FilesMatch "(config.*\.php|\.jsonl|\.json)$">
+  Require all denied
+</FilesMatch>
