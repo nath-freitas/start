@@ -78,6 +78,7 @@ function texto(string $chave, int $max): string {
 $ESQUEMA = [
     'nome'       => 80,
     'whatsapp'   => 26,   // cabe E.164 de qualquer país já formatado: "+351 912345678"
+    'ddi'        => 4,    // só os dígitos do país ("55", "351"); opcional, ver split abaixo
     'email'      => 120,
     'link'       => 200,
     'profissao'  => 160,
@@ -85,7 +86,8 @@ $ESQUEMA = [
     'projeto'    => 1500,
     'seis_meses' => 1500,
 ];
-$OBRIGATORIOS = array_keys($ESQUEMA);
+// `ddi` é derivável do `whatsapp`, então não trava o envio se a página não mandar
+$OBRIGATORIOS = array_values(array_diff(array_keys($ESQUEMA), ['ddi']));
 
 $campos = [];
 foreach ($ESQUEMA as $k => $max) $campos[$k] = texto($k, $max);
@@ -109,6 +111,23 @@ if (substr($campos['whatsapp'], 0, 1) === '+') {
     if (strlen($digitos) > 11 && substr($digitos, 0, 2) === '55') $e164 = '+' . $digitos;
 }
 
+/* DDI e número nacional separados. Ordem de confiança:
+   1) o campo `ddi` que a própria página manda (é o país que a pessoa escolheu);
+   2) o espaço que a página põe entre DDI e número ("+351 912345678");
+   3) Brasil.
+   Nunca adivinhar o DDI contando dígitos: prefixo de país tem 1, 2 ou 3 dígitos
+   e "+1 242" (Bahamas) é indistinguível de "+1" (EUA) sem tabela. */
+$candidatos = [preg_replace('/\D/', '', $campos['ddi'])];
+if (preg_match('/^\+(\d{1,3})\s/', $campos['whatsapp'], $m)) $candidatos[] = $m[1];
+$candidatos[] = '55';   // default de quem não escolheu país
+
+$ddi = '';
+foreach ($candidatos as $cand) {
+    // só vale o candidato que realmente prefixa o E.164 — senão o resto do número sai torto
+    if ($cand !== '' && strpos($e164, '+' . $cand) === 0) { $ddi = $cand; break; }
+}
+$nacional = $ddi === '' ? substr($e164, 1) : substr($e164, strlen($ddi) + 1);
+
 // UTMs vindas da querystring da página, quando o link do fluxo carregar alguma
 parse_str((string)($_POST['query'] ?? ''), $q);
 $utm = [];
@@ -125,6 +144,12 @@ $registro = array_merge([
     'formulario'  => $c,
 ], $campos, [
     'whatsapp_e164' => $e164,
+    /* DDI e número nacional SEPARADOS, além do E.164 junto. CRM de WhatsApp
+       (Unnichat/Underchat e parentes) mapeia campo a campo e pede "DDI" e
+       "telefone" como duas coisas: sem isso não há o que arrastar para o campo
+       DDI na tela de mapeamento. O E.164 fica porque quem aceita junto prefere. */
+    'ddi'           => $ddi,
+    'telefone'      => $nacional,
     'pagina'        => substr((string)($_POST['pagina'] ?? ''), 0, 300),
     'utm'           => $utm,
     // IP nunca em claro: só o hash serve para "é a mesma pessoa?" sem guardar PII de rede
@@ -211,8 +236,12 @@ if (!empty($cfg['mailchimp_key']) && !empty($cfg['mailchimp_list'])) {
    Configuráveis: destino novo não pede deploy, só um setup.php?acao=criar. */
 foreach ((array)($cfg['webhooks'] ?? []) as $w) {
     if (empty($w['url'])) continue;
+    /* `extras` entra no CORPO junto com a resposta. Existe porque há CRM que quer a
+       credencial dentro do payload, não no cabeçalho — e sem isso descobrir qual dos
+       dois é o caso viraria deploy em vez de uma linha de config. */
+    $corpo = array_merge($registro, (array)($w['extras'] ?? []));
     $entregas['webhook_' . ($w['nome'] ?? 'sem-nome')] =
-        http_json($w['url'], (array)($w['headers'] ?? []), $registro,
+        http_json($w['url'], (array)($w['headers'] ?? []), $corpo,
                   strtoupper((string)($w['metodo'] ?? 'POST')));
 }
 
