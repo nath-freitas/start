@@ -3,13 +3,12 @@
 # Link curto da TAXA DE RESERVA da Mentoria JG (R$1.000), usado no pitch do
 # dia 2 da imersão, no WhatsApp e no e-mail de abertura das inscrições.
 #
-# 25/08/2026: o link de pagamento da Hotmart ainda não existe. Enquanto isso,
-# este redirecionamento aponta para a HOME do domínio, para o endereço já poder
-# circular nas peças. TROCAR O DESTINO ABAIXO PELO CHECKOUT DA HOTMART ANTES DO
-# DISPARO DE 26/08 À NOITE.
+# 26/08/2026: destino definitivo no ar — checkout da Hotmart do produto
+# "Reserva Mentoria JG". O ?checkoutMode=10 é o modo de checkout enviado pela
+# Nath; o QSA preserva as UTMs de origem (entram como &utm_* depois do modo).
 #
-# Destino definitivo (quando o link existir):
-# RewriteRule ^$ https://pay.hotmart.com/XXXXXXXXX [R=302,L,QSA]
+# Histórico: até 25/08 apontava para a home do domínio, porque o produto ainda
+# não estava cadastrado na Hotmart.
 
 RewriteEngine On
-RewriteRule ^$ https://jorgegrimberg.com.br/ [R=302,L,QSA]
+RewriteRule ^$ https://pay.hotmart.com/R107334020K?checkoutMode=10 [R=302,L,QSA]
