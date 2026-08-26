@@ -77,7 +77,7 @@ function texto(string $chave, int $max): string {
 // nome do campo => tamanho máximo aceito. O que não estiver aqui é descartado.
 $ESQUEMA = [
     'nome'       => 80,
-    'whatsapp'   => 20,
+    'whatsapp'   => 26,   // cabe E.164 de qualquer país já formatado: "+351 912345678"
     'email'      => 120,
     'link'       => 200,
     'profissao'  => 160,
@@ -93,13 +93,21 @@ foreach ($ESQUEMA as $k => $max) $campos[$k] = texto($k, $max);
 $faltando = [];
 foreach ($OBRIGATORIOS as $k) if ($campos[$k] === '') $faltando[] = $k;
 if (!filter_var($campos['email'], FILTER_VALIDATE_EMAIL)) $faltando[] = 'email';
-if (strlen(preg_replace('/\D/', '', $campos['whatsapp'])) < 10) $faltando[] = 'whatsapp';
+// piso de 8 dígitos: número internacional curto existe e não pode ser recusado aqui
+if (strlen(preg_replace('/\D/', '', $campos['whatsapp'])) < 8) $faltando[] = 'whatsapp';
 if ($faltando) fim(422, ['ok' => false, 'msg' => 'campos invalidos', 'campos' => array_values(array_unique($faltando))]);
 
-// telefone em E.164 — é o formato que CRM de WhatsApp espera; o mascarado fica junto
+/* telefone em E.164 — é o formato que CRM de WhatsApp espera; o mascarado fica junto.
+   Se o formulário já mandou com "+", o DDI é o que a pessoa escolheu e vale como veio:
+   assumir +55 aqui transformaria um número de Portugal em número inválido. Só quando
+   não vier DDI é que o Brasil entra como padrão. */
 $digitos = preg_replace('/\D/', '', $campos['whatsapp']);
-$e164 = '+55' . ltrim($digitos, '0');
-if (strlen($digitos) > 11 && substr($digitos, 0, 2) === '55') $e164 = '+' . $digitos;
+if (substr($campos['whatsapp'], 0, 1) === '+') {
+    $e164 = '+' . $digitos;
+} else {
+    $e164 = '+55' . ltrim($digitos, '0');
+    if (strlen($digitos) > 11 && substr($digitos, 0, 2) === '55') $e164 = '+' . $digitos;
+}
 
 // UTMs vindas da querystring da página, quando o link do fluxo carregar alguma
 parse_str((string)($_POST['query'] ?? ''), $q);
