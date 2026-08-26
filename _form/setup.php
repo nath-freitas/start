@@ -14,13 +14,20 @@
  * Os segredos entram por POST, não por querystring: querystring vai parar no log
  * de acesso do servidor em claro, corpo de POST não.
  *
- * A chave abaixo mora numa branch PÚBLICA. Ela não protege o dado — quem protege
- * é o basic auth do Apache no .htaccess. Ela só evita esbarrão.
- * Depois de configurado e com a campanha fechada, REMOVA este arquivo da branch.
+ * AUTENTICAÇÃO: esta pasta é pública (o navegador de quem preenche precisa
+ * alcançar o enviar.php), e a branch de deploy também é. Logo, chave escrita
+ * NESTE arquivo é chave publicada. A que vale mora em BASE_DADOS/.setup_key,
+ * fora do docroot e fora do repositório. A CHAVE_BOOTSTRAP abaixo só serve para
+ * instalar a primeira — depois que o arquivo existe, ela para de valer.
+ *
+ * Perdeu a chave? Não há como recuperá-la do servidor. O caminho é apagar
+ * /home/u346131448/dados/formularios/.setup_key pelo Gerenciador de Arquivos da
+ * Hostinger: a bootstrap volta a valer e você instala outra.
  */
 
-const BASE_DADOS  = '/home/u346131448/dados/formularios';
-const CHAVE_SETUP = 'kQ7mR2xW9pLvT4dN8fHbZ6yJcA3sEuGn';
+const BASE_DADOS      = '/home/u346131448/dados/formularios';
+const CHAVE_BOOTSTRAP = 'kQ7mR2xW9pLvT4dN8fHbZ6yJcA3sEuGn';
+const ARQ_CHAVE       = BASE_DADOS . '/.setup_key';
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -30,14 +37,31 @@ function fim(int $code, array $corpo): void {
     exit;
 }
 
+$instalada = is_file(ARQ_CHAVE) ? trim((string)@file_get_contents(ARQ_CHAVE)) : '';
 $k = (string)($_POST['k'] ?? $_GET['k'] ?? '');
-if (!hash_equals(CHAVE_SETUP, $k)) fim(401, ['ok' => false, 'msg' => 'chave invalida']);
+if (!hash_equals($instalada !== '' ? $instalada : CHAVE_BOOTSTRAP, $k)) {
+    fim(401, ['ok' => false, 'msg' => 'chave invalida']);
+}
+
+$acao = (string)($_POST['acao'] ?? $_GET['acao'] ?? 'status');
+
+// Instala (ou troca) a chave de verdade. Não depende de slug: é do serviço.
+if ($acao === 'instalar-chave') {
+    $nova = trim((string)($_POST['nova'] ?? ''));
+    if (strlen($nova) < 24) fim(400, ['ok' => false, 'msg' => 'nova precisa de 24+ caracteres']);
+    if (!is_dir(BASE_DADOS) && !@mkdir(BASE_DADOS, 0750, true) && !is_dir(BASE_DADOS)) {
+        fim(500, ['ok' => false, 'msg' => 'nao consegui criar ' . BASE_DADOS]);
+    }
+    if (@file_put_contents(ARQ_CHAVE, $nova . "\n", LOCK_EX) === false) {
+        fim(500, ['ok' => false, 'msg' => 'nao consegui escrever a chave']);
+    }
+    @chmod(ARQ_CHAVE, 0600);
+    fim(200, ['ok' => true, 'msg' => 'chave instalada', 'bootstrap_ainda_vale' => false]);
+}
 
 $c = (string)($_POST['c'] ?? $_GET['c'] ?? '');
 if (!preg_match('/^[a-z0-9-]{2,40}$/', $c)) fim(400, ['ok' => false, 'msg' => 'slug invalido']);
 $dir = BASE_DADOS . '/' . $c;
-
-$acao = (string)($_POST['acao'] ?? $_GET['acao'] ?? 'status');
 
 if ($acao === 'status') {
     $resp   = $dir . '/respostas.jsonl';
@@ -65,37 +89,51 @@ if ($acao === 'status') {
         ),
         'entregas'      => is_file($dir . '/entregas.jsonl')
             ? count(file($dir . '/entregas.jsonl', FILE_SKIP_EMPTY_LINES)) : 0,
+        'limite_hora'   => (int)($cfg['limite_hora'] ?? 12),
+        // se isto vier false, a chave publicada na branch ainda abre este endpoint
+        'chave_propria' => $instalada !== '',
         'php'           => PHP_VERSION,
         'curl'          => function_exists('curl_init'),
     ]);
 }
 
-// Apaga só o dado de teste. O config.php fica.
+/* Zera a base do formulário ARQUIVANDO, não apagando. A mesma chamada que tirava
+   o teste de ontem tiraria a reserva paga de hoje, e não havia volta: com dado
+   real dentro, "limpar" é irreversível. Renomear custa o mesmo e não destrói. */
 if ($acao === 'limpar') {
-    $apagados = [];
+    $stamp = date('Ymd-His'); $arquivados = [];
     foreach (['respostas.jsonl', 'entregas.jsonl', 'alertas.jsonl'] as $f) {
-        if (is_file($dir . '/' . $f) && @unlink($dir . '/' . $f)) $apagados[] = $f;
+        if (is_file($dir . '/' . $f) && @rename($dir . '/' . $f, $dir . '/' . $f . '.bak-' . $stamp)) {
+            $arquivados[] = $f;
+        }
     }
-    fim(200, ['ok' => true, 'apagados' => $apagados]);
+    fim(200, ['ok' => true, 'arquivados' => $arquivados, 'sufixo' => '.bak-' . $stamp]);
 }
 
-// Remove UMA resposta pelo id, sem tocar no resto (poda de teste depois que a
-// base já tem resposta real dentro).
+/* Remove respostas pelo id, sem tocar no resto — é como se tira um teste depois
+   que a base já tem resposta real dentro. Poda os três arquivos: deixar o log de
+   entrega e o alerta de um id que não existe mais é ruído que ninguém sabe ler. */
 if ($acao === 'podar') {
     $alvos = array_filter(array_map('trim', explode(',', (string)($_POST['id'] ?? $_GET['id'] ?? ''))));
-    $arq = $dir . '/respostas.jsonl';
-    $removidas = 0; $mantidas = 0; $saida = '';
-    foreach (file($arq, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [] as $l) {
-        $r = json_decode($l, true);
-        if (is_array($r) && in_array((string)($r['id'] ?? ''), $alvos, true)) { $removidas++; continue; }
-        $saida .= $l . "\n"; $mantidas++;
+    if (!$alvos) fim(400, ['ok' => false, 'msg' => 'id e obrigatorio']);
+    $out = [];
+    foreach (['respostas.jsonl', 'entregas.jsonl', 'alertas.jsonl'] as $f) {
+        $arq = $dir . '/' . $f;
+        if (!is_file($arq)) { $out[$f] = ['removidas' => 0, 'mantidas' => 0]; continue; }
+        $removidas = 0; $mantidas = 0; $saida = '';
+        foreach (file($arq, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [] as $l) {
+            $r = json_decode($l, true);
+            if (is_array($r) && in_array((string)($r['id'] ?? ''), $alvos, true)) { $removidas++; continue; }
+            $saida .= $l . "\n"; $mantidas++;
+        }
+        $tmp = $arq . '.tmp';
+        if ($removidas && (file_put_contents($tmp, $saida, LOCK_EX) === false || !@rename($tmp, $arq))) {
+            @unlink($tmp);
+            fim(500, ['ok' => false, 'msg' => 'nao consegui reescrever ' . $f]);
+        }
+        $out[$f] = ['removidas' => $removidas, 'mantidas' => $mantidas];
     }
-    $tmp = $arq . '.tmp';
-    if ($removidas && (file_put_contents($tmp, $saida, LOCK_EX) === false || !@rename($tmp, $arq))) {
-        @unlink($tmp);
-        fim(500, ['ok' => false, 'msg' => 'nao consegui reescrever a base']);
-    }
-    fim(200, ['ok' => true, 'removidas' => $removidas, 'mantidas' => $mantidas]);
+    fim(200, ['ok' => true] + $out);
 }
 
 if ($acao !== 'criar') fim(400, ['ok' => false, 'msg' => 'acao desconhecida']);
@@ -130,6 +168,8 @@ $novo = [
     // tag que a plataforma de pagamento aplica na compra aprovada. O receptor não
     // aplica esta: só confere se ela está no contato e, se não estiver, abre alerta.
     'mailchimp_tag_pagamento' => (string)($_POST['mailchimp_tag_pagamento'] ?? $atual['mailchimp_tag_pagamento'] ?? ''),
+    // teto de envios por hora vindos do mesmo IP; 0 desliga
+    'limite_hora'    => (int)($_POST['limite_hora'] ?? $atual['limite_hora'] ?? 12),
     'webhooks'       => $webhooks,
 ];
 

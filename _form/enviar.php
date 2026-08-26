@@ -157,6 +157,24 @@ $registro = array_merge([
     'agente'        => substr((string)($_SERVER['HTTP_USER_AGENT'] ?? ''), 0, 200),
 ]);
 
+/* ------------------------- trava de enxurrada -------------------------------
+   O endpoint é público por construção (o navegador de quem preenche tem que
+   alcançar ele) e o URL está no código-fonte da página. Sem teto, um laço de
+   curl enche a base de lixo e dispara uma automação de CRM por linha. Devolve
+   sucesso, como a armadilha de robô: quem apanha de 429 tenta de novo.
+   Conta pelo hash do IP, na última hora. */
+$limite = (int)($cfg['limite_hora'] ?? 12);
+if ($limite > 0 && is_file($dir . '/respostas.jsonl')) {
+    $corte = date('c', time() - 3600);   // mesmo fuso em toda linha: comparação de string basta
+    $recentes = 0;
+    foreach (file($dir . '/respostas.jsonl', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [] as $l) {
+        $r = json_decode($l, true);
+        if (is_array($r) && ($r['ip_hash'] ?? '') === $registro['ip_hash']
+            && (string)($r['recebido_em'] ?? '') >= $corte) $recentes++;
+    }
+    if ($recentes >= $limite) fim(200, ['ok' => true, 'id' => 'ok']);
+}
+
 /* ------------- 1. grava primeiro: nada depende de API de terceiro ------------- */
 $linha = json_encode($registro, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n";
 if (file_put_contents($dir . '/respostas.jsonl', $linha, FILE_APPEND | LOCK_EX) === false) {
@@ -201,9 +219,28 @@ function http_json(string $url, array $headers, $corpo, string $metodo = 'POST',
     return ['http' => $code, 'erro' => $erro, 'corpo' => substr((string)$body, 0, $max_corpo)];
 }
 
+function ok_http(array $r): bool { return $r['http'] >= 200 && $r['http'] < 300; }
+
+/* Uma retentativa, e só uma. A falha de repasse mais comum é blip de rede, timeout
+   ou 429 momentâneo, e a segunda tentativa resolve isso sem fila, sem cron e sem
+   estado guardado. Erro de configuração (4xx que não seja 429) não melhora com
+   repetição — não gasta a segunda tentativa nem os 2 segundos. */
+function repassar(string $url, array $headers, $corpo, string $metodo = 'POST', int $max_corpo = 400): array {
+    $r = http_json($url, $headers, $corpo, $metodo, $max_corpo);
+    if (!ok_http($r) && ($r['http'] === 0 || $r['http'] === 429 || $r['http'] >= 500)) {
+        sleep(2);
+        $r = http_json($url, $headers, $corpo, $metodo, $max_corpo);
+        $r['tentativas'] = 2;
+        return $r;
+    }
+    $r['tentativas'] = 1;
+    return $r;
+}
+
 /* Fila de coisas que só humano resolve (e-mail que não casa com a base, comprador
-   sem a tag de pagamento). Fica em arquivo próprio, separado do log de entregas,
-   porque é a única saída do receptor que alguém precisa LER — o resto é histórico. */
+   sem a tag de pagamento, repasse que não entrou). Fica em arquivo próprio,
+   separado do log de entregas, porque é a única saída do receptor que alguém
+   precisa LER — o resto é histórico. */
 function alerta(string $dir, string $tipo, array $registro, array $extra): void {
     @file_put_contents($dir . '/alertas.jsonl', json_encode([
         'em'       => date('c'),
@@ -233,15 +270,25 @@ if (!empty($cfg['mailchimp_key']) && !empty($cfg['mailchimp_list'])) {
     $hash = md5(strtolower($campos['email']));
     $auth = ['Authorization: Basic ' . base64_encode('anystring:' . $cfg['mailchimp_key'])];
 
-    $busca = http_json($base . $hash . '?fields=id,tags', $auth, '', 'GET', 20000);
+    $busca = repassar($base . $hash . '?fields=id,tags', $auth, '', 'GET', 20000);
     $entregas['mailchimp_busca'] = ['http' => $busca['http'], 'erro' => $busca['erro']];
+
+    /* 404 é caso previsto (vira alerta próprio, logo abaixo). Qualquer outro
+       não-2xx é o Mailchimp fora do ar ou credencial recusada — e aí NENHUM
+       contato desta rodada foi enriquecido. Isso tem que aparecer na fila. */
+    if (!ok_http($busca) && $busca['http'] !== 404) {
+        alerta($dir, 'mailchimp-falhou', $registro, [
+            'etapa' => 'busca', 'http' => $busca['http'],
+            'erro'  => $busca['erro'], 'resposta' => substr($busca['corpo'], 0, 300),
+        ]);
+    }
 
     if ($busca['http'] === 200) {
         /* skip_merge_validation: campo obrigatório da audiência que o formulário
            não pergunta não pode derrubar o enriquecimento inteiro.
            E não mandamos `status`: mexer no status de quem já é contato
            reinscreve ou desinscreve sem querer. */
-        $entregas['mailchimp_campos'] = http_json(
+        $entregas['mailchimp_campos'] = repassar(
             $base . $hash . '?skip_merge_validation=true', $auth,
             ['merge_fields' => [
                 'FNAME'     => $campos['nome'],
@@ -254,9 +301,21 @@ if (!empty($cfg['mailchimp_key']) && !empty($cfg['mailchimp_list'])) {
             ]], 'PATCH');
 
         if (!empty($cfg['mailchimp_tag'])) {
-            $entregas['mailchimp_tag'] = http_json($base . $hash . '/tags', $auth, [
+            $entregas['mailchimp_tag'] = repassar($base . $hash . '/tags', $auth, [
                 'tags' => [['name' => $cfg['mailchimp_tag'], 'status' => 'active']],
             ]);
+        }
+
+        // Contato achado e mesmo assim não gravou: campo recusado, audiência
+        // errada, permissão. Silencioso por natureza — a pessoa existe na base.
+        foreach (['mailchimp_campos', 'mailchimp_tag'] as $etapa) {
+            if (isset($entregas[$etapa]) && !ok_http($entregas[$etapa])) {
+                alerta($dir, 'mailchimp-falhou', $registro, [
+                    'etapa' => $etapa, 'http' => $entregas[$etapa]['http'],
+                    'erro'  => $entregas[$etapa]['erro'],
+                    'resposta' => substr($entregas[$etapa]['corpo'], 0, 300),
+                ]);
+            }
         }
 
         /* Vigia do ListBoss. A falha dele é silenciosa: 199 dos 201 contatos da
@@ -288,9 +347,24 @@ foreach ((array)($cfg['webhooks'] ?? []) as $w) {
        credencial dentro do payload, não no cabeçalho — e sem isso descobrir qual dos
        dois é o caso viraria deploy em vez de uma linha de config. */
     $corpo = array_merge($registro, (array)($w['extras'] ?? []));
-    $entregas['webhook_' . ($w['nome'] ?? 'sem-nome')] =
-        http_json($w['url'], (array)($w['headers'] ?? []), $corpo,
-                  strtoupper((string)($w['metodo'] ?? 'POST')));
+    $nome  = (string)($w['nome'] ?? 'sem-nome');
+    $res   = repassar($w['url'], (array)($w['headers'] ?? []), $corpo,
+                      strtoupper((string)($w['metodo'] ?? 'POST')));
+    $entregas['webhook_' . $nome] = $res;
+
+    /* Falha de repasse era o único ponto cego do fluxo: a resposta ficava salva,
+       a pessoa não chegava no CRM e ninguém ficava sabendo — a descoberta era a
+       Andressa estranhar uma ausência. Agora entra na mesma fila que o resto do
+       que só humano resolve, com o corpo da resposta do destino junto. */
+    if (!ok_http($res)) {
+        alerta($dir, 'repasse-falhou', $registro, [
+            'destino'    => $nome,
+            'http'       => $res['http'],
+            'erro'       => $res['erro'],
+            'resposta'   => $res['corpo'],
+            'tentativas' => $res['tentativas'] ?? 1,
+        ]);
+    }
 }
 
 if ($entregas) {

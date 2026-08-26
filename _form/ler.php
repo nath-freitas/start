@@ -66,6 +66,33 @@ if (is_file($dir . '/alertas.jsonl')) {
     }
 }
 
+/* Entregas — o resultado de cada repasse (Mailchimp, Unnichat). Só as que
+   falharam saem aqui: o sucesso é histórico e mora no arquivo. Isto existe
+   porque `entregas.jsonl` era escrito e não era lido por ninguém — o repasse
+   podia falhar sem que houvesse onde ver. */
+$entregas = 0; $falhas = [];
+if (is_file($dir . '/entregas.jsonl')) {
+    foreach (file($dir . '/entregas.jsonl', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [] as $l) {
+        $e = json_decode($l, true);
+        if (!is_array($e)) continue;
+        $entregas++;
+        foreach ((array)($e['resultado'] ?? []) as $destino => $r) {
+            $http = (int)($r['http'] ?? 0);
+            if ($http >= 200 && $http < 300) continue;
+            // o 404 da busca do Mailchimp é caso previsto e já tem alerta próprio
+            if ($destino === 'mailchimp_busca' && $http === 404) continue;
+            $falhas[] = [
+                'id'       => $e['id'] ?? '',
+                'em'       => $e['em'] ?? '',
+                'destino'  => $destino,
+                'http'     => $http,
+                'erro'     => (string)($r['erro'] ?? ''),
+                'resposta' => substr((string)($r['corpo'] ?? ''), 0, 300),
+            ];
+        }
+    }
+}
+
 header('Content-Type: application/json; charset=utf-8');
 echo json_encode([
     'ok'          => true,
@@ -75,6 +102,8 @@ echo json_encode([
     'total'       => count($unicas),
     'reenvios'    => count($brutas) - count($unicas),
     'alertas'     => $alertas,
+    'entregas'    => $entregas,
+    'falhas_de_repasse' => $falhas,
     'respostas'   => $unicas,
     'historico'   => $brutas,
 ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
