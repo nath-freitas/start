@@ -9,14 +9,27 @@
 
 <!--
   ======================================================================
-  FORMULÁRIO DE RESERVA — MENTORIA JG · v1 · 26/08/2026
+  FORMULÁRIO DE RESERVA — MENTORIA JG · v2 · 26/08/2026
   ----------------------------------------------------------------------
   Passo 4 do fluxo da taxa de reserva: Hotmart R$1.000 → /reserva →
   fluxo no Unichat → ESTE FORMULÁRIO → link dos R$7.000 na entrevista.
 
-  Identidade: fundo preto, tipografia branca, vermelho #B31F1E,
-  logo (JORGE GRIMBERG), fontes próprias self-hosted (KMR Waldenburg +
-  Helvetica Now Display). Nada de bege/amarelo da Catapulta.
+  v2 — REGISTRO INSTITUCIONAL (branco), a pedido da Nath por conta do
+  Jorge, mesma virada do PDF da Reserva:
+    · fundo branco, tipografia preta
+    · vermelho #B31F1E CHEIO (o #E23A2E só existe para contraste sobre
+      preto e sobre branco fica lavado — não entra aqui)
+    · lockup da mentoria: JORGE GRIMBERG / (MENTORIA JG), tipografado
+      em Helvetica Now Display a partir da arte que o Jorge está usando
+      na Hotmart (Hotmart-08-25-2026_09_10_PM.png)
+    · fontes próprias self-hosted (KMR Waldenburg + Helvetica Now)
+  Nada de bege/amarelo da Catapulta.
+
+  v2 — TELEFONE EM PADRÃO INTERNACIONAL
+  Seletor de país/DDI (lista completa, Brasil e Portugal fixados no
+  topo) + número nacional. O campo `whatsapp` sai da página já em
+  formato internacional, começando com "+", e o receptor usa o DDI que
+  veio em vez de assumir +55.
 
   DESTINO DOS DADOS
   O POST vai para o receptor da Catapulta (fora do domínio do cliente,
@@ -27,7 +40,7 @@
   Content-Type urlencoded de propósito: evita preflight CORS.
 
   A VALIDAR
-  1. Credencial do Mailchimp e endpoint/token do Unnichat (Nath).
+  1. Endpoint/token do Unnichat (Nath).
   2. <meta robots noindex,nofollow> ativo — é página de fluxo, não de busca.
   ======================================================================
 -->
@@ -57,15 +70,16 @@
 
 <style>
   :root{
-    --ink:#000000;
-    --ink-2:#0B0B0B;
     --paper:#FFFFFF;
-    --soft:#B9B9B9;
-    --mute:#7C7C7C;
-    --line:#242424;
-    --line-2:#3A3A3A;
+    --ink:#000000;
+    --body:#1C1C1C;
+    --soft:#3A3A3A;
+    --mute:#767676;
+    --line:#D9D9D9;
+    --line-2:#B5B5B5;
+    --panel:#F5F5F5;
     --red:#B31F1E;
-    --red-bright:#E23A2E;
+    --red-deep:#8E1918;
     --font-display:'Waldenburg Display','Helvetica Now Display',Impact,sans-serif;
     --font-body:'Waldenburg','Helvetica Now Display',Helvetica,Arial,sans-serif;
     --font-ui:'Helvetica Now Display',Helvetica,Arial,sans-serif;
@@ -76,16 +90,16 @@
   html{-webkit-text-size-adjust:100%;}
   body{
     font-family:var(--font-body);
-    background:var(--ink);
-    color:var(--paper);
+    background:var(--paper);
+    color:var(--body);
     line-height:1.55;
     -webkit-font-smoothing:antialiased;
     min-height:100vh;
   }
   img{max-width:100%; display:block;}
-  a{color:var(--red-bright); text-decoration:none;}
+  a{color:var(--red); text-decoration:none;}
   a:hover{text-decoration:underline;}
-  :focus-visible{outline:3px solid var(--red-bright); outline-offset:3px;}
+  :focus-visible{outline:3px solid var(--red); outline-offset:3px;}
 
   @media (prefers-reduced-motion: reduce){
     *{animation-duration:.01ms !important; transition-duration:.01ms !important;}
@@ -93,24 +107,47 @@
 
   .wrap{max-width:var(--maxw); margin:0 auto; padding:0 24px;}
 
+  /* ---------------- lockup da mentoria ----------------
+     JORGE GRIMBERG por cima, (MENTORIA JG) embaixo — é a arte que ele
+     já usa na Hotmart. Tipografado, não imagem: escala em qualquer
+     tamanho e continua nítido no retina. */
+  .marca{
+    display:inline-block;
+    font-family:var(--font-ui);
+    color:var(--ink);
+    text-transform:uppercase;
+    line-height:1;
+  }
+  .marca .nome{
+    display:block;
+    font-weight:700;
+    font-size:16px; letter-spacing:.055em;
+  }
+  .marca .produto{
+    display:block;
+    font-weight:800;
+    font-size:25px; letter-spacing:-.005em;
+    margin-top:5px;
+  }
+
   /* ---------------- topo ---------------- */
   .topbar{
     border-bottom:1px solid var(--line);
-    padding:22px 0 20px;
+    padding:24px 0 22px;
   }
-  .logo-jg{width:168px; height:auto;}
 
   /* ---------------- cabeçalho ---------------- */
   header.intro{padding:44px 0 8px;}
   .eyebrow{
-    font-family:var(--font-ui); font-weight:700;
-    font-size:11.5px; letter-spacing:.16em; text-transform:uppercase;
-    color:var(--red-bright);
+    font-family:var(--font-ui); font-weight:800;
+    font-size:11.5px; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--red);
     margin-bottom:14px;
   }
   h1{
     font-family:var(--font-display); font-weight:400;
     text-transform:uppercase;
+    color:var(--ink);
     font-size:clamp(38px, 9vw, 66px);
     line-height:.94; letter-spacing:.01em;
   }
@@ -118,7 +155,7 @@
     margin-top:20px;
     font-size:17px; color:var(--soft); max-width:56ch;
   }
-  .lead strong{color:var(--paper); font-weight:400;}
+  .lead strong{color:var(--ink); font-weight:400;}
   .rule{height:1px; background:var(--line); margin:34px 0 0;}
 
   /* ---------------- formulário ---------------- */
@@ -131,21 +168,21 @@
     font-family:var(--font-ui); font-weight:700;
     font-size:15px; line-height:1.35;
     text-transform:uppercase; letter-spacing:.02em;
-    color:var(--paper);
+    color:var(--ink);
   }
-  .req{color:var(--red-bright);}
+  .req{color:var(--red);}
   .help{
     margin-top:7px;
     font-size:14px; color:var(--mute);
   }
 
-  input[type=text], input[type=tel], input[type=email], textarea{
+  input[type=text], input[type=tel], input[type=email], textarea, select{
     display:block; width:100%;
     margin-top:14px;
-    background:var(--ink-2);
+    background:var(--paper);
     border:1px solid var(--line-2);
     border-radius:0;
-    color:var(--paper);
+    color:var(--ink);
     font-family:var(--font-body);
     font-size:16px;               /* 16px evita o zoom automático do iOS */
     line-height:1.5;
@@ -154,13 +191,44 @@
     -webkit-appearance:none; appearance:none;
   }
   textarea{min-height:132px; resize:vertical;}
-  input::placeholder, textarea::placeholder{color:#5A5A5A;}
-  input:focus, textarea:focus{
-    border-color:var(--red-bright);
-    background:#111;
+  input::placeholder, textarea::placeholder{color:#A6A6A6;}
+  input:focus, textarea:focus, select:focus{
+    border-color:var(--red);
+    background:var(--panel);
     outline:none;
   }
-  input.erro, textarea.erro, .opcoes.erro{border-color:var(--red-bright);}
+  input.erro, textarea.erro, select.erro, .opcoes.erro{border-color:var(--red);}
+
+  /* ---------------- telefone internacional ----------------
+     País/DDI num seletor próprio e número nacional ao lado. O que sai
+     da página é E.164 ("+55 (11) 99999-9999"), não um número solto que
+     só faz sentido se a pessoa for do Brasil. */
+  .tel{
+    display:grid;
+    grid-template-columns:minmax(0,44%) minmax(0,56%);
+    gap:0;
+  }
+  .tel select{
+    margin-top:14px;
+    border-right:0;
+    padding-right:34px;
+    background-image:
+      linear-gradient(45deg, transparent 50%, var(--ink) 50%),
+      linear-gradient(135deg, var(--ink) 50%, transparent 50%);
+    background-position:calc(100% - 19px) calc(50% + 1px), calc(100% - 13px) calc(50% + 1px);
+    background-size:6px 6px, 6px 6px;
+    background-repeat:no-repeat;
+    text-overflow:ellipsis;
+  }
+  .tel select:focus{border-right:0;}
+  .tel select.erro{border-right:0;}
+  .tel input{margin-top:14px;}
+  @media (max-width:520px){
+    .tel{grid-template-columns:1fr;}
+    .tel select{border-right:1px solid var(--line-2);}
+    .tel select:focus, .tel select.erro{border-right:1px solid;}
+    .tel input{margin-top:-1px;}     /* encosta no seletor: é um controle só */
+  }
 
   /* escolha única */
   fieldset{border:0;}
@@ -172,19 +240,19 @@
     transition:background .15s ease;
   }
   .opt + .opt{border-top:1px solid var(--line);}
-  .opt:hover{background:var(--ink-2);}
+  .opt:hover{background:var(--panel);}
   .opt input{
     -webkit-appearance:none; appearance:none;
     flex:0 0 auto;
     width:17px; height:17px; margin-top:4px;
-    border:1px solid #6A6A6A; border-radius:50%;
+    border:1px solid #9A9A9A; border-radius:50%;
     background:transparent; cursor:pointer;
     transition:border-color .15s ease;
   }
-  .opt input:checked{border-color:var(--red-bright); border-width:5px;}
-  .opt span{font-size:16px; line-height:1.45;}
-  .opt:has(input:checked){background:#141414;}
-  .opt:has(input:checked) span{color:var(--paper);}
+  .opt input:checked{border-color:var(--red); border-width:5px;}
+  .opt span{font-size:16px; line-height:1.45; color:var(--body);}
+  .opt:has(input:checked){background:var(--panel);}
+  .opt:has(input:checked) span{color:var(--ink);}
 
   /* mensagem de erro por campo */
   .msg{
@@ -192,7 +260,7 @@
     margin-top:9px;
     font-family:var(--font-ui); font-weight:700;
     font-size:12px; letter-spacing:.08em; text-transform:uppercase;
-    color:var(--red-bright);
+    color:var(--red);
   }
   .field.invalido .msg{display:block;}
 
@@ -215,28 +283,28 @@
     cursor:pointer;
     transition:background .15s ease;
   }
-  button.cta:hover:not(:disabled){background:var(--red-bright);}
-  button.cta:disabled{background:#3A3A3A; color:var(--mute); cursor:default;}
+  button.cta:hover:not(:disabled){background:var(--red-deep);}
+  button.cta:disabled{background:#CFCFCF; color:#8A8A8A; cursor:default;}
   .envio .nota{
     margin-top:14px; font-size:13.5px; color:var(--mute); text-align:center;
   }
   .falha{
     display:none;
     margin-top:16px; padding:14px 16px;
-    border:1px solid var(--red-bright);
-    font-size:14.5px; color:var(--paper);
+    border:1px solid var(--red);
+    font-size:14.5px; color:var(--ink);
   }
   .falha.on{display:block;}
 
   /* ---------------- tela final ---------------- */
   .obrigado{display:none; padding:80px 0 100px;}
   .obrigado.on{display:block;}
-  .obrigado .marca{
+  .obrigado .marca-fim{
     width:44px; height:4px; background:var(--red); margin-bottom:26px;
   }
   .obrigado h2{
     font-family:var(--font-display); font-weight:400;
-    text-transform:uppercase;
+    text-transform:uppercase; color:var(--ink);
     font-size:clamp(34px, 8vw, 56px); line-height:.96;
   }
   .obrigado p{margin-top:20px; font-size:17px; color:var(--soft); max-width:48ch;}
@@ -248,17 +316,19 @@
     display:flex; align-items:center; justify-content:space-between; gap:18px;
     flex-wrap:wrap;
   }
-  footer img{width:132px;}
-  footer .nome{
-    font-family:var(--font-display); font-weight:400;
-    text-transform:uppercase; font-size:19px; letter-spacing:.01em;
-    color:var(--soft);
+  footer .marca .nome{font-size:13px;}
+  footer .marca .produto{font-size:20px;}
+  footer .assinatura{
+    font-family:var(--font-ui); font-weight:700;
+    font-size:11px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--mute);
   }
 
   @media (max-width:600px){
     .wrap{padding:0 20px;}
     header.intro{padding:34px 0 6px;}
-    .logo-jg{width:142px;}
+    .marca .nome{font-size:14px;}
+    .marca .produto{font-size:22px;}
     footer{padding:24px 0 34px;}
   }
 </style>
@@ -267,7 +337,10 @@
 
 <div class="topbar">
   <div class="wrap">
-    <img class="logo-jg" src="images/logo-jg.png" alt="Jorge Grimberg">
+    <div class="marca" role="img" aria-label="Jorge Grimberg — Mentoria JG">
+      <span class="nome">Jorge Grimberg</span>
+      <span class="produto">(Mentoria JG)</span>
+    </div>
   </div>
 </div>
 
@@ -292,10 +365,13 @@
     <!-- 2 -->
     <div class="field" data-campo="whatsapp">
       <label class="q" for="whatsapp">2. Seu WhatsApp <span class="req">*</span></label>
-      <div class="help">Com DDD. É por aqui que a gente combina o horário da sua conversa.</div>
-      <input type="tel" id="whatsapp" name="whatsapp" inputmode="tel" autocomplete="tel"
-             placeholder="(11) 99999-9999" maxlength="20" required>
-      <div class="msg">Informe um WhatsApp com DDD</div>
+      <div class="help">Selecione o país e digite o número com DDD. É por aqui que a gente combina o horário da sua conversa.</div>
+      <div class="tel">
+        <select id="pais" name="pais" aria-label="País do seu WhatsApp"></select>
+        <input type="tel" id="whatsapp" name="whatsapp" inputmode="tel" autocomplete="tel-national"
+               placeholder="(11) 99999-9999" maxlength="22" required>
+      </div>
+      <div class="msg">Informe um WhatsApp válido</div>
     </div>
 
     <!-- 3 -->
@@ -367,7 +443,7 @@
   </form>
 
   <section class="obrigado" id="obrigado" tabindex="-1">
-    <div class="marca"></div>
+    <div class="marca-fim"></div>
     <h2>Recebido.</h2>
     <p>A gente entra em contato pelo WhatsApp para combinar o horário da sua conversa. Até já.</p>
   </section>
@@ -375,8 +451,11 @@
 </main>
 
 <footer class="wrap">
-  <img src="images/logo-jg.png" alt="Jorge Grimberg">
-  <div class="nome">Mentoria JG</div>
+  <div class="marca" role="img" aria-label="Jorge Grimberg — Mentoria JG">
+    <span class="nome">Jorge Grimberg</span>
+    <span class="produto">(Mentoria JG)</span>
+  </div>
+  <div class="assinatura">Sobre o seu projeto</div>
 </footer>
 
 <script>
@@ -390,16 +469,105 @@
   var falha    = document.getElementById('falha');
   var obrigado = document.getElementById('obrigado');
 
-  /* ---------- máscara de telefone ---------- */
-  var tel = document.getElementById('whatsapp');
-  tel.addEventListener('input', function(){
-    var d = tel.value.replace(/\D/g, '').slice(0, 11);
-    var v = d;
-    if (d.length > 2)  v = '(' + d.slice(0,2) + ') ' + d.slice(2);
-    if (d.length > 6)  v = '(' + d.slice(0,2) + ') ' + d.slice(2, d.length > 10 ? 7 : 6)
-                          + '-' + d.slice(d.length > 10 ? 7 : 6);
-    tel.value = v;
+  /* ================= telefone em padrão internacional =================
+     Lista de DDIs (E.164). Brasil e Portugal fixados no topo porque são
+     ~toda a base; o resto em ordem alfabética. Formato "Nome|DDI". */
+  var PAISES = [
+    'Brasil|55','Portugal|351','—|',
+    'Afeganistão|93','África do Sul|27','Albânia|355','Alemanha|49','Andorra|376',
+    'Angola|244','Anguilla|1264','Antígua e Barbuda|1268','Arábia Saudita|966',
+    'Argélia|213','Argentina|54','Armênia|374','Aruba|297','Austrália|61',
+    'Áustria|43','Azerbaijão|994','Bahamas|1242','Bahrein|973','Bangladesh|880',
+    'Barbados|1246','Bélgica|32','Belize|501','Benin|229','Bermudas|1441',
+    'Bielorrússia|375','Bolívia|591','Bósnia e Herzegovina|387','Botsuana|267',
+    'Brunei|673','Bulgária|359','Burkina Faso|226','Burundi|257','Butão|975',
+    'Cabo Verde|238','Camarões|237','Camboja|855','Canadá|1','Catar|974',
+    'Cazaquistão|7','Chade|235','Chile|56','China|86','Chipre|357','Cingapura|65',
+    'Colômbia|57','Comores|269','Congo|242','Congo (RDC)|243','Coreia do Sul|82',
+    'Costa do Marfim|225','Costa Rica|506','Croácia|385','Cuba|53','Curaçao|599',
+    'Dinamarca|45','Djibuti|253','Dominica|1767','Egito|20','El Salvador|503',
+    'Emirados Árabes Unidos|971','Equador|593','Eritreia|291','Eslováquia|421',
+    'Eslovênia|386','Espanha|34','Essuatíni|268','Estados Unidos|1','Estônia|372',
+    'Etiópia|251','Fiji|679','Filipinas|63','Finlândia|358','França|33','Gabão|241',
+    'Gâmbia|220','Gana|233','Geórgia|995','Gibraltar|350','Granada|1473','Grécia|30',
+    'Groenlândia|299','Guadalupe|590','Guam|1671','Guatemala|502','Guiana|592',
+    'Guiana Francesa|594','Guiné|224','Guiné Equatorial|240','Guiné-Bissau|245',
+    'Haiti|509','Honduras|504','Hong Kong|852','Hungria|36','Iêmen|967','Índia|91',
+    'Indonésia|62','Irã|98','Iraque|964','Irlanda|353','Islândia|354','Israel|972',
+    'Itália|39','Jamaica|1876','Japão|81','Jordânia|962','Kuwait|965','Laos|856',
+    'Lesoto|266','Letônia|371','Líbano|961','Libéria|231','Líbia|218',
+    'Liechtenstein|423','Lituânia|370','Luxemburgo|352','Macau|853',
+    'Macedônia do Norte|389','Madagascar|261','Malásia|60','Malaui|265',
+    'Maldivas|960','Mali|223','Malta|356','Marrocos|212','Martinica|596',
+    'Maurício|230','Mauritânia|222','México|52','Mianmar|95','Moçambique|258',
+    'Moldávia|373','Mônaco|377','Mongólia|976','Montenegro|382','Namíbia|264',
+    'Nepal|977','Nicarágua|505','Níger|227','Nigéria|234','Noruega|47',
+    'Nova Caledônia|687','Nova Zelândia|64','Omã|968','Países Baixos|31','Palau|680',
+    'Palestina|970','Panamá|507','Papua-Nova Guiné|675','Paquistão|92','Paraguai|595',
+    'Peru|51','Polinésia Francesa|689','Polônia|48','Porto Rico|1787','Quênia|254',
+    'Quirguistão|996','Reino Unido|44','República Centro-Africana|236',
+    'República Dominicana|1809','República Tcheca|420','Reunião|262','Romênia|40',
+    'Ruanda|250','Rússia|7','Samoa|685','San Marino|378','Santa Lúcia|1758',
+    'Senegal|221','Serra Leoa|232','Sérvia|381','Seicheles|248','Síria|963',
+    'Somália|252','Sri Lanka|94','Sudão|249','Sudão do Sul|211','Suécia|46',
+    'Suíça|41','Suriname|597','Tailândia|66','Taiwan|886','Tajiquistão|992',
+    'Tanzânia|255','Timor-Leste|670','Togo|228','Tonga|676','Trinidad e Tobago|1868',
+    'Tunísia|216','Turcomenistão|993','Turquia|90','Ucrânia|380','Uganda|256',
+    'Uruguai|598','Uzbequistão|998','Vanuatu|678','Vaticano|39','Venezuela|58',
+    'Vietnã|84','Zâmbia|260','Zimbábue|263'
+  ];
+
+  var pais = document.getElementById('pais');
+  var tel  = document.getElementById('whatsapp');
+
+  PAISES.forEach(function(linha, i){
+    var p = linha.split('|');
+    if (!p[1]){                                   // separador visual
+      var sep = document.createElement('option');
+      sep.disabled = true; sep.textContent = '──────────';
+      pais.appendChild(sep);
+      return;
+    }
+    var o = document.createElement('option');
+    o.value = p[1];
+    o.textContent = p[0] + ' (+' + p[1] + ')';
+    o.dataset.nome = p[0];
+    if (i === 0) o.selected = true;               // Brasil
+    pais.appendChild(o);
   });
+
+  function ddi(){ return pais.value || '55'; }
+
+  /* Máscara: só o Brasil tem formato fixo. Fora daqui os planos de
+     numeração divergem demais para mascarar sem estragar número certo —
+     então mantém dígitos limpos e valida por comprimento E.164. */
+  function formata(){
+    var d = tel.value.replace(/\D/g, '');
+    if (ddi() === '55'){
+      d = d.slice(0, 11);
+      var v = d;
+      if (d.length > 2)  v = '(' + d.slice(0,2) + ') ' + d.slice(2);
+      if (d.length > 6)  v = '(' + d.slice(0,2) + ') ' + d.slice(2, d.length > 10 ? 7 : 6)
+                            + '-' + d.slice(d.length > 10 ? 7 : 6);
+      tel.value = v;
+    } else {
+      tel.value = d.slice(0, 15 - ddi().length);
+    }
+  }
+  tel.addEventListener('input', formata);
+  pais.addEventListener('change', function(){
+    tel.placeholder = ddi() === '55' ? '(11) 99999-9999' : 'Número com código de área';
+    formata();
+    if (form.querySelector('[data-campo="whatsapp"]').classList.contains('invalido')) marca('whatsapp', valido('whatsapp'));
+  });
+
+  // o que vai no payload: E.164 completo, nunca um número solto
+  function telefoneInternacional(){
+    var d = tel.value.replace(/\D/g, '');
+    if (!d) return '';
+    if (ddi() === '55') return '+55 ' + tel.value.trim();
+    return '+' + ddi() + ' ' + d;
+  }
 
   /* ---------- validação ---------- */
   function valorDe(nome){
@@ -407,6 +575,7 @@
       var m = form.querySelector('input[name="estagio"]:checked');
       return m ? m.value : '';
     }
+    if (nome === 'whatsapp') return telefoneInternacional();
     var el = form.elements[nome];
     return el ? String(el.value || '').trim() : '';
   }
@@ -414,8 +583,12 @@
   function valido(nome){
     var v = valorDe(nome);
     if (v === '') return false;
-    if (nome === 'whatsapp') return v.replace(/\D/g,'').length >= 10;
-    if (nome === 'email')    return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+    if (nome === 'whatsapp'){
+      var d = tel.value.replace(/\D/g, '');
+      if (ddi() === '55') return d.length === 10 || d.length === 11;   // fixo ou celular
+      return d.length >= 5 && (d.length + ddi().length) <= 15;         // teto do E.164
+    }
+    if (nome === 'email') return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
     return true;
   }
 
@@ -428,6 +601,8 @@
     var alvo = bloco.querySelector('input[type=text],input[type=tel],input[type=email],textarea')
             || bloco.querySelector('.opcoes');
     if (alvo) alvo.classList.toggle('erro', !ok);
+    var sel = bloco.querySelector('select');
+    if (sel) sel.classList.toggle('erro', !ok);
   }
 
   CAMPOS.forEach(function(nome){
@@ -450,7 +625,7 @@
     });
     if (primeiroErro){
       primeiroErro.scrollIntoView({behavior:'smooth', block:'center'});
-      var foco = primeiroErro.querySelector('input,textarea');
+      var foco = primeiroErro.querySelector('input,textarea,select');
       if (foco) foco.focus({preventScroll:true});
       return;
     }
