@@ -632,6 +632,7 @@
 
     var dados = new URLSearchParams();
     CAMPOS.forEach(function(nome){ dados.append(nome, valorDe(nome)); });
+    dados.append('ddi', ddi());     // o país escolhido, separado — o CRM mapeia DDI e número em campos distintos
     dados.append('empresa', valorDe('empresa'));            // honeypot
     dados.append('pagina', location.href);
     dados.append('query', location.search.replace(/^\?/, ''));
