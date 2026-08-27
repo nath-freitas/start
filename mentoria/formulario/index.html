@@ -9,7 +9,7 @@
 
 <!--
   ======================================================================
-  FORMULÁRIO DE RESERVA — MENTORIA JG · v2 · 26/08/2026
+  FORMULÁRIO DE RESERVA — MENTORIA JG · v3 · 27/08/2026
   ----------------------------------------------------------------------
   Passo 4 do fluxo da taxa de reserva: Hotmart R$1.000 → /reserva →
   fluxo no Unichat → ESTE FORMULÁRIO → link dos R$7.000 na entrevista.
@@ -19,11 +19,18 @@
     · fundo branco, tipografia preta
     · vermelho #B31F1E CHEIO (o #E23A2E só existe para contraste sobre
       preto e sobre branco fica lavado — não entra aqui)
-    · lockup da mentoria: JORGE GRIMBERG / (MENTORIA JG), tipografado
-      em Helvetica Now Display a partir da arte que o Jorge está usando
-      na Hotmart (Hotmart-08-25-2026_09_10_PM.png)
     · fontes próprias self-hosted (KMR Waldenburg + Helvetica Now)
   Nada de bege/amarelo da Catapulta.
+
+  v3 — LOCKUP VIRA IMAGEM
+  O lockup JORGE GRIMBERG / (MENTORIA JG) estava tipografado em
+  Helvetica Now Display. Medido em 26/08: no mesmo cap, a Helvetica sai
+  32% mais larga que a arte que o Jorge usa na Hotmart — a linha 1 dele
+  é uma KMR Waldenburg condensada de peso médio que o projeto não tem.
+  Agora entra como recorte da arte original
+  (images/lockup-jg-mentoria.png, 334x98), 150px no topo / 120px no
+  rodapé, e só desce de tamanho. Volta a ser tipografia só quando o
+  Jorge entregar o vetor.
 
   v2 — TELEFONE EM PADRÃO INTERNACIONAL
   Seletor de país/DDI (lista completa, Brasil e Portugal fixados no
@@ -108,26 +115,20 @@
   .wrap{max-width:var(--maxw); margin:0 auto; padding:0 24px;}
 
   /* ---------------- lockup da mentoria ----------------
-     JORGE GRIMBERG por cima, (MENTORIA JG) embaixo — é a arte que ele
-     já usa na Hotmart. Tipografado, não imagem: escala em qualquer
-     tamanho e continua nítido no retina. */
+     JORGE GRIMBERG por cima, (MENTORIA JG) embaixo.
+
+     IMAGEM, não tipografia (corrigido em 27/08/2026). A linha 1 da arte
+     que o Jorge usa na Hotmart é uma KMR Waldenburg condensada de peso
+     médio que este projeto não tem; medido em 26/08, a Helvetica Now
+     Display Bold no mesmo cap sai 32% MAIS LARGA que a arte dele. Então
+     a marca entra como recorte raster da arte original
+     (images/lockup-jg-mentoria.png, 334x98) e SÓ DESCE de tamanho —
+     nunca sobe, nunca volta a ser redigitada. Enquanto o vetor (ou o
+     corte condensado da Waldenburg) não vier do Jorge, esse é o teto. */
   .marca{
-    display:inline-block;
-    font-family:var(--font-ui);
-    color:var(--ink);
-    text-transform:uppercase;
-    line-height:1;
-  }
-  .marca .nome{
     display:block;
-    font-weight:700;
-    font-size:16px; letter-spacing:.055em;
-  }
-  .marca .produto{
-    display:block;
-    font-weight:800;
-    font-size:25px; letter-spacing:-.005em;
-    margin-top:5px;
+    width:150px;   /* 334x98 -> ~44px de altura; downscale de 2,2x */
+    height:auto;
   }
 
   /* ---------------- topo ---------------- */
@@ -316,8 +317,7 @@
     display:flex; align-items:center; justify-content:space-between; gap:18px;
     flex-wrap:wrap;
   }
-  footer .marca .nome{font-size:13px;}
-  footer .marca .produto{font-size:20px;}
+  footer .marca{width:120px;}
   footer .assinatura{
     font-family:var(--font-ui); font-weight:700;
     font-size:11px; letter-spacing:.18em; text-transform:uppercase;
@@ -327,8 +327,8 @@
   @media (max-width:600px){
     .wrap{padding:0 20px;}
     header.intro{padding:34px 0 6px;}
-    .marca .nome{font-size:14px;}
-    .marca .produto{font-size:22px;}
+    .marca{width:132px;}
+    footer .marca{width:112px;}
     footer{padding:24px 0 34px;}
   }
 </style>
@@ -337,10 +337,9 @@
 
 <div class="topbar">
   <div class="wrap">
-    <div class="marca" role="img" aria-label="Jorge Grimberg — Mentoria JG">
-      <span class="nome">Jorge Grimberg</span>
-      <span class="produto">(Mentoria JG)</span>
-    </div>
+    <img class="marca" src="images/lockup-jg-mentoria.png"
+         width="334" height="98"
+         alt="Jorge Grimberg — Mentoria JG">
   </div>
 </div>
 
@@ -451,10 +450,9 @@
 </main>
 
 <footer class="wrap">
-  <div class="marca" role="img" aria-label="Jorge Grimberg — Mentoria JG">
-    <span class="nome">Jorge Grimberg</span>
-    <span class="produto">(Mentoria JG)</span>
-  </div>
+  <img class="marca" src="images/lockup-jg-mentoria.png"
+       width="334" height="98" loading="lazy"
+       alt="Jorge Grimberg — Mentoria JG">
   <div class="assinatura">Sobre o seu projeto</div>
 </footer>
 
